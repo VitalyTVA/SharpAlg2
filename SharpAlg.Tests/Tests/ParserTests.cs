@@ -5,7 +5,7 @@ using NUnit.Framework;
 using System.Linq.Expressions;
 using SharpAlg;
 using SharpAlg.Native;
-using SharpKit.JavaScript;
+//
 using System.IO;
 using System.Text;
 using SharpAlg.Native.Parser;
@@ -13,7 +13,7 @@ using SharpAlg.Native.Builder;
 using Parser = SharpAlg.Native.Parser.Parser;
 
 namespace SharpAlg.Tests {
-    [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
+    //(JsMode.Clr, Filename = SR.JSTestsName)]
     [TestFixture]
     public class ParserTests {
         [Test]
@@ -150,7 +150,7 @@ namespace SharpAlg.Tests {
             return ParserTestHelper.ParseNoConvolutionCore(expression);
         }
     }
-    [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
+    //(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class ParserTestHelper {
         public static SharpAlg.Native.Parser.Parser AssertValue(this SharpAlg.Native.Parser.Parser parser, double? value, Expr expectedExpr = null, Context context = null) {
             return parser

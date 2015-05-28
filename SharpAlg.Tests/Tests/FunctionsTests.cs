@@ -5,12 +5,12 @@ using NUnit.Framework;
 using System.Linq.Expressions;
 using SharpAlg;
 using SharpAlg.Native;
-using SharpKit.JavaScript;
+//
 using SharpAlg.Native.Builder;
 using SharpAlg.Native.Parser;
 
 namespace SharpAlg.Tests {
-    [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
+    //(JsMode.Clr, Filename = SR.JSTestsName)]
     [TestFixture]
     public class FunctionsTests {
         const string STR_PiIsAConstantAndCantBeUsedAsFunction = "Pi is a constant and can't be used as function\r\n";

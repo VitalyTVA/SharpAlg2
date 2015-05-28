@@ -5,7 +5,7 @@ using NUnit.Framework;
 using System.Linq.Expressions;
 using SharpAlg;
 using SharpAlg.Native;
-using SharpKit.JavaScript;
+//
 using System.IO;
 using System.Text;
 using SharpAlg.Native.Parser;

@@ -5,11 +5,11 @@ using NUnit.Framework;
 using System.Linq.Expressions;
 using SharpAlg;
 using SharpAlg.Native;
-using SharpKit.JavaScript;
+//
 using SharpAlg.Native.Builder;
 
 namespace SharpAlg.Tests {
-    [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
+    //(JsMode.Clr, Filename = SR.JSTestsName)]
     [TestFixture]
     public class DiffTests {
         [Test]

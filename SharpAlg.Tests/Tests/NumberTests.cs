@@ -5,12 +5,12 @@ using NUnit.Framework;
 using System.Linq.Expressions;
 using SharpAlg;
 using SharpAlg.Native;
-using SharpKit.JavaScript;
+//
 using SharpAlg.Native.Builder;
 using System.Diagnostics;
 
 namespace SharpAlg.Tests {
-    [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
+    //(JsMode.Clr, Filename = SR.JSTestsName)]
     [TestFixture]
     public class NumberTests {
         [Test]
@@ -322,7 +322,7 @@ namespace SharpAlg.Tests {
             "1".Divide("2").IsFalse(x => x.IsFloat).IsFalse(x => x.IsInteger).IsTrue(x => x.IsFraction);
         }
     }
-    [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
+    //(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class NumberTestHelper {
         public static Number AssertFractionNumber(this Number n, string expected) {
             return n.IsEqual(x => x.ToString(), expected).IsEqual(x => x.GetType().Name, "FractionNumber");

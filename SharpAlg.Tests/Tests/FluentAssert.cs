@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SharpAlg.Native;
-using SharpKit.JavaScript;
+//
 
 namespace SharpAlg.Tests {
     [System.Diagnostics.DebuggerNonUserCode]
-    [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
+    //(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class FluentAssert {
         public static TInput IsNull<TInput>(this TInput obj, Func<TInput, object> valueEvaluator = null) where TInput : class {
             Assert.IsNull(GetActualValue(obj, valueEvaluator));
@@ -82,17 +82,15 @@ namespace SharpAlg.Tests {
             throw new AssertionException("Exception expected");
         }
         #region JS compatibility
-        [JsMethod(Code = "")]
         static void CheckExceptionType(Type exceptionType, Exception e) {
             e.GetType().IsEqual(exceptionType);
         }
-        [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
+        //(JsMode.Clr, Filename = SR.JSTestsName)]
         public class JsAssertionException : Exception {
             public JsAssertionException(string message)
                 : base(message) {
             }
         }
-        [JsMethod(Code = "this.JsAreEqual(expected, actual);")]
         static void AreEqual(object expected, object actual) {
             Assert.AreEqual(expected, actual);
         }

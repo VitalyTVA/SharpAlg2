@@ -5,15 +5,15 @@ using NUnit.Framework;
 using System.Linq.Expressions;
 using SharpAlg;
 using SharpAlg.Native;
-using SharpKit.JavaScript;
+//
 using SharpAlg.Native.Builder;
 using SharpAlg.Native.Parser;
 
 namespace SharpAlg.Tests {
-    [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
+    //(JsMode.Clr, Filename = SR.JSTestsName)]
     [TestFixture]
     public class ExprTests {
-        [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
+        //(JsMode.Clr, Filename = SR.JSTestsName)]
         class CustomFunction : Function {
             public CustomFunction()
                 : base("CustomFunc") {
@@ -368,7 +368,7 @@ namespace SharpAlg.Tests {
             //TODO recursive substitution x => x + 1
         }
     }
-    [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
+    //(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class ExprTestHelper {
         public static SharpAlg.Native.Parser.Parser GetParser(this string expression) {
             return expression.ParseCore(ExprBuilderFactory.CreateDefault());
