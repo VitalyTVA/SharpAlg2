@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5d5ac34e-bb01-4719-be34-cbd879a882e6}</ProjectGuid>
+    <ProjectGuid>{01DEE02A-1F6C-46A9-B945-65E9DE87498E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpAlg</RootNamespace>
@@ -35,9 +35,25 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <ProjectReference Include="..\SharpAlg.Core\SharpAlg.Core.csproj">
+      <Project>{a823e596-e03f-4896-8946-5cae2ba1c65d}</Project>
+      <Name>SharpAlg.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpAlg.Implementation\SharpAlg.Implementation.csproj">
+      <Project>{06bd00af-1f46-4df4-a61e-e05d412d90b4}</Project>
+      <Name>SharpAlg.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpAlg.Parser\SharpAlg.Parser.csproj">
+      <Project>{a20747c7-601e-454a-83d5-d53fc6724f71}</Project>
+      <Name>SharpAlg.Parser</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Native\ContextFactory.cs" />
+    <Compile Include="Native\ExprBuilderFactory.cs" />
+    <Compile Include="Native\ExpressionExtensions.cs" />
+    <Compile Include="Native\Functions.cs" />
+    <Compile Include="Native\SR.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
@@ -48,5 +64,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-
 </Project>

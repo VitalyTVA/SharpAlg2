@@ -36,10 +36,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Debug|Any CPU.ActiveCfg = Debug_NET|Any CPU
-		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Debug|Any CPU.Build.0 = Debug_NET|Any CPU
-		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Release|Any CPU.ActiveCfg = Debug_NET|Any CPU
-		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Release|Any CPU.Build.0 = Debug_NET|Any CPU
+		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CE855CA7-ECAE-445B-A33E-4D35702F66B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CE855CA7-ECAE-445B-A33E-4D35702F66B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE855CA7-ECAE-445B-A33E-4D35702F66B3}.Release|Any CPU.ActiveCfg = Release|Any CPU

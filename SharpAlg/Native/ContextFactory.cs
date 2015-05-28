@@ -1,10 +1,10 @@
-using SharpKit.JavaScript;
+//
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    //(JsMode.Clr, Filename = SR.JSNativeName)]
     public static class ContextFactory {
         public static Context CreateEmpty() {
             return new Context();

@@ -1,14 +1,14 @@
 using SharpAlg.Native.Builder;
 using SharpAlg.Native.Parser;
 using SharpAlg.Native.Printer;
-using SharpKit.JavaScript;
+//
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    //(JsMode.Clr, Filename = SR.JSNativeName)]
     public static class ExpressionExtensions {
         public static Number Evaluate(this Expr expr, IContext context = null) {
             return expr.Visit(new ExpressionEvaluator(context ?? ContextFactory.Default));

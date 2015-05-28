@@ -1,10 +1,10 @@
-using SharpKit.JavaScript;
+//
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpAlg.Native.Builder {
-    [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
+    //(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class ExprBuilderFactory {
         public static ExprBuilder CreateDefault() {
             return new ConvolutionExprBuilder(ContextFactory.Default);
