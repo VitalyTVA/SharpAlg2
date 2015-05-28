@@ -6,15 +6,15 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using SharpKit.JavaScript;
+//
 using SharpAlg.Native.Builder;
 
 namespace SharpAlg.Native.Parser {
 
 
-[JsType(JsMode.Clr, Filename = SR.JS_Parser)]
+//(JsMode.Clr, Filename = SR.JS_Parser)]
 class ArgsList : List<Expr> { }
-[JsType(JsMode.Prototype, Filename = SR.JS_Parser)]
+//(JsMode.Prototype, Filename = SR.JS_Parser)]
 public class Parser {
 	public const int _EOF = 0;
 	public const int _identifier = 1;
@@ -237,7 +237,7 @@ public class Parser {
 //parser set patch end
 } // end Parser
 
-[JsType(JsMode.Prototype, Filename = SR.JS_Parser)]
+//(JsMode.Prototype, Filename = SR.JS_Parser)]
 public class Errors : ErrorsBase {
     protected override string GetErrorByCode(int n) {
         string s;

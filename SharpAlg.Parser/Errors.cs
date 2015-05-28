@@ -1,9 +1,9 @@
-using SharpKit.JavaScript;
+//
 using System;
 using System.Text;
 
 namespace SharpAlg.Native.Parser {
-    [JsType(JsMode.Prototype, Filename = SR.JS_Parser)]
+    //(JsMode.Prototype, Filename = SR.JS_Parser)]
     public abstract class ErrorsBase {
         const string errMsgFormat = "Error at line {0} column {1}: {2}";
         public static string GetErrorText(int line, int column, string errorText) {

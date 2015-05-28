@@ -3,13 +3,13 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using SharpKit.JavaScript;
+//
 using SharpAlg.Native.Builder;
 
 -->namespace
-[JsType(JsMode.Clr, Filename = SR.JS_Parser)]
+//(JsMode.Clr, Filename = SR.JS_Parser)]
 class ArgsList : List<Expr> { }
-[JsType(JsMode.Prototype, Filename = SR.JS_Parser)]
+//(JsMode.Prototype, Filename = SR.JS_Parser)]
 public class Parser {
 -->constants
 	const bool T = true;
@@ -108,7 +108,7 @@ public class Parser {
 //parser set patch end
 } // end Parser
 
-[JsType(JsMode.Prototype, Filename = SR.JS_Parser)]
+//(JsMode.Prototype, Filename = SR.JS_Parser)]
 public class Errors : ErrorsBase {
     protected override string GetErrorByCode(int n) {
         string s;

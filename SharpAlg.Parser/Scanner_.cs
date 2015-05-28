@@ -5,12 +5,12 @@ SharpAlg Parser
 using System;
 using System.IO;
 using System.Collections;
-using SharpKit.JavaScript;
+//
 using System.Collections.Generic;
 
 namespace SharpAlg.Native.Parser {
 
-[JsType(JsMode.Clr, Filename = SR.JS_Parser)]
+//(JsMode.Clr, Filename = SR.JS_Parser)]
 public class Scanner {
 	const char EOL = '\n';
 	const int eofSym = 0; /* pdt */

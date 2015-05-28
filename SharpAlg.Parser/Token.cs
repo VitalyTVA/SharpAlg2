@@ -1,10 +1,10 @@
 using System;
 using System.IO;
 using System.Collections;
-using SharpKit.JavaScript;
+//
 
 namespace SharpAlg.Native.Parser {
-    [JsType(JsMode.Json, Filename = SR.JS_Parser)]
+    //(JsMode.Json, Filename = SR.JS_Parser)]
     public class Token {
         public int kind;    // token kind
         public int pos;     // token position in bytes in the source text (starting at 0)
