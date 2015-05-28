@@ -1,0 +1,100 @@
+COMPILER SharpAlg
+
+/*--------------------------------------------------------------------------*/
+CHARACTERS
+  letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".
+  digit = "0123456789".
+  cr  = '\r'.
+  lf  = '\n'.
+  tab = '\t'.
+
+TOKENS
+  identifier  = letter {letter | digit}.
+  number = digit {digit}.
+  floatNumber = {digit} '.' digit {digit}.
+
+IGNORE cr + lf + tab
+
+PRODUCTIONS
+
+SharpAlg 										(. Expr expr; .)
+= AdditiveExpression<out expr>					(. this.Expr = expr; .)
+.
+
+AdditiveExpression<out Expr expr>				(. bool leftMinus = false, rightMinus; Expr rightExpr = null; .)			
+=	[
+	'-'											(. leftMinus = true; .)
+	]
+	MultiplicativeExpression<out expr>			(. expr = leftMinus ? builder.Minus(expr) : expr; .)
+	{
+	AdditiveOperation<out rightMinus>
+	MultiplicativeExpression<out rightExpr>		(. expr = builder.Add(expr, (rightMinus ? builder.Minus(rightExpr) : rightExpr)); .)
+	}
+.
+
+AdditiveOperation<out bool minus>
+=												(. minus = false; .)
+  ( '+'
+  | '-'											(. minus = true; .)
+  )
+.
+
+MultiplicativeExpression<out Expr expr>			(. bool divide; Expr rightExpr; .)			
+= PowerExpression<out expr>
+	{
+	MultiplicativeOperation<out divide> 
+	PowerExpression<out rightExpr>				(. expr = builder.Multiply(expr, (divide ? builder.Inverse(rightExpr) : rightExpr)); .)
+	}
+.
+
+MultiplicativeOperation<out bool divide>
+=												(. divide = false; .)
+  ( '*'
+  | '/'											(. divide = true; .)
+  )
+.
+
+PowerExpression<out Expr expr>					(. Expr rightExpr; .)			
+= FactorialExpression<out expr>
+	{
+	'^' 
+	FactorialExpression<out rightExpr>			(. expr = builder.Power(expr, rightExpr); .)
+	}
+.
+
+FactorialExpression<out Expr expr>
+= Terminal<out expr>
+	{ 
+		'!'										(. expr = builder.Function("factorial", expr.AsEnumerable()); .)			
+	}										
+.
+
+Terminal<out Expr expr>							(. expr = null; .)
+=	
+	(number										(. expr = Expr.Constant(NumberFactory.FromIntString(t.val)); .)
+	| floatNumber								(. expr = Expr.Constant(NumberFactory.FromString(t.val)); .)
+	| '('AdditiveExpression<out expr>')'
+	| FunctionCall<out expr>			
+	)
+.
+
+FunctionCall<out Expr expr>						(. string name; ArgsList args = null; .)
+= 
+	identifier									(. name = t.val; .)
+	{ ArgumentList<ref args> }											
+												(. expr = args != null ? (Expr)builder.Function(name, args) : builder.Parameter(name); .)
+.
+
+ArgumentList<ref ArgsList args>		(. args = new ArgsList(); .)
+=	'(' { List<args> } ')'
+.
+
+List<ArgsList args>						(. Expr first; .)				
+= 
+	AdditiveExpression<out first>				(. args.Add(first); .)
+	{
+	',' List<args>
+	}
+.
+
+END SharpAlg.

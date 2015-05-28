@@ -1,0 +1,121 @@
+-->begin
+using System;
+using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
+using SharpKit.JavaScript;
+using SharpAlg.Native.Builder;
+
+-->namespace
+[JsType(JsMode.Clr, Filename = SR.JS_Parser)]
+class ArgsList : List<Expr> { }
+[JsType(JsMode.Prototype, Filename = SR.JS_Parser)]
+public class Parser {
+-->constants
+	const bool T = true;
+	const bool x = false;
+	const int minErrDist = 2;
+	
+	public Scanner scanner;
+	public Errors  errors;
+
+	public Token t;    // last recognized token
+	public Token la;   // lookahead token
+	int errDist = minErrDist;
+
+-->declarations
+	public Expr Expr { get; private set; }
+	readonly ExprBuilder builder;
+	public Parser(Scanner scanner, ExprBuilder builder) {
+		this.scanner = scanner;
+		errors = new Errors();
+		this.builder = builder;
+	}
+
+	void SynErr (int n) {
+		if (errDist >= minErrDist) errors.SynErr(la.line, la.col, n);
+		errDist = 0;
+	}
+
+	public void SemErr (string msg) {
+		if (errDist >= minErrDist) errors.SemErr(t.line, t.col, msg);
+		errDist = 0;
+	}
+	
+	void Get () {
+		for (;;) {
+			t = la;
+			la = scanner.Scan();
+			if (la.kind <= maxT) { ++errDist; break; }
+-->pragmas
+			la = t;
+		}
+	}
+	
+	void Expect (int n) {
+		if (la.kind==n) Get(); else { SynErr(n); }
+	}
+	
+	bool StartOf (int s) {
+		return set[s][la.kind];
+	}
+	
+	void ExpectWeak (int n, int follow) {
+		if (la.kind == n) Get();
+		else {
+			SynErr(n);
+			while (!StartOf(follow)) Get();
+		}
+	}
+
+
+	bool WeakSeparator(int n, int syFol, int repFol) {
+		int kind = la.kind;
+		if (kind == n) {Get(); return true;}
+		else if (StartOf(repFol)) {return false;}
+		else {
+			SynErr(n);
+			while (!(set[syFol][kind] || set[repFol][kind] || set[0][kind])) {
+				Get();
+				kind = la.kind;
+			}
+			return StartOf(syFol);
+		}
+	}
+
+	
+-->productions
+
+	public void Parse() {
+		la = new Token();
+		la.val = "";		
+		Get();
+		try {
+-->parseRoot
+		} catch(Exception e) {
+			errors.SemErr(e.GetMessage());
+		}
+	}
+/*original set	
+	static readonly bool[,] set = {
+<--initialization
+	};
+*/
+//parser set patch begin
+	static readonly bool[][] set = {
+-->initialization
+	};
+//parser set patch end
+} // end Parser
+
+[JsType(JsMode.Prototype, Filename = SR.JS_Parser)]
+public class Errors : ErrorsBase {
+    protected override string GetErrorByCode(int n) {
+        string s;
+        switch(n) {
+-->errors
+            default: s = "error " + n; break;
+        }
+        return s;
+    }
+}
