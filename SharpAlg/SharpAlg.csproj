@@ -10,6 +10,9 @@
     <AssemblyName>SharpAlg</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>40</FileUpgradeFlags>
+    <UpgradeBackupLocation>C:\GitHub\SharpAlg2\Backup\SharpAlg\</UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug_NET|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

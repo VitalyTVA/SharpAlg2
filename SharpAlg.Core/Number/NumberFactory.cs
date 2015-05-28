@@ -1,5 +1,5 @@
 using SharpAlg.Native.Numbers;
-using SharpKit.JavaScript;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Clr, Filename = SR.JS_Core_Number)]
+    //(JsMode.Clr, Filename = SR.JS_Core_Number)]
     public static class NumberFactory {
         public static readonly Number Zero;
         public static readonly Number One;

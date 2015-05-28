@@ -1,4 +1,4 @@
-using SharpKit.JavaScript;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Clr, Filename = SR.JS_Core_Utils)]
+    //(JsMode.Clr, Filename = SR.JS_Core_Utils)]
     public class Tuple<T1, T2> {
         readonly T1 item1;
         readonly T2 item2;

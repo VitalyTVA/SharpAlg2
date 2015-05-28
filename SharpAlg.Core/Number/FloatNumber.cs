@@ -1,4 +1,4 @@
-using SharpKit.JavaScript;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 
 namespace SharpAlg.Native.Numbers {
-    [JsType(JsMode.Clr, Filename = SR.JS_Core_Number)]
     internal sealed class FloatNumber : Number {
         internal readonly double value;
         public FloatNumber(double value) {

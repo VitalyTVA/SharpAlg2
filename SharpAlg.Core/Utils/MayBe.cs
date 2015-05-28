@@ -1,11 +1,10 @@
-using SharpKit.JavaScript;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Prototype, Filename = SR.JS_Core_Utils)]
     [DebuggerNonUserCode]
     public static class MayBe {
         public static TR With<TI, TR>(this TI input, Func<TI, TR> evaluator)

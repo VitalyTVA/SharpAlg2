@@ -1,5 +1,5 @@
 ﻿using SharpAlg.Native;
-using SharpKit.JavaScript;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,8 +8,8 @@ using System.Text;
 
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Clr, Filename = SR.JS_Core)]
-    [DebuggerDisplay("Expr: {PrintDebug()}")]
+    //(JsMode.Clr, Filename = SR.JS_Core)]
+    //[DebuggerDisplay("Expr: {PrintDebug()}")]
     public abstract class Expr {
         public static readonly ConstantExpr Zero = new ConstantExpr(NumberFactory.Zero);
         public static readonly ConstantExpr One = new ConstantExpr(NumberFactory.One);
@@ -61,15 +61,15 @@ namespace SharpAlg.Native {
         }
         public abstract T Visit<T>(IExpressionVisitor<T> visitor);
 #if DEBUG
-        [JsMethod(Code = "return \"\";")]
-        public string PrintDebug() {
-            var type = Type.GetType("SharpAlg.Native.ExpressionExtensions, SharpAlg, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
-            var method = type.GetMethod("Print", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
-            return (string)method.Invoke(null, new object[] { this, null });
-        }
+        //(Code = "return \"\";")]
+        //public string PrintDebug() {
+        //    var type = Type.GetType("SharpAlg.Native.ExpressionExtensions, SharpAlg, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
+        //    var method = type.In("Print", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+        //    return (string)method.Invoke(null, new object[] { this, null });
+        //}
 #endif
     }
-    [JsType(JsMode.Clr, Filename = SR.JS_Core)]
+    //(JsMode.Clr, Filename = SR.JS_Core)]
     public class ConstantExpr : Expr {
         internal ConstantExpr(Number value) {
             Value = value;
@@ -79,7 +79,7 @@ namespace SharpAlg.Native {
             return visitor.Constant(this);
         }
     }
-    [JsType(JsMode.Clr, Filename = SR.JS_Core)]
+    //(JsMode.Clr, Filename = SR.JS_Core)]
     public class ParameterExpr : Expr {
         internal ParameterExpr(string parameterName) {
             ParameterName = parameterName;
@@ -92,14 +92,14 @@ namespace SharpAlg.Native {
     public enum BinaryOperation {
         Add, Multiply
     }
-    [JsType(JsMode.Clr, Filename = SR.JS_Core)]
+    //(JsMode.Clr, Filename = SR.JS_Core)]
     public abstract class MultiExpr : Expr {
         internal MultiExpr(IEnumerable<Expr> args) {
             Args = args;
         }
         public IEnumerable<Expr> Args { get; private set; }
     }
-    [JsType(JsMode.Clr, Filename = SR.JS_Core)]
+    //(JsMode.Clr, Filename = SR.JS_Core)]
     public class AddExpr : MultiExpr {
         internal AddExpr(IEnumerable<Expr> args)
             : base(args) {
@@ -108,7 +108,7 @@ namespace SharpAlg.Native {
             return visitor.Add(this);
         }
     }
-    [JsType(JsMode.Clr, Filename = SR.JS_Core)]
+    //(JsMode.Clr, Filename = SR.JS_Core)]
     public class MultiplyExpr : MultiExpr {
         internal MultiplyExpr(IEnumerable<Expr> args)
             : base(args) {
@@ -117,7 +117,7 @@ namespace SharpAlg.Native {
             return visitor.Multiply(this);
         }
     }
-    [JsType(JsMode.Clr, Filename = SR.JS_Core)]
+    //(JsMode.Clr, Filename = SR.JS_Core)]
     public class PowerExpr : Expr {
         internal PowerExpr(Expr left, Expr right) {
             Right = right;
@@ -129,7 +129,7 @@ namespace SharpAlg.Native {
             return visitor.Power(this);
         }
     }
-    [JsType(JsMode.Clr, Filename = SR.JS_Core)]
+    //(JsMode.Clr, Filename = SR.JS_Core)]
     public class FunctionExpr : Expr {
         internal FunctionExpr(string functionName, IEnumerable<Expr> arguments) {
             Args = arguments;

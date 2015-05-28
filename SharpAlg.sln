@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg", "SharpAlg\SharpAlg.csproj", "{01DEE02A-1F6C-46A9-B945-65E9DE87498E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{CE855CA7-ECAE-445B-A33E-4D35702F66B3} = {CE855CA7-ECAE-445B-A33E-4D35702F66B3}
@@ -42,10 +44,10 @@ Global
 		{CE855CA7-ECAE-445B-A33E-4D35702F66B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE855CA7-ECAE-445B-A33E-4D35702F66B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE855CA7-ECAE-445B-A33E-4D35702F66B3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A823E596-E03F-4896-8946-5CAE2BA1C65D}.Debug|Any CPU.ActiveCfg = Debug_NET|Any CPU
-		{A823E596-E03F-4896-8946-5CAE2BA1C65D}.Debug|Any CPU.Build.0 = Debug_NET|Any CPU
-		{A823E596-E03F-4896-8946-5CAE2BA1C65D}.Release|Any CPU.ActiveCfg = Debug_NET|Any CPU
-		{A823E596-E03F-4896-8946-5CAE2BA1C65D}.Release|Any CPU.Build.0 = Debug_NET|Any CPU
+		{A823E596-E03F-4896-8946-5CAE2BA1C65D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A823E596-E03F-4896-8946-5CAE2BA1C65D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A823E596-E03F-4896-8946-5CAE2BA1C65D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A823E596-E03F-4896-8946-5CAE2BA1C65D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A20747C7-601E-454A-83D5-D53FC6724F71}.Debug|Any CPU.ActiveCfg = Debug_NET|Any CPU
 		{A20747C7-601E-454A-83D5-D53FC6724F71}.Debug|Any CPU.Build.0 = Debug_NET|Any CPU
 		{A20747C7-601E-454A-83D5-D53FC6724F71}.Release|Any CPU.ActiveCfg = Debug_NET|Any CPU

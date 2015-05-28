@@ -1,10 +1,10 @@
-using SharpKit.JavaScript;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpAlg.Native.Builder {
-    [JsType(JsMode.Prototype, Filename = SR.JS_Core)]
+    //(JsMode.Prototype, Filename = SR.JS_Core)]
     public abstract class ExprBuilder {
         public abstract IContext Context { get; }
         public abstract Expr Parameter(string parameterName);
