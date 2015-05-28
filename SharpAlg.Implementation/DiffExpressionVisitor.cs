@@ -1,12 +1,12 @@
 using SharpAlg.Native.Builder;
-using SharpKit.JavaScript;
+//
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Prototype, Filename = SR.JS_Implementation)]
+    //(JsMode.Prototype, Filename = SR.JS_Implementation)]
     public class DiffExpressionVisitor : IDiffExpressionVisitor {
         string parameterName;
         bool autoParameterName;
@@ -67,7 +67,7 @@ namespace SharpAlg.Native {
                 () => { throw new InvalidOperationException(); }); //TODO exception and message
         }
     }
-    [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
+    //(JsMode.Clr, Filename = SR.JS_Implementation)]
     public class ExpressionDefferentiationException : Exception {
         public ExpressionDefferentiationException()
             : base() {

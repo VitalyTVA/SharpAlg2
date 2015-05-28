@@ -1,5 +1,5 @@
 using SharpAlg.Native.Builder;
-using SharpKit.JavaScript;
+//
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Prototype, Filename = SR.JS_Implementation)]
+    //(JsMode.Prototype, Filename = SR.JS_Implementation)]
     class MultiplyExpressionExtractor : DefaultExpressionVisitor<Expr> {
         static MultiplyExpressionExtractor instance;
         static MultiplyExpressionExtractor Instance { get { return instance ?? (instance = new MultiplyExpressionExtractor()); } }

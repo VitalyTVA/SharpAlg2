@@ -1,4 +1,4 @@
-using SharpKit.JavaScript;
+//
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace SharpAlg.Native {
     public enum OperationPriority {
         None, Add, Multiply, Power, Factorial
     }
-    [JsType(JsMode.Prototype, Filename = SR.JS_Implementation)]
+    //(JsMode.Prototype, Filename = SR.JS_Implementation)]
     public class ExpressionEvaluator : IExpressionEvaluator {
         readonly IContext context;
         public IContext Context { get { return context; } }
@@ -81,7 +81,7 @@ namespace SharpAlg.Native {
             throw new NotImplementedException(); //TODO correct exception
         }
     }
-    [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
+    //(JsMode.Clr, Filename = SR.JS_Implementation)]
     public class ExpressionEvaluationException : Exception {
         public ExpressionEvaluationException()
             : base() {

@@ -1,4 +1,4 @@
-using SharpKit.JavaScript;
+//
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 using System.Text;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Prototype, Filename = SR.JS_Implementation)]
+    //(JsMode.Prototype, Filename = SR.JS_Implementation)]
     public abstract class DefaultExpressionVisitor<T> : IExpressionVisitor<T> {
         protected DefaultExpressionVisitor() { }
         public virtual T Constant(ConstantExpr constant) {

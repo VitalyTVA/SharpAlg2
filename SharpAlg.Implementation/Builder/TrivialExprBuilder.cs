@@ -1,10 +1,10 @@
-using SharpKit.JavaScript;
+//
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpAlg.Native.Builder {
-    [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Builder)]
+    //(JsMode.Prototype, Filename = SR.JS_Implementation_Builder)]
     public class TrivialExprBuilder : ExprBuilder {
         readonly IContext context;
         public override IContext Context { get { return context; } }

@@ -1,13 +1,13 @@
-using SharpKit.JavaScript;
+//
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpAlg.Native.Builder {
-    [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Builder)]
+    //(JsMode.Prototype, Filename = SR.JS_Implementation_Builder)]
     public class ConvolutionExprBuilder : ExprBuilder {
         #region inner classes
-        [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Builder)]
+        //(JsMode.Prototype, Filename = SR.JS_Implementation_Builder)]
         class ExpressionArgumentsExtractor : DefaultExpressionVisitor<IEnumerable<Expr>> {
             public static IEnumerable<Expr> ExtractArguments(Expr expr, BinaryOperation operation) {
                 return expr.Visit(new ExpressionArgumentsExtractor(operation));
@@ -28,7 +28,7 @@ namespace SharpAlg.Native.Builder {
                 return expr.AsEnumerable();
             }
         }
-        [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Builder)]
+        //(JsMode.Prototype, Filename = SR.JS_Implementation_Builder)]
         class MultiplyExpressionExtractor : DefaultExpressionVisitor<Tuple<Expr, Expr>> {
             static readonly MultiplyExpressionExtractor Instance = new MultiplyExpressionExtractor();
             public static Tuple<Expr, Expr> ExtractMultiply(Expr expr) {
@@ -44,7 +44,7 @@ namespace SharpAlg.Native.Builder {
                 return new Tuple<Expr, Expr>(Expr.One, expr);
             }
         }
-        [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Builder)]
+        //(JsMode.Prototype, Filename = SR.JS_Implementation_Builder)]
         class PowerExpressionExtractor : DefaultExpressionVisitor<PowerExpr> {
             static readonly PowerExpressionExtractor Instance = new PowerExpressionExtractor();
             public static PowerExpr ExtractPower(Expr expr) {

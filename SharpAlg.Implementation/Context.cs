@@ -1,10 +1,10 @@
-using SharpKit.JavaScript;
+//
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
+    //(JsMode.Clr, Filename = SR.JS_Implementation)]
     public class Context : IContext {
         Dictionary<string, Expr> names = new Dictionary<string, Expr>();
         Dictionary<string, Function> functions = new Dictionary<string, Function>();

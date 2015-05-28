@@ -1,5 +1,5 @@
 using SharpAlg.Native.Builder;
-using SharpKit.JavaScript;
+//
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Clr, Filename = SR.JS_Implementation_Functions)]
+    //(JsMode.Clr, Filename = SR.JS_Implementation_Functions)]
     public abstract class ConstantFunction : Function, ISupportDiff, IConstantFunction {
         public ConstantFunction(string name)
             : base(name) {

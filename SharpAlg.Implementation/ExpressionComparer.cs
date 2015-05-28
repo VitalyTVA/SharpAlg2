@@ -1,11 +1,11 @@
-using SharpKit.JavaScript;
+//
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
+    //(JsMode.Clr, Filename = SR.JS_Implementation)]
     public class ExpressionEqualityComparer : IExpressionVisitor<bool> {
         protected readonly Expr expr;
         public ExpressionEqualityComparer(Expr expr) {
@@ -48,7 +48,7 @@ namespace SharpAlg.Native {
             });
         }
     }
-    [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
+    //(JsMode.Clr, Filename = SR.JS_Implementation)]
     public class ExpressionEquivalenceComparer : ExpressionEqualityComparer {
         public ExpressionEquivalenceComparer(Expr expr)
             : base(expr) {

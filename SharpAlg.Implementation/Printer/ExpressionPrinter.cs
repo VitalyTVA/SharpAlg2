@@ -1,4 +1,4 @@
-using SharpKit.JavaScript;
+//
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,10 +7,10 @@ using System.Runtime.Serialization;
 using System.Text;
 
 namespace SharpAlg.Native.Printer {
-    [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
+    //(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
     public class ExpressionPrinter : IExpressionVisitor<string> {
         #region inner classes
-        [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
+        //(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
         class ExpressionWrapperVisitor : IExpressionVisitor<bool> {
             readonly ExpressionOrder order;
             readonly OperationPriority priority;
@@ -52,7 +52,7 @@ namespace SharpAlg.Native.Printer {
                 return priority >= exprPriority;
             }
         }
-        [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
+        //(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
         abstract class UnaryExpressionExtractor : DefaultExpressionVisitor<UnaryExpressionInfo> {
             protected abstract BinaryOperation Operation { get; }
             protected UnaryExpressionExtractor() {
@@ -66,7 +66,7 @@ namespace SharpAlg.Native.Printer {
                 return new UnaryExpressionInfo(expr, ExpressionEvaluator.GetBinaryOperationEx(Operation));
             }
         }
-        [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
+        //(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
         class MultiplyUnaryExpressionExtractor : UnaryExpressionExtractor {
             public static readonly MultiplyUnaryExpressionExtractor MultiplyInstance = new MultiplyUnaryExpressionExtractor();
             protected override BinaryOperation Operation { get { return BinaryOperation.Multiply; } }
@@ -79,7 +79,7 @@ namespace SharpAlg.Native.Printer {
                 return base.Power(power);
             }
         }
-        [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
+        //(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
         class AddUnaryExpressionExtractor : UnaryExpressionExtractor {
             static readonly AddUnaryExpressionExtractor AddInstance = new AddUnaryExpressionExtractor();
             public static UnaryExpressionInfo ExtractAddUnaryInfo(Expr expr) {
@@ -100,7 +100,7 @@ namespace SharpAlg.Native.Printer {
                 return base.Multiply(multi);
             }
         }
-        [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
+        //(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
         class UnaryExpressionInfo {
             public UnaryExpressionInfo(Expr expr, BinaryOperationEx operation) {
                 Operation = operation;

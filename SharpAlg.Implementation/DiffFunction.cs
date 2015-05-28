@@ -1,5 +1,5 @@
 using SharpAlg.Native.Builder;
-using SharpKit.JavaScript;
+//
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
+    //(JsMode.Clr, Filename = SR.JS_Implementation)]
     public class DiffFunction : Function, ISupportConvolution {
         public DiffFunction()
             : base("diff") {
