@@ -58,6 +58,7 @@
     <Compile Include="ImmutableContext.cs" />
     <Compile Include="Primitives.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\ExprTests.cs" />
     <Compile Include="Tests\IntersectionsTests.cs" />
     <Compile Include="Tests\ProblemsTests.cs" />
   </ItemGroup>
