@@ -4,13 +4,17 @@ using Numerics;
 
 namespace SharpAlg.Geo.Core {
     public abstract class Expr {
-        public static AddExpr operator +(Expr a, Expr b) {
-            return new AddExpr(ImmutableArray.Create(a, b));
-        }
         public static implicit operator Expr(int val) {
             return new ConstExpr(val);
         }
 
+        public static AddExpr operator +(Expr a, Expr b) {
+            return new AddExpr(ImmutableArray.Create(a, b));
+        }
+
+        public static MultExpr operator *(Expr a, Expr b) {
+            return new MultExpr(ImmutableArray.Create(a, b));
+        }
     }
 
     public class AddExpr : Expr {
@@ -65,6 +69,12 @@ namespace SharpAlg.Geo.Core {
         public readonly BigRational Value;
         public ConstExpr(BigRational value) {
             Value = value;
+        }
+    }
+
+    public static class ExprExtensions {
+        public static SqrtExpr Sqrt(Expr value) {
+            return new SqrtExpr(value);
         }
     }
 }

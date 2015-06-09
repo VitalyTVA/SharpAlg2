@@ -1,6 +1,7 @@
 ﻿using Numerics;
 using NUnit.Framework;
 using SharpAlg.Geo.Core;
+using static SharpAlg.Geo.Core.ExprExtensions;
 
 namespace SharpAlg.Geo.Tests {
     [TestFixture]
@@ -13,10 +14,18 @@ namespace SharpAlg.Geo.Tests {
             ParamExpr a = "A";
             Assert.AreEqual("A", a.Name);
 
-            var a_plus_five = a + 5;
+            AddExpr a_plus_five = a + 5;
             Assert.AreEqual(2, a_plus_five.Args.Length);
             Assert.AreSame(a, a_plus_five.Args[0]);
             Assert.AreEqual((BigRational)5, ((ConstExpr)a_plus_five.Args[1]).Value);
+
+            MultExpr five_mult_a = 5 * a;
+            Assert.AreEqual(2, five_mult_a.Args.Length);
+            Assert.AreEqual((BigRational)5, ((ConstExpr)five_mult_a.Args[0]).Value);
+            Assert.AreSame(a, five_mult_a.Args[1]);
+
+            SqrtExpr sqrt_a = Sqrt(a);
+            Assert.AreSame(a, sqrt_a.Value);
         }
     }
 }
