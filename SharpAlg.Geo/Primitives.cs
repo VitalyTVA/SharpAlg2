@@ -248,7 +248,7 @@ namespace SharpAlg.Geo {
         }
         public static ImmutableContext RegisterValue(this ImmutableContext context, Expr parameter, double value) {
             return context
-                .Register(((ParameterExpr)parameter).ParameterName, Expr.Constant(NumberFactory.FromDouble(value)));
+                .Register(((ParameterExpr)parameter).ParameterName, Expr.Constant(value));
         }
         public static ImmutableContext RegisterValue(this ImmutableContext context, string nane, double value) {
             return context.RegisterValue(nane.Parse(), value);
@@ -272,7 +272,7 @@ namespace SharpAlg.Geo {
             return expr.Evaluate(context).ToDouble();
         }
         public static Expr AsConst(this double value) {
-            return Expr.Constant(NumberFactory.FromDouble(value));
+            return Expr.Constant(value);
         }
         public static Expr Convolute(this Expr expr) {
             return expr.Visit(new ExprRewriter(new ConvolutionExprBuilder(ContextFactory.Empty)));

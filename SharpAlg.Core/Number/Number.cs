@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using SharpAlg.Native.Numbers;
 
 namespace SharpAlg.Native {
     //(JsMode.Clr, Filename = SR.JS_Core_Number)]
@@ -16,6 +17,12 @@ namespace SharpAlg.Native {
             var type = Math.Max(n1.NumberType, n2.NumberType);
             n1 = n1.ConvertTo(type);
             n2 = n2.ConvertTo(type);
+        }
+        //public static explicit operator Number(double n)  {
+        //    return NumberFactory.FromDouble(n);
+        //}
+        public static implicit operator Number(double n) {
+            return new FloatNumber(n);
         }
         public static bool operator ==(Number n1, Number n2) {
             if((object)n1 != null && (object)n2 != null)

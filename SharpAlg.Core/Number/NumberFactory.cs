@@ -20,20 +20,17 @@ namespace SharpAlg.Native {
             One = LongIntegerNumber.One;
             Two = LongIntegerNumber.Two;
             MinusOne = LongIntegerNumber.MinusOne;
-            Pi = FromDouble(Math.PI);
+            Pi = Math.PI;
         }
 
         public static Number GetFloat(Number n, Func<double, double> evaluator) {
-            return FromDouble(evaluator(n.ToFloat().ConvertCast<FloatNumber>().value));
-        }
-        public static Number FromDouble(double value) {
-            return new FloatNumber(value);
+            return evaluator(n.ToFloat().ConvertCast<FloatNumber>().value);
         }
         public static double ToDouble(this Number number) {
             return ((FloatNumber)GetFloat(number, x => x)).value;
         }
         public static Number FromString(string s) {
-            return FromDouble(PlatformHelper.Parse(s));
+            return PlatformHelper.Parse(s);
         }
         public static Number FromIntString(string s) {
             return LongIntegerNumber.FromLongIntStringCore(s);
