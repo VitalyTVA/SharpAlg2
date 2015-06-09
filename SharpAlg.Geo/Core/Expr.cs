@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using System.Numerics;
 using Numerics;
 
@@ -17,7 +18,7 @@ namespace SharpAlg.Geo.Core {
         }
 
         public static MultExpr operator -(Expr a) {
-            return new MultExpr(ImmutableArray.Create(new ConstExpr(-1), a));
+            return new MultExpr(ImmutableArray.Create(-1, a));
         }
 
         public static DivExpr operator /(Expr a, Expr b) {
@@ -55,6 +56,8 @@ namespace SharpAlg.Geo.Core {
         public readonly Expr Value;
         public readonly BigInteger Power;
         public PowerExpr(Expr value, BigInteger power) {
+            if(power < 1)
+                throw new InvalidOperationException();
             Value = value;
             Power = power;
         }

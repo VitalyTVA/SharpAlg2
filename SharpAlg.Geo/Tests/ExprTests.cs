@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using Numerics;
 using NUnit.Framework;
 using SharpAlg.Geo.Core;
@@ -39,6 +40,9 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual(2, minus_a.Args.Length);
             Assert.AreEqual((BigRational)(-1), ((ConstExpr)minus_a.Args[0]).Value);
             Assert.AreSame(a, minus_a.Args[1]);
+
+            Assert.Throws<InvalidOperationException>(() => { var x = a ^ 0; });
+            Assert.Throws<InvalidOperationException>(() => { var x = a ^ -1; });
         }
     }
 }
