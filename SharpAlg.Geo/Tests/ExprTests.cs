@@ -1,4 +1,5 @@
-﻿using Numerics;
+﻿using System.Numerics;
+using Numerics;
 using NUnit.Framework;
 using SharpAlg.Geo.Core;
 using static SharpAlg.Geo.Core.ExprExtensions;
@@ -26,6 +27,10 @@ namespace SharpAlg.Geo.Tests {
 
             SqrtExpr sqrt_a = Sqrt(a);
             Assert.AreSame(a, sqrt_a.Value);
+
+            PowerExpr a_power_five = a ^ 5;
+            Assert.AreSame(a, a_power_five.Value);
+            Assert.AreEqual((BigInteger)5, a_power_five.Power);
         }
     }
 }

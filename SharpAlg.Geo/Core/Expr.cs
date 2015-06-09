@@ -15,6 +15,10 @@ namespace SharpAlg.Geo.Core {
         public static MultExpr operator *(Expr a, Expr b) {
             return new MultExpr(ImmutableArray.Create(a, b));
         }
+
+        public static PowerExpr operator ^(Expr value,  BigInteger power) {
+            return new PowerExpr(value, power);
+        }
     }
 
     public class AddExpr : Expr {
