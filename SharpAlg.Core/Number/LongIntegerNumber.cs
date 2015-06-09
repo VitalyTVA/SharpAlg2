@@ -22,8 +22,8 @@ namespace SharpAlg.Native.Numbers {
             for(int i = s.Length - 1; i >= lastIndex; i--) {
                 currentPart += (PlatformHelper.CharToInt(s[i]) - ZeroCode) * currentPower;
                 currentIndex++;
-                currentPower *= LongIntegerNumber.Base;
-                if(currentIndex == LongIntegerNumber.BaseCount) {
+                currentPower *= Base;
+                if(currentIndex == BaseCount) {
                     currentIndex = 0;
                     digits.Add(currentPart);
                     currentPart = 0;
