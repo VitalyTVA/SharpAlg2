@@ -7,14 +7,16 @@ namespace SharpAlg.Geo.Tests {
     public class ExprTests {
         [Test]
         public void BasicStuffTest() {
-            ConstExpr five = 5;
-            Assert.AreEqual((BigRational)5, five.Value);
+            Expr five = 5;
+            Assert.AreEqual((BigRational)5, ((ConstExpr)five).Value);
 
             ParamExpr a = "A";
             Assert.AreEqual("A", a.Name);
 
-            var a_plus_five = a + five;
-            CollectionAssert.AreEqual(new Expr[] { a, five }, a_plus_five.Args);
+            var a_plus_five = a + 5;
+            Assert.AreEqual(2, a_plus_five.Args.Length);
+            Assert.AreSame(a, a_plus_five.Args[0]);
+            Assert.AreEqual((BigRational)5, ((ConstExpr)a_plus_five.Args[1]).Value);
         }
     }
 }

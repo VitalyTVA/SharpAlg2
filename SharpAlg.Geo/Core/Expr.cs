@@ -7,6 +7,9 @@ namespace SharpAlg.Geo.Core {
         public static AddExpr operator +(Expr a, Expr b) {
             return new AddExpr(ImmutableArray.Create(a, b));
         }
+        public static implicit operator Expr(int val) {
+            return new ConstExpr(val);
+        }
 
     }
 
@@ -59,10 +62,6 @@ namespace SharpAlg.Geo.Core {
     }
 
     public class ConstExpr : Expr {
-        public static implicit operator ConstExpr(int val) {
-            return new ConstExpr(val);
-        }
-
         public readonly BigRational Value;
         public ConstExpr(BigRational value) {
             Value = value;
