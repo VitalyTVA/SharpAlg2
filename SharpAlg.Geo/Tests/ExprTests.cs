@@ -21,6 +21,13 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreSame(a, a_plus_five.Args[0]);
             Assert.AreEqual((BigRational)5, ((ConstExpr)a_plus_five.Args[1]).Value);
 
+            AddExpr five_minus_a = 5 - a;
+            Assert.AreEqual(2, five_minus_a.Args.Length);
+            Assert.AreEqual((BigRational)5, ((ConstExpr)five_minus_a.Args[0]).Value);
+            Assert.AreEqual((BigRational)(-1), ((ConstExpr)(five_minus_a.Args[1] as MultExpr).Args[0]).Value);
+            Assert.AreSame(a, (five_minus_a.Args[1] as MultExpr).Args[1]);
+
+
             MultExpr five_mult_a = 5 * a;
             Assert.AreEqual(2, five_mult_a.Args.Length);
             Assert.AreEqual((BigRational)5, ((ConstExpr)five_mult_a.Args[0]).Value);

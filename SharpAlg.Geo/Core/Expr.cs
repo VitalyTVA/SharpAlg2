@@ -20,6 +20,9 @@ namespace SharpAlg.Geo.Core {
         public static MultExpr operator -(Expr a) {
             return new MultExpr(ImmutableArray.Create(-1, a));
         }
+        public static AddExpr operator -(Expr a, Expr b) {
+            return a + (-b);
+        }
 
         public static DivExpr operator /(Expr a, Expr b) {
             return new DivExpr(a, b);
