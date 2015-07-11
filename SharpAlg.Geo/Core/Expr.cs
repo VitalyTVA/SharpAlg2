@@ -31,6 +31,7 @@ namespace SharpAlg.Geo.Core {
         public static PowerExpr operator ^(Expr value,  BigInteger power) {
             return new PowerExpr(value, power);
         }
+
     }
 
     public class AddExpr : Expr {
@@ -55,12 +56,14 @@ namespace SharpAlg.Geo.Core {
         }
     }
 
+    public class PowerShouldBePositiveException : ApplicationException { }
+
     public class PowerExpr : Expr {
         public readonly Expr Value;
         public readonly BigInteger Power;
         public PowerExpr(Expr value, BigInteger power) {
             if(power < 1)
-                throw new InvalidOperationException();
+                throw new PowerShouldBePositiveException();
             Value = value;
             Power = power;
         }
@@ -94,5 +97,14 @@ namespace SharpAlg.Geo.Core {
         public static SqrtExpr Sqrt(Expr value) {
             return new SqrtExpr(value);
         }
+        public static Expr Build(Func<Expr, Expr> f, Expr a) {
+            return f(a);
+        }
+        public static Expr Build(Func<Expr, Expr, Expr> f, Expr a, Expr b) {
+            return f(a, b);
+        }
+        //public static Expr Build(Func<Expr, Expr, Expr, Expr> f, Expr a, Expr b) {
+        //    return f(a, b);
+        //}
     }
 }
