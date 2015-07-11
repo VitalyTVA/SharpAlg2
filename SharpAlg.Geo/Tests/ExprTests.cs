@@ -50,6 +50,10 @@ namespace SharpAlg.Geo.Tests {
 
             Assert.Throws<PowerShouldBePositiveException>(() => { var t = Build(x => x ^ 0, a); });
             Assert.Throws<PowerShouldBePositiveException>(() => { var t = Build(x => x ^ -1, a); });
+            Assert.Throws<InvalidExpressionException>(() => { var t = Build(x => SomeFunc(x), a); });
+        }
+        static Expr SomeFunc(Expr e) {
+            throw new NotImplementedException();
         }
     }
 }

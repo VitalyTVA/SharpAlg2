@@ -67,6 +67,7 @@ namespace SharpAlg.Geo.Core {
 
     public class CantImplicitlyCreateExpressionException : ApplicationException { }
     public class PowerShouldBePositiveException : ApplicationException { }
+    public class InvalidExpressionException : ApplicationException { }
 
     public class PowerExpr : Expr {
         public readonly Expr Value;
@@ -121,6 +122,7 @@ namespace SharpAlg.Geo.Core {
             var argsDict = expression.Parameters.Select((x, i) => new { Parameter = x, Expr = args[i] }).ToImmutableDictionary(x => x.Parameter, x => x.Expr);
             return BuildCore(expression.Body, x => argsDict[x]);
         }
+        static readonly Expression<Func<Expr, Expr>> SqrtExpr = x => Sqrt(x);
         static Expr BuildCore(Expression expression, Func<ParameterExpression, Expr> getArgs) {
             if(expression.NodeType == ExpressionType.Parameter) {
                 return getArgs((ParameterExpression)expression);
@@ -130,7 +132,7 @@ namespace SharpAlg.Geo.Core {
             }
             if(expression.NodeType == ExpressionType.Call) {
                 var call = expression as MethodCallExpression;
-                if(call != null) {
+                if(call != null && call.Method == ((MethodCallExpression)SqrtExpr.Body).Method) {
                     return new SqrtExpr(BuildCore(call.Arguments.Single(), getArgs));
                 }
             }
@@ -158,7 +160,7 @@ namespace SharpAlg.Geo.Core {
                 var binary = expression as BinaryExpression;
                 return new PowerExpr(BuildCore(binary.Left, getArgs), GetConst(binary.Right));
             }
-            throw new InvalidOperationException();
+            throw new InvalidExpressionException();
         }
         static Expr Negate(Expression expression, Func<ParameterExpression, Expr> getArgs) {
             return new MultExpr(ImmutableArray.Create(-1, (BuildCore(expression, getArgs))));
