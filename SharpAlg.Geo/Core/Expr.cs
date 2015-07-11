@@ -97,11 +97,11 @@ namespace SharpAlg.Geo.Core {
         public static SqrtExpr Sqrt(Expr value) {
             return new SqrtExpr(value);
         }
-        public static Expr Build(Func<Expr, Expr> f, Expr a) {
-            return f(a);
+        public static Expr Build(Func<Expr, Expr> f, Expr x1) {
+            return f(x1);
         }
-        public static Expr Build(Func<Expr, Expr, Expr> f, Expr a, Expr b) {
-            return f(a, b);
+        public static Expr Build(Func<Expr, Expr, Expr> f, Expr x1, Expr x2) {
+            return f(x1, x2);
         }
         //public static Expr Build(Func<Expr, Expr, Expr, Expr> f, Expr a, Expr b) {
         //    return f(a, b);
