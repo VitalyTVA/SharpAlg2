@@ -121,10 +121,10 @@ namespace SharpAlg.Geo.Core {
                 return LegacyExpr.Divide(div.Numerator.ToLegacy(), div.Denominator.ToLegacy());
             var power = expr as PowerExpr;
             if(power != null)
-                return LegacyExpr.Divide(power.Value.ToLegacy(), new ConstExpr(power.Power).ToLegacy());
-            var sqrt = expr as SqrtExpr;
-            if(sqrt != null)
-                return LegacyExpr.Power(sqrt.Value.ToLegacy(), ExprHelper.Half);
+                return LegacyExpr.Power(power.Value.ToLegacy(), new ConstExpr(power.Power).ToLegacy());
+            //var sqrt = expr as SqrtExpr;
+            //if(sqrt != null)
+            //    return LegacyExpr.Power(sqrt.Value.ToLegacy(), ExprHelper.Half);
             var param = expr as ParamExpr;
             if(param != null)
                 return LegacyExpr.Parameter(param.Name);
