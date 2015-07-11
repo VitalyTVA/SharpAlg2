@@ -142,6 +142,9 @@ namespace SharpAlg.Geo.Core {
         public static Expr Build(Expression<Func<Expr, Expr, Expr>> f, Expr x1, Expr x2) {
             return BuildExpr(f, x1, x2);
         }
+        public static Expr Build(Expression<Func<Expr, Expr, Expr, Expr>> f, Expr x1, Expr x2, Expr x3) {
+            return BuildExpr(f, x1, x2, x3);
+        }
 
         static Expr BuildExpr(LambdaExpression expression, params Expr[] args) {
             if(expression.Parameters.Count != args.Length) {

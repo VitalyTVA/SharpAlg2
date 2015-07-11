@@ -67,11 +67,11 @@ namespace SharpAlg.Geo.Tests {
             Build(x => -x).AssertSimpleStringRepresentation("-x");
             Build(x => 9 + x).AssertSimpleStringRepresentation("9 + x");
             Build(x => 9 - x).AssertSimpleStringRepresentation("9 - x");
-            //"-(9 - x)".ParseNoConvolution().AssertSimpleStringRepresentation("-(9 - x)");
-            //"(9 * x)".Parse().AssertSimpleStringRepresentation("9 * x");
-            //"(9 / x)".Parse().AssertSimpleStringRepresentation("9 / x");
-            //"x + y * z".Parse().AssertSimpleStringRepresentation("x + y * z");
-            //"(x + y) * z".Parse().AssertSimpleStringRepresentation("(x + y) * z");
+            Build(x => -(9 - x)).AssertSimpleStringRepresentation("-(9 - x)");
+            Build(x => 9 * x).AssertSimpleStringRepresentation("9 * x");
+            Build(x => 9 / x).AssertSimpleStringRepresentation("9 / x");
+            Build((x, y, z) => x + y * z).AssertSimpleStringRepresentation("x + y * z");
+            Build((x, y, z) => (x + y) * z).AssertSimpleStringRepresentation("(x + y) * z");
             //"z * (x + y)".Parse().AssertSimpleStringRepresentation("z * (x + y)");
             //"x ^ y".Parse().AssertSimpleStringRepresentation("x ^ y");
             //"x * z ^ y".Parse().AssertSimpleStringRepresentation("x * z ^ y");
@@ -133,10 +133,14 @@ namespace SharpAlg.Geo.Tests {
         public static Expr Build(Expression<Func<Expr, Expr>> f) {
             return ExprExtensions.Build(f, GetParameters(f).Single());
         }
-        //public static Expr Build(Expression<Func<Expr, Expr, Expr>> f) {
-        //    var parameters = GetParameters(f);
-        //    return ExprExtensions.Build(f, parameters[0], parameters[1]);
-        //}
+        public static Expr Build(Expression<Func<Expr, Expr, Expr>> f) {
+            var parameters = GetParameters(f);
+            return ExprExtensions.Build(f, parameters[0], parameters[1]);
+        }
+        public static Expr Build(Expression<Func<Expr, Expr, Expr, Expr>> f) {
+            var parameters = GetParameters(f);
+            return ExprExtensions.Build(f, parameters[0], parameters[1], parameters[2]);
+        }
         static ImmutableArray<Expr> GetParameters(LambdaExpression expression) {
             return expression.Parameters.Select(x => (ParamExpr)x.Name).ToImmutableArray<Expr>();
         }
