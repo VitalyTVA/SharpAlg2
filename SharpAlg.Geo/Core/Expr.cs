@@ -5,6 +5,7 @@ using Numerics;
 using System.Linq.Expressions;
 using System.Collections.Generic;
 using System.Linq;
+using LegacyExpr = SharpAlg.Native.Expr;
 
 namespace SharpAlg.Geo.Core {
     public abstract class Expr {
@@ -41,6 +42,9 @@ namespace SharpAlg.Geo.Core {
             //return new PowerExpr(value, power);
         }
 
+        public override string ToString() {
+            return Native.ExpressionExtensions.Print(this.ToLegacy());
+        }
     }
 
     public class AddExpr : Expr {
@@ -64,10 +68,6 @@ namespace SharpAlg.Geo.Core {
             Denominator = denominator;
         }
     }
-
-    public class CantImplicitlyCreateExpressionException : ApplicationException { }
-    public class PowerShouldBePositiveException : ApplicationException { }
-    public class InvalidExpressionException : ApplicationException { }
 
     public class PowerExpr : Expr {
         public readonly Expr Value;
@@ -106,7 +106,35 @@ namespace SharpAlg.Geo.Core {
 
     public static class ExprExtensions {
         public static SqrtExpr Sqrt(Expr value) {
-            return new SqrtExpr(value);
+            throw new CantImplicitlyCreateExpressionException();
+            //return new SqrtExpr(value);
+        }
+        public static LegacyExpr ToLegacy(this Expr expr) {
+            var add = expr as AddExpr;
+            if(add != null)
+                return LegacyExpr.Add(add.Args.Select(ToLegacy));
+            var mult = expr as MultExpr;
+            if(mult != null)
+                return LegacyExpr.Multiply(mult.Args.Select(ToLegacy));
+            var div = expr as DivExpr;
+            if(div != null)
+                return LegacyExpr.Divide(div.Numerator.ToLegacy(), div.Denominator.ToLegacy());
+            var power = expr as PowerExpr;
+            if(power != null)
+                return LegacyExpr.Divide(power.Value.ToLegacy(), new ConstExpr(power.Power).ToLegacy());
+            var sqrt = expr as SqrtExpr;
+            if(sqrt != null)
+                return LegacyExpr.Power(sqrt.Value.ToLegacy(), ExprHelper.Half);
+            var param = expr as ParamExpr;
+            if(param != null)
+                return LegacyExpr.Parameter(param.Name);
+            var @const = expr as ConstExpr;
+            if(@const != null)
+                return Native.ExpressionExtensions.Parse(@const.Value.ToString());
+            throw new InvalidOperationException();
+        }
+        public static Expr Build(Expression<Func<Expr>> f) {
+            return BuildExpr(f);
         }
         public static Expr Build(Expression<Func<Expr, Expr>> f, Expr x1) {
             return BuildExpr(f, x1);
@@ -171,4 +199,7 @@ namespace SharpAlg.Geo.Core {
             return (int)constant.Value;
         }
     }
+    public class CantImplicitlyCreateExpressionException : ApplicationException { }
+    public class PowerShouldBePositiveException : ApplicationException { }
+    public class InvalidExpressionException : ApplicationException { }
 }
