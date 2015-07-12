@@ -152,7 +152,7 @@ namespace SharpAlg.Geo.Core {
                 sqrt: x => LegacyExpr.Power(x.Value.ToLegacy(), ExprHelper.Half),
                 param: x => LegacyExpr.Parameter(x.Name),
                 @const: x => Native.ExpressionExtensions.Parse(x.Value.ToString())
-            ).Convolute();
+            );//.Convolute();
         }
         public static Expr Build(Expression<Func<Expr>> f) {
             return BuildExpr(f);
