@@ -172,9 +172,14 @@ namespace SharpAlg.Geo {
     public static class QuadraticEquationHelper {
         static readonly System.Tuple<Expr, Expr> Roots;
         static QuadraticEquationHelper() {
-            var d = "(B^2-4*A*C)^(1/2)";
-            var x1 = string.Format("(-B+{0})/(2*A)", d).Parse();
-            var x2 = string.Format("(-B-{0})/(2*A)", d).Parse();
+            var A = new Core.ParamExpr("A");
+            var B = new Core.ParamExpr("B");
+            var C = new Core.ParamExpr("C");
+            var d = Build((a, b, c) => Sqrt((b ^ 2) - 4 * a * c), A, B, C).ToLegacy().Convolute();
+
+            //var d = "(B^2-4*A*C)^(1/2)";
+            var x1 = string.Format("(-B+{0})/(2*A)", d.Print()).Parse();
+            var x2 = string.Format("(-B-{0})/(2*A)", d.Print()).Parse();
             Roots = Tuple.Create(x1, x2);
         }
         public static System.Tuple<Expr, Expr> Solve(this QuadraticEquation eq) {

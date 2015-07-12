@@ -149,7 +149,7 @@ namespace SharpAlg.Geo.Core {
                 mult: x => LegacyExpr.Multiply(x.Args.Select(ToLegacy)),
                 div: x => LegacyExpr.Divide(x.Numerator.ToLegacy(), x.Denominator.ToLegacy()),
                 power: x => LegacyExpr.Power(x.Value.ToLegacy(), new ConstExpr(x.Power).ToLegacy()),
-                sqrt: x => LegacyExpr.Function("sqrt", x.Value.ToLegacy()),
+                sqrt: x => LegacyExpr.Power(x.Value.ToLegacy(), ExprHelper.Half),
                 param: x => LegacyExpr.Parameter(x.Name),
                 @const: x => Native.ExpressionExtensions.Parse(x.Value.ToString())
             );
