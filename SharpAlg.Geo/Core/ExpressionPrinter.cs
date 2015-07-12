@@ -132,10 +132,6 @@ namespace SharpAlg.Geo.Core {
             throw new NotImplementedException();
             //return multi.Args.Count() == 2 && Expr.MinusOne.ExprEquals(multi.Args.ElementAt(0));
         }
-        static bool IsInverseExpression(PowerExpr power) {
-            throw new NotImplementedException();
-            //return Expr.MinusOne.ExprEquals(power.Right);
-        }
         static string Add(AddExpr multi) {
             throw new NotImplementedException();
             //var sb = new StringBuilder();
@@ -165,11 +161,7 @@ namespace SharpAlg.Geo.Core {
             //return sb.ToString();
         }
         static string Power(PowerExpr power) {
-            throw new NotImplementedException();
-            //if(IsInverseExpression(power)) {
-            //    return String.Format("1 / {0}", WrapFromMultiply(power.Left, ExpressionOrder.Default));
-            //}
-            //return string.Format("{0} ^ {1}", WrapFromPower(power.Left), WrapFromPower(power.Right));
+            return string.Format("{0} ^ {1}", WrapFromPower(power.Value), power.Power);
         }
         static string Parameter(ParamExpr parameter) {
             return parameter.Name;
