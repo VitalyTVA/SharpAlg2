@@ -108,15 +108,6 @@ namespace SharpAlg.Geo.Tests {
             Build(x => 1 / (3 * x)).AssertSimpleStringRepresentation("1 / (3 * x)");
 
             //"someFunc(x, x + y, x ^ y)".Parse().AssertSimpleStringRepresentation("someFunc(x, x + y, x ^ y)");
-
-            //"2*x/3*y".Parse().AssertSimpleStringRepresentation("2/3 * x * y");
-            //"2*x/(-3)*y".Parse().AssertSimpleStringRepresentation("-2/3 * x * y");
-            //"2/3 + y".Parse().AssertSimpleStringRepresentation("2/3 + y");
-            //"2/3^2".Parse().AssertSimpleStringRepresentation("2/9");
-            //"(-4/6)^2".Parse().AssertSimpleStringRepresentation("4/9");
-
-            //Build(x => (2 / 3) ^ 4).AssertSimpleStringRepresentation("(2 / 3) ^ 4");
-            //Build(x => (-2 / 3) ^ 4).AssertSimpleStringRepresentation("(-2 / 3) ^ 4");
         }
         [Test]
         public void ToStringTest2() {
@@ -125,6 +116,15 @@ namespace SharpAlg.Geo.Tests {
             var z = new ParamExpr("z");
             Multiply(-1, x, y).AssertSimpleStringRepresentation("-x * y");
             Multiply(-2, x, y).AssertSimpleStringRepresentation("-2 * x * y");
+            Multiply(Const(new BigRational(2, 3)), x, y).AssertSimpleStringRepresentation("2/3 * x * y");
+            Multiply(Const(new BigRational(-2, 3)), x, y).AssertSimpleStringRepresentation("-2/3 * x * y");
+            Add(Const(new BigRational(2, 3)), x, y).AssertSimpleStringRepresentation("2/3 + x + y");
+            Const(new BigRational(2, 9)).AssertSimpleStringRepresentation("2/9");
+            Divide(2, 9).AssertSimpleStringRepresentation("2 / 9");
+            Power(Const(new BigRational(2, 3)), 4).AssertSimpleStringRepresentation("(2/3) ^ 4");
+            Power(Divide(2, 3), 4).AssertSimpleStringRepresentation("(2 / 3) ^ 4");
+            Power(Const(new BigRational(-2, 3)), 4).AssertSimpleStringRepresentation("(-2/3) ^ 4");
+            Power(Divide(-2, 3), 4).AssertSimpleStringRepresentation("(-2 / 3) ^ 4");
 
             Add(z, Multiply(-1, x, y)).AssertSimpleStringRepresentation("z - x * y");
             Add(z, Multiply(-2, x, y)).AssertSimpleStringRepresentation("z - 2 * x * y");

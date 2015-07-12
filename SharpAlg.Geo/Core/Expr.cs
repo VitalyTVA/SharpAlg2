@@ -213,6 +213,10 @@ namespace SharpAlg.Geo.Core {
         public static PowerExpr Power(Expr value, BigInteger power) {
             return new PowerExpr(value, power);
         }
+        public static ConstExpr Const(BigRational value) {
+            return new ConstExpr(value);
+        }
+        
     }
     public class CantImplicitlyCreateExpressionException : ApplicationException { }
     public class PowerShouldBePositiveException : ApplicationException { }
