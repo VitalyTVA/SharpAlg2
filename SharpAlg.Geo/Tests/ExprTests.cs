@@ -103,7 +103,6 @@ namespace SharpAlg.Geo.Tests {
             Build((x, y) => y * (-x)).AssertSimpleStringRepresentation("y * (-x)");
             Build((x, y) => -y * x).AssertSimpleStringRepresentation("(-y) * x");
 
-            //Build((x, y) => -y * x).AssertSimpleStringRepresentation("-y * x");
             //Build(x => 2 * x / (3 + x)).AssertSimpleStringRepresentation("2 * x / (3 + x)");
             //Build((x, y, z) => x / y / z).AssertSimpleStringRepresentation("x / y / z");
 
@@ -125,6 +124,12 @@ namespace SharpAlg.Geo.Tests {
 
             //Build(x => (2 / 3) ^ 4).AssertSimpleStringRepresentation("(2 / 3) ^ 4");
             //Build(x => (-2 / 3) ^ 4).AssertSimpleStringRepresentation("(-2 / 3) ^ 4");
+        }
+        [Test]
+        public void ToStringTest2() {
+            var x = new ParamExpr("x");
+            var y = new ParamExpr("y");
+            Multiply((Expr)(-1), x, y).AssertSimpleStringRepresentation("-x * y");
         }
     }
     public static class ExprTestExtensions {
