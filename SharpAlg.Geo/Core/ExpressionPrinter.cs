@@ -175,19 +175,7 @@ namespace SharpAlg.Geo.Core {
             return parameter.Name;
         }
         static string Sqrt(SqrtExpr sqrtExpr) {
-            throw new NotImplementedException();
-            //var sb = new StringBuilder(functionExpr.FunctionName);
-            //if(!(context.GetFunction(functionExpr.FunctionName) is IConstantFunction)) {
-            //    sb.Append("(");
-            //    functionExpr.Args.Accumulate(x => {
-            //        sb.Append(x.Visit(this));
-            //    }, x => {
-            //        sb.Append(", ");
-            //        sb.Append(x.Visit(this));
-            //    });
-            //    sb.Append(")");
-            //}
-            //return sb.ToString();
+            return string.Format("sqrt({0})", Print(sqrtExpr.Value));
         }
         static string GetBinaryOperationSymbol(BinaryOperationEx operation) {
             switch(operation) {
