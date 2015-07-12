@@ -94,12 +94,12 @@ namespace SharpAlg.Geo.Core {
         //        return base.Power(power);
         //    }
         //}
-        ////(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
-        //class AddUnaryExpressionExtractor : UnaryExpressionExtractor {
+        static class AddUnaryExpressionExtractor  {
         //    static readonly AddUnaryExpressionExtractor AddInstance = new AddUnaryExpressionExtractor();
-        //    public static UnaryExpressionInfo ExtractAddUnaryInfo(Expr expr) {
-        //        return expr.Visit(AddInstance);
-        //    }
+            public static UnaryExpressionInfo ExtractAddUnaryInfo(Expr expr) {
+                throw new NotImplementedException();
+                //return expr.Visit(AddInstance);
+            }
         //    protected override BinaryOperation Operation { get { return BinaryOperation.Add; } }
         //    AddUnaryExpressionExtractor() {
         //    }
@@ -114,7 +114,7 @@ namespace SharpAlg.Geo.Core {
         //        }
         //        return base.Multiply(multi);
         //    }
-        //}
+        }
         class UnaryExpressionInfo {
             public UnaryExpressionInfo(Expr expr, BinaryOperationEx operation) {
                 Operation = operation;
