@@ -154,6 +154,31 @@ namespace SharpAlg.Geo.Core {
                 @const: x => Native.ExpressionExtensions.Parse(x.Value.ToString())
             );//.Convolute();
         }
+        static T Evaluate<T>(this Expr expr, Func<T, T, T> add, Func<T, T, T> mult, Func<T, T, T> div, Func<T, T, T> power, Func<T, T> sqrt, Func<string, T> param, Func<BigRational, T> @const) {
+            //Func<Expr, T> eval = x => x.Evaluate(add, mult, div, power, sqrt, param, @const);
+            Func<Expr, T> doEval = null;
+            doEval = e => e.MatchStrict(
+                add: x => x.Args.Select(doEval).Aggregate(add),
+                mult: x => x.Args.Select(doEval).Aggregate(mult),
+                div: x => div(doEval(x.Numerator), doEval(x.Denominator)),
+                power: x => power(doEval(x.Value), @const(x.Power)),
+                sqrt: x => sqrt(doEval(x.Value)),
+                param: x => param(x.Name),
+                @const: x => @const(x.Value)
+            );
+            return doEval(expr);
+        }
+        public static double ToReal(this Expr expr, Func<string, double> param) {
+            return expr.Evaluate(
+                add: (x, y) => x + y,
+                mult: (x, y) => x * y,
+                div: (x, y) => x / y,
+                power: (x, y) => Math.Pow(x, y),
+                sqrt: x => Math.Sqrt(x),
+                param: param,
+                @const: x => (double)x
+            );
+        }
         public static Expr Build(Expression<Func<Expr>> f) {
             return BuildExpr(f);
         }

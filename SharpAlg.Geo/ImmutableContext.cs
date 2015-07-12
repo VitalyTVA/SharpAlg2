@@ -18,6 +18,9 @@ namespace SharpAlg.Geo {
         Expr IContext.GetValue(string name) {
             return names.TryGetValue(name);
         }
+        public double GetValue(string name) {
+            return ((IContext)this).GetValue(name).Evaluate(this).ToDouble();
+        }
         public ImmutableContext Register(string name, Expr value) {
             return new ImmutableContext(names.Add(name, value));
         }
