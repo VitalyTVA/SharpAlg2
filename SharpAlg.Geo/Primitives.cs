@@ -216,15 +216,15 @@ namespace SharpAlg.Geo {
         //}
         public static ImmutableContext RegisterPoint(this ImmutableContext context, Point p, double x, double y) {
             return context
-                .RegisterValue(p.X, x)
-                .RegisterValue(p.Y, y);
+                .RegisterValue((ParameterExpr)p.X, x)
+                .RegisterValue((ParameterExpr)p.Y, y);
         }
-        public static ImmutableContext RegisterValue(this ImmutableContext context, Expr parameter, double value) {
+        public static ImmutableContext RegisterValue(this ImmutableContext context, ParameterExpr parameter, double value) {
             return context
-                .Register(((ParameterExpr)parameter).ParameterName, Expr.Constant(value));
+                .Register(parameter.ParameterName, Expr.Constant(value));
         }
-        public static ImmutableContext RegisterValue(this ImmutableContext context, string nane, double value) {
-            return context.RegisterValue(nane.Parse(), value);
+        public static ImmutableContext RegisterValue(this ImmutableContext context, string name, double value) {
+            return context.RegisterValue(Expr.Parameter(name), value);
         }
         public static ImmutableContext RegisterLine(this ImmutableContext context, Line l, string a, string b, string c) {
             return context
