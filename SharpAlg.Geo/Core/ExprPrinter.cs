@@ -22,7 +22,6 @@ namespace SharpAlg.Geo.Core {
         }
 
         //#region inner classes
-        ////(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
         static class ExpressionWrapperVisitor {
             public static bool ShouldWrap(Expr expr, OperationPriority priority, ExpressionOrder order) {
                 throw new NotImplementedException();
@@ -67,7 +66,6 @@ namespace SharpAlg.Geo.Core {
             //    return priority >= exprPriority;
             //}
         }
-        ////(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
         //abstract class UnaryExpressionExtractor : DefaultExpressionVisitor<UnaryExpressionInfo> {
         //    protected abstract BinaryOperation Operation { get; }
         //    protected UnaryExpressionExtractor() {
@@ -125,9 +123,29 @@ namespace SharpAlg.Geo.Core {
             public Expr Expr { get; private set; }
             public BinaryOperationEx Operation { get; private set; }
         }
-        //#endregion
         public static string Print(Expr expr) {
-            throw new NotImplementedException();
+            var add = expr as AddExpr;
+            if(add != null)
+                return Add(add);
+            var mult = expr as MultExpr;
+            if(mult != null)
+                return Multiply(mult);
+            //var div = expr as DivExpr;
+            //if(div != null)
+            //    return Divide(div);
+            var power = expr as PowerExpr;
+            if(power != null)
+                return Power(power);
+            var sqrt = expr as SqrtExpr;
+            if(sqrt != null)
+                return Sqrt(sqrt);
+            var param = expr as ParamExpr;
+            if(param != null)
+                return Parameter(param);
+            var @const = expr as ConstExpr;
+            if(@const != null)
+                return Constant(@const);
+            throw new InvalidOperationException();
         }
 
         static bool IsMinusExpression(MultExpr multi) {
@@ -165,6 +183,9 @@ namespace SharpAlg.Geo.Core {
         }
         static string Parameter(ParamExpr parameter) {
             return parameter.Name;
+        }
+        static string Constant(ConstExpr constant) {
+            return constant.Value.ToString();
         }
         static string Sqrt(SqrtExpr sqrtExpr) {
             return string.Format("sqrt({0})", Print(sqrtExpr.Value));
