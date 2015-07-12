@@ -137,7 +137,6 @@ namespace SharpAlg.Geo.Core {
             return (expr as ConstExpr).If(x => x.Value == BigInteger.MinusOne).ReturnSuccess();
         }
         static string Add(AddExpr multi) {
-            throw new NotImplementedException();
             var sb = new StringBuilder();
             sb.Append(Print(multi.Args.First()));
             foreach(var expr in multi.Args.Skip(1)) {
@@ -152,16 +151,14 @@ namespace SharpAlg.Geo.Core {
                 string exprText = WrapFromAdd(multi.Tail());
                 return String.Format("-{0}", exprText);
             }
-            throw new NotImplementedException();
-            //var sb = new StringBuilder();
-            //multi.Args.Accumulate(x => {
-            //    sb.Append(WrapFromMultiply(x, ExpressionOrder.Head));
-            //}, x => {
-            //    UnaryExpressionInfo info = x.Visit(MultiplyUnaryExpressionExtractor.MultiplyInstance);
-            //    sb.Append(GetBinaryOperationSymbol(info.Operation));
-            //    sb.Append(WrapFromMultiply(info.Expr, ExpressionOrder.Default));
-            //});
-            //return sb.ToString();
+            var sb = new StringBuilder();
+            sb.Append(WrapFromMultiply(multi.Args.First(), ExpressionOrder.Head));
+            foreach(var expr in multi.Args.Skip(1)) {
+                UnaryExpressionInfo info = MultiplyUnaryExpressionExtractor.ExtractMultiplyUnaryInfo(expr);
+                sb.Append(GetBinaryOperationSymbol(info.Operation));
+                sb.Append(WrapFromMultiply(info.Expr, ExpressionOrder.Default));
+            }
+            return sb.ToString();
         }
         static string Power(PowerExpr power) {
             return string.Format("{0} ^ {1}", WrapFromPower(power.Value), power.Power);
