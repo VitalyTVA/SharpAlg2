@@ -24,11 +24,30 @@ namespace SharpAlg.Geo.Core {
         static class UnaryExpressionExtractor {
             public static UnaryExpressionInfo ExtractMultiplyUnaryInfo(Expr expr) {
                 Func<Expr, UnaryExpressionInfo> getDefault = x => GetDefault(BinaryOperation.Multiply, x);
-                throw new NotImplementedException();
+                Func<ConstExpr, UnaryExpressionInfo> getConstant = x => Constant(BinaryOperation.Multiply, x);
+
+                return expr.MatchStrict(
+                    add: getDefault,
+                    mult: getDefault,
+                    div: getDefault,
+                    power: getDefault,
+                    sqrt: getDefault,
+                    param: getDefault,
+                    @const: getConstant
+                );
             }
             public static UnaryExpressionInfo ExtractAddUnaryInfo(Expr expr) {
                 Func<Expr, UnaryExpressionInfo> getDefault = x => GetDefault(BinaryOperation.Add, x);
-                throw new NotImplementedException();
+                Func<ConstExpr, UnaryExpressionInfo> getConstant = x => Constant(BinaryOperation.Add, x);
+                return expr.MatchStrict(
+                    add: getDefault,
+                    mult: getDefault,
+                    div: getDefault,
+                    power: getDefault,
+                    sqrt: getDefault,
+                    param: getDefault,
+                    @const: getConstant
+                );
             }
 
             static UnaryExpressionInfo Constant(BinaryOperation operation, ConstExpr constant) {
