@@ -18,7 +18,7 @@ namespace SharpAlg.Geo.Core {
             Add, Subtract, Multiply, Divide
         }
         enum OperationPriority {
-            None, Add, Multiply, Power
+            None, Add, Multiply, Divide, Power
         }
 
         static class UnaryExpressionExtractor {
@@ -71,7 +71,7 @@ namespace SharpAlg.Geo.Core {
             return expr.MatchStrict(
                 Add,
                 Multiply,
-                div => { throw new NotImplementedException(); },
+                Divide,
                 Power,
                 Sqrt,
                 Parameter,
@@ -108,6 +108,9 @@ namespace SharpAlg.Geo.Core {
                 sb.Append(WrapFromMultiply(info.Expr, ExpressionOrder.Default));
             }
             return sb.ToString();
+        }
+        static string Divide(DivExpr div) {
+            return string.Format("{0} / {1}", WrapFromDivide(div.Numerator), WrapFromDivide(div.Denominator));
         }
         static string Power(PowerExpr power) {
             return string.Format("{0} ^ {1}", WrapFromPower(power.Value), power.Power);
@@ -158,6 +161,9 @@ namespace SharpAlg.Geo.Core {
         static string WrapFromAdd(Expr expr) {
             return Wrap(expr, OperationPriority.Add, ExpressionOrder.Default);
         }
+        static string WrapFromDivide(Expr expr) {
+            return Wrap(expr, OperationPriority.Divide, ExpressionOrder.Default);
+        }
         static string WrapFromMultiply(Expr expr, ExpressionOrder order) {
             return Wrap(expr, OperationPriority.Multiply, order);
         }
@@ -176,7 +182,7 @@ namespace SharpAlg.Geo.Core {
             return expr.MatchStrict(
                 add: x => shouldWrap(OperationPriority.Add),
                 mult: x => IsMinusExpression(x) || shouldWrap(OperationPriority.Multiply),
-                div: x => { throw new NotImplementedException(); },
+                div: x => shouldWrap(OperationPriority.Divide),
                 power: x => shouldWrap(OperationPriority.Power),
                 sqrt: x => false,
                 param: x => false,

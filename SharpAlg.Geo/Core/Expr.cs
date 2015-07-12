@@ -40,7 +40,7 @@ namespace SharpAlg.Geo.Core {
         }
 
         public override string ToString() {
-            return Native.ExpressionExtensions.Print(this.ToLegacy());
+            return this.Print();
         }
     }
 
