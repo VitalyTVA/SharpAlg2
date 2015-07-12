@@ -99,10 +99,10 @@ namespace SharpAlg.Geo.Tests {
             Build(x => 2 * x / (3 + x)).AssertSimpleStringRepresentation("(2 * x) / (3 + x)");
             Build((x, y, z) => 2 * x / (y * z)).AssertSimpleStringRepresentation("(2 * x) / (y * z)");
             Build((x, y) => (x ^ 3) / (y ^ 4)).AssertSimpleStringRepresentation("x ^ 3 / y ^ 4");
+            Build(x => 1 / (x ^ 3)).AssertSimpleStringRepresentation("1 / x ^ 3");
+            Build((x, y) => y * (-x)).AssertSimpleStringRepresentation("y * (-x)");
+            Build((x, y) => -y * x).AssertSimpleStringRepresentation("(-y) * x");
 
-            //"1 / 3 ^ x".Parse().AssertSimpleStringRepresentation("1 / 3 ^ x");
-            //"1 / (4 * x)".Parse().AssertSimpleStringRepresentation("1/4 / x");
-            //"t * (-x)".Parse().AssertSimpleStringRepresentation("-t * x");
             //"t * (-2) * x".Parse().AssertSimpleStringRepresentation("-2 * t * x");
             //"z + t * (-x)".Parse().AssertSimpleStringRepresentation("z - t * x");
             //"z + t * (-2) * x".Parse().AssertSimpleStringRepresentation("z - 2 * t * x");
