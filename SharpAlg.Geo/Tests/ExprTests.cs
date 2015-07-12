@@ -77,20 +77,13 @@ namespace SharpAlg.Geo.Tests {
             Build((x, y) => x * (y ^ 3)).AssertSimpleStringRepresentation("x * y ^ 3");
             Build((x, y) => x * y ^ 3).AssertSimpleStringRepresentation("(x * y) ^ 3");
             Build((x, y, z) => x + y + z).AssertSimpleStringRepresentation("x + y + z");
-            //"x - y - z".Parse().AssertSimpleStringRepresentation("x - y - z");
-            //"x / y / z".Parse().AssertSimpleStringRepresentation("x / y / z");
-            //"1 + 2 * x + 3 * y".Parse().AssertSimpleStringRepresentation("1 + 2 * x + 3 * y");
-            //"(x + 1) ^ (x * y)".Parse().AssertSimpleStringRepresentation("(x + 1) ^ (x * y)");
-            //"(x - 0.05) ^ (x * .2 * y)".Parse().AssertSimpleStringRepresentation("(x - 0.05) ^ (0.2 * x * y)");
+            Build((x, y, z) => x - y - z).AssertSimpleStringRepresentation("x - y - z");
+            Build((x, y, z) => x / y / z).AssertSimpleStringRepresentation("(x / y) / z");
+            Build((x, y) => 1 + 2 * x + 3 * y).AssertSimpleStringRepresentation("1 + 2 * x + 3 * y");
+            Build((x, y) => (x + 1) ^ (2 * 3)).AssertSimpleStringRepresentation("(x + 1) ^ 6");
 
-            //Expr.Minus(Expr.Parameter("x")).AssertSimpleStringRepresentation("-x");
-            //Expr.Inverse(Expr.Parameter("x")).AssertSimpleStringRepresentation("1 / x");
-
-            //Expr.Add(ExprTestHelper.AsConstant(9), Expr.Minus(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 - x");
-            //Expr.Multiply(ExprTestHelper.AsConstant(9), Expr.Inverse(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 / x");
-
-            //Expr.Add(ExprTestHelper.AsConstant(9), Expr.Minus(Expr.Minus(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 - (-x)");
-            //Expr.Multiply(ExprTestHelper.AsConstant(9), Expr.Inverse(Expr.Inverse(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 / (1 / x)");
+            Build(x => 9 - (-x)).AssertSimpleStringRepresentation("9 - (-x)");
+            Build(x => 9 / (1 / x)).AssertSimpleStringRepresentation("9 / (1 / x)");
 
             //Expr.Add(ExprTestHelper.AsConstant(9), Expr.Inverse(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 + 1 / x");
             //Expr.Multiply(ExprTestHelper.AsConstant(9), Expr.Minus(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 * (-x)");
