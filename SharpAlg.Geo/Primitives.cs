@@ -170,23 +170,6 @@ namespace SharpAlg.Geo {
     }
 
     public static class QuadraticEquationHelper {
-        static readonly System.Tuple<Expr, Expr> Roots;
-        static QuadraticEquationHelper() {
-            var a = new Core.ParamExpr("A");
-            var b = new Core.ParamExpr("B");
-            var c = new Core.ParamExpr("C");
-            var d = Build((A, B, C) => Sqrt((B ^ 2) - 4 * A * C), a, b, c);
-            var x1 = Build((A, B, D) => (-B + D) / (2 * A), a, b, d).ToLegacy();
-            var x2 = Build((A, B, D) => (-B - D) / (2 * A), a, b, d).ToLegacy();
-            Roots = Tuple.Create(x1, x2);
-        }
-        public static System.Tuple<Expr, Expr> Solve(Expr a, Expr b, Expr c) {
-            var context = ImmutableContext.Empty
-                 .Register("A", a)
-                 .Register("B", b)
-                 .Register("C", c);
-            return Roots.FMap(x => x.Substitute(context));
-        }
         public static System.Tuple<NewExpr, NewExpr> Solve(NewExpr a, NewExpr b, NewExpr c) {
             var d = Build((A, B, C) => Sqrt((B ^ 2) - 4 * A * C), a, b, c);
             var x1 = Build((A, B, D) => (-B + D) / (2 * A), a, b, d);

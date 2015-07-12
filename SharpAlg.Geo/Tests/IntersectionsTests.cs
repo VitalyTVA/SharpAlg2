@@ -1,6 +1,9 @@
 ﻿using NUnit.Framework;
 using SharpAlg.Native;
 using RealPoint = System.Windows.Point;
+using NewExpr = SharpAlg.Geo.Core.Expr;
+using static SharpAlg.Geo.Core.ExprExtensions;
+using static SharpAlg.Geo.Tests.ExprTestExtensions;
 
 namespace SharpAlg.Geo.Tests {
     [TestFixture]
@@ -138,28 +141,29 @@ namespace SharpAlg.Geo.Tests {
         //}
         [Test]
         public void QuadraticEquation() {
-            var roots = QuadraticEquationHelper.Solve("A".Parse(), "B".Parse(), "C".Parse());
+
+            var roots = QuadraticEquationHelper.Solve((Core.ParamExpr)"A", (Core.ParamExpr)"B", (Core.ParamExpr)"C");
             var context = ImmutableContext.Empty
                 .RegisterValue("A".Parse(), 1)
                 .RegisterValue("B".Parse(), -2)
                 .RegisterValue("C".Parse(), -3);
-            Assert.AreEqual(3, roots.Item1.ToReal(context));
-            Assert.AreEqual(-1, roots.Item2.ToReal(context));
+            Assert.AreEqual(3, roots.Item1.ToLegacy().ToReal(context));
+            Assert.AreEqual(-1, roots.Item2.ToLegacy().ToReal(context));
 
             context = ImmutableContext.Empty
                 .RegisterValue("A".Parse(), 2)
                 .RegisterValue("B".Parse(), -4)
                 .RegisterValue("C".Parse(), -6);
-            Assert.AreEqual(3, roots.Item1.ToReal(context));
-            Assert.AreEqual(-1, roots.Item2.ToReal(context));
+            Assert.AreEqual(3, roots.Item1.ToLegacy().ToReal(context));
+            Assert.AreEqual(-1, roots.Item2.ToLegacy().ToReal(context));
 
-            roots = QuadraticEquationHelper.Solve("X + 1".Parse(), "Y - 2".Parse(), "Z / 2".Parse());
+            roots = QuadraticEquationHelper.Solve(Build(X => X + 1), Build(Y => Y -2), Build(Z => Z / 2));
             context = ImmutableContext.Empty
                 .RegisterValue("X".Parse(), 0)
                 .RegisterValue("Y".Parse(), 0)
                 .RegisterValue("Z".Parse(), -6);
-            Assert.AreEqual(3, roots.Item1.ToReal(context));
-            Assert.AreEqual(-1, roots.Item2.ToReal(context));
+            Assert.AreEqual(3, roots.Item1.ToLegacy().ToReal(context));
+            Assert.AreEqual(-1, roots.Item2.ToLegacy().ToReal(context));
         }
         [Test]
         public void Middle1() {
