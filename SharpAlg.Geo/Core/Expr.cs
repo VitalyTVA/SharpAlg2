@@ -129,6 +129,17 @@ namespace SharpAlg.Geo.Core {
                 return @const(constExpr);
             throw new InvalidOperationException();
         }
+        public static T MatchDefault<T>(this Expr expr, Func<Expr, T> @default, Func<AddExpr, T> add = null, Func<MultExpr, T> mult = null, Func<DivExpr, T> div = null, Func<PowerExpr, T> power = null, Func<SqrtExpr, T> sqrt = null, Func<ParamExpr, T> param = null, Func<ConstExpr, T> @const = null) {
+            return expr.MatchStrict<T>(
+                add ?? @default,
+                mult ?? @default,
+                div ?? @default,
+                power ?? @default,
+                sqrt ?? @default,
+                param ?? @default,
+                @const ?? @default
+            );
+        }
         public static LegacyExpr ToLegacy(this Expr expr) {
             return expr.MatchStrict(
                 add: x => LegacyExpr.Add(x.Args.Select(ToLegacy)),
