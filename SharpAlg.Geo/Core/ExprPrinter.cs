@@ -59,19 +59,6 @@ namespace SharpAlg.Geo.Core {
                 return new UnaryExpressionInfo(expr, GetBinaryOperationEx(operation));
             }
         }
-        static class AddUnaryExpressionExtractor  {
-        //    public override UnaryExpressionInfo Multiply(MultiplyExpr multi) {
-        //        ConstantExpr headConstant = multi.Args.First() as ConstantExpr;
-        //        if(headConstant.Return(x => x.Value < NumberFactory.Zero, () => false)) {
-        //            ConstantExpr exprConstant = Expr.Constant(NumberFactory.Zero - headConstant.Value);
-        //            Expr expr = headConstant.ExprEquals(Expr.MinusOne) ?
-        //                multi.Tail() :
-        //                Expr.Multiply(exprConstant.AsEnumerable<Expr>().Concat(multi.Args.Tail()));
-        //            return new UnaryExpressionInfo(expr, BinaryOperationEx.Subtract);
-        //        }
-        //        return base.Multiply(multi);
-        //    }
-        }
         class UnaryExpressionInfo {
             public UnaryExpressionInfo(Expr expr, BinaryOperationEx operation) {
                 Operation = operation;
