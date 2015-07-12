@@ -21,51 +21,6 @@ namespace SharpAlg.Geo.Core {
             None, Add, Multiply, Power, Factorial
         }
 
-        //#region inner classes
-        static class ExpressionWrapperVisitor {
-            public static bool ShouldWrap(Expr expr, OperationPriority priority, ExpressionOrder order) {
-                throw new NotImplementedException();
-            }
-            //readonly ExpressionOrder order;
-            //readonly OperationPriority priority;
-            //readonly IContext context;
-            //public ExpressionWrapperVisitor(IContext context, OperationPriority priority, ExpressionOrder order) {
-            //    this.context = context;
-            //    this.order = order;
-            //    this.priority = priority;
-            //}
-            //public bool Constant(ConstantExpr constant) {
-            //    if(constant.Value.IsFraction)
-            //        return ShouldWrap(OperationPriority.Power);
-            //    if(order == ExpressionOrder.Head)
-            //        return false;
-            //    return constant.Value < NumberFactory.Zero;
-            //}
-            //public bool Parameter(ParameterExpr parameter) {
-            //    return false;
-            //}
-            //public bool Add(AddExpr multi) {
-            //    return ShouldWrap(OperationPriority.Add);
-            //}
-            //public bool Multiply(MultiplyExpr multi) {
-            //    if(IsMinusExpression(multi))
-            //        return true;
-            //    return ShouldWrap(OperationPriority.Multiply);
-            //}
-            //public bool Power(PowerExpr power) {
-            //    if(IsInverseExpression(power))
-            //        return ShouldWrap(OperationPriority.Multiply);
-            //    return ShouldWrap(OperationPriority.Power);
-            //}
-            //public bool Function(FunctionExpr functionExpr) {
-            //    if(IsFactorial(context, functionExpr))
-            //        return ShouldWrap(OperationPriority.Factorial);
-            //    return false;
-            //}
-            //bool ShouldWrap(OperationPriority exprPriority) {
-            //    return priority >= exprPriority;
-            //}
-        }
         //abstract class UnaryExpressionExtractor : DefaultExpressionVisitor<UnaryExpressionInfo> {
         //    protected abstract BinaryOperation Operation { get; }
         //    protected UnaryExpressionExtractor() {
@@ -211,11 +166,29 @@ namespace SharpAlg.Geo.Core {
             return Wrap(expr, OperationPriority.Power, ExpressionOrder.Default);
         }
         static string Wrap(Expr expr, OperationPriority currentPriority, ExpressionOrder order) {
-            bool wrap = ExpressionWrapperVisitor.ShouldWrap(expr, currentPriority, order);
+            bool wrap = ShouldWrap(expr, currentPriority, order);
             string s = Print(expr);
             if(wrap)
                 return "(" + s + ")";
             return s;
+        }
+        static bool ShouldWrap(Expr expr, OperationPriority priority, ExpressionOrder order) {
+            Func<OperationPriority, bool> shouldWrap = x => priority > x;
+            return expr.MatchStrict(
+                add: x => shouldWrap(OperationPriority.Add),
+                mult: x => IsMinusExpression(x) || shouldWrap(OperationPriority.Multiply),
+                div: x => { throw new NotImplementedException(); },
+                power: x => shouldWrap(OperationPriority.Power),
+                sqrt: x => false,
+                param: x => false,
+                @const: x => {
+                    if(x.Value.IsFraction())
+                        return shouldWrap(OperationPriority.Power);
+                    if(order == ExpressionOrder.Head)
+                        return false;
+                    return x.Value < 0;
+                }
+            );
         }
     }
 }
