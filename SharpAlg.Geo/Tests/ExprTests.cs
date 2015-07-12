@@ -103,12 +103,9 @@ namespace SharpAlg.Geo.Tests {
             Build((x, y) => y * (-x)).AssertSimpleStringRepresentation("y * (-x)");
             Build((x, y) => -y * x).AssertSimpleStringRepresentation("(-y) * x");
 
-            //Build(x => 2 * x / (3 + x)).AssertSimpleStringRepresentation("2 * x / (3 + x)");
-            //Build((x, y, z) => x / y / z).AssertSimpleStringRepresentation("x / y / z");
+            Build(x => 2 * x / (3 + x)).AssertSimpleStringRepresentation("(2 * x) / (3 + x)");
+            Build((x, y, z) => x / y / z).AssertSimpleStringRepresentation("(x / y) / z");
 
-            //"t * (-2) * x".Parse().AssertSimpleStringRepresentation("-2 * t * x");
-            //"z + t * (-x)".Parse().AssertSimpleStringRepresentation("z - t * x");
-            //"z + t * (-2) * x".Parse().AssertSimpleStringRepresentation("z - 2 * t * x");
             //"(- x * t) ^ z".Parse().AssertSimpleStringRepresentation("(-x * t) ^ z");
 
             //Expr.Multiply(new Expr[] { ExprTestHelper.AsConstant(2), Expr.Parameter("x"), Expr.Power(Expr.Multiply(Expr.Parameter("y"), Expr.Parameter("z")), Expr.MinusOne) }).AssertSimpleStringRepresentation("2 * x / (y * z)");
@@ -129,7 +126,12 @@ namespace SharpAlg.Geo.Tests {
         public void ToStringTest2() {
             var x = new ParamExpr("x");
             var y = new ParamExpr("y");
+            var z = new ParamExpr("z");
             Multiply((Expr)(-1), x, y).AssertSimpleStringRepresentation("-x * y");
+            Multiply((Expr)(-2), x, y).AssertSimpleStringRepresentation("-2 * x * y");
+
+            Add(z, Multiply((Expr)(-1), x, y)).AssertSimpleStringRepresentation("z - x * y");
+            Add(z, Multiply((Expr)(-2), x, y)).AssertSimpleStringRepresentation("z - 2 * x * y");
         }
     }
     public static class ExprTestExtensions {
