@@ -139,7 +139,7 @@ namespace SharpAlg.Geo.Tests {
 
             Divide(2, 9).AssertSimpleStringRepresentation("2 / 9");
             Power(Divide(2, 3), 4).AssertSimpleStringRepresentation("(2 / 3) ^ 4");
-            Power(Divide(-2, 3), 4).AssertSimpleStringRepresentation("(-2 / 3) ^ 4");
+            Power(Divide(-2, 3), 4).AssertSimpleStringRepresentation("((-2) / 3) ^ 4");
             Divide(Multiply(2, x), Multiply(y, z)).AssertSimpleStringRepresentation("(2 * x) / (y * z)");
         }
     }
@@ -160,7 +160,6 @@ namespace SharpAlg.Geo.Tests {
         }
         public static Expr AssertSimpleStringRepresentation(this Expr expr, string str) {
             Assert.AreEqual(str, expr.ToString());
-            //Assert.AreEqual(str, expr.Print());
             return expr;
         }
     }
