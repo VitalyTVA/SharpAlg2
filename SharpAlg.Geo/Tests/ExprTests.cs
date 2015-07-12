@@ -107,7 +107,7 @@ namespace SharpAlg.Geo.Tests {
             Build((x, y, z) => x / y / z).AssertSimpleStringRepresentation("(x / y) / z");
             Build(x => 1 / (3 * x)).AssertSimpleStringRepresentation("1 / (3 * x)");
 
-            //"someFunc(x, x + y, x ^ y)".Parse().AssertSimpleStringRepresentation("someFunc(x, x + y, x ^ y)");
+            Build((x, y) =>Sqrt(x + y)).AssertSimpleStringRepresentation("sqrt(x + y)");
         }
         [Test]
         public void ToStringTest2() {

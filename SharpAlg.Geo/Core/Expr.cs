@@ -118,9 +118,9 @@ namespace SharpAlg.Geo.Core {
             var power = expr as PowerExpr;
             if(power != null)
                 return LegacyExpr.Power(power.Value.ToLegacy(), new ConstExpr(power.Power).ToLegacy());
-            //var sqrt = expr as SqrtExpr;
-            //if(sqrt != null)
-            //    return LegacyExpr.Power(sqrt.Value.ToLegacy(), ExprHelper.Half);
+            var sqrt = expr as SqrtExpr;
+            if(sqrt != null)
+                return LegacyExpr.Function("sqrt", sqrt.Value.ToLegacy());
             var param = expr as ParamExpr;
             if(param != null)
                 return LegacyExpr.Parameter(param.Name);
