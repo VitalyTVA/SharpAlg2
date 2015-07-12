@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 using System.Text;
 
 namespace SharpAlg.Geo.Core {
-    public static class ExpressionPrinter {
+    public static class ExprPrinter {
         public enum ExpressionOrder {
             Head, Default
         }

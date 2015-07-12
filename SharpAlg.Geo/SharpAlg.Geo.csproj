@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Expr.cs" />
-    <Compile Include="Core\ExpressionPrinter.cs" />
+    <Compile Include="Core\ExprPrinter.cs" />
     <Compile Include="Core\MayBe.cs" />
     <Compile Include="ImmutableContext.cs" />
     <Compile Include="Primitives.cs" />
