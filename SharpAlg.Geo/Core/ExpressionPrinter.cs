@@ -121,6 +121,10 @@ namespace SharpAlg.Geo.Core {
         //    public BinaryOperationEx Operation { get; private set; }
         //}
         //#endregion
+        public static string Print(Expr expr) {
+            throw new NotImplementedException();
+        }
+
         static bool IsMinusExpression(MultExpr multi) {
             throw new NotImplementedException();
             //return multi.Args.Count() == 2 && Expr.MinusOne.ExprEquals(multi.Args.ElementAt(0));
@@ -129,7 +133,7 @@ namespace SharpAlg.Geo.Core {
             throw new NotImplementedException();
             //return Expr.MinusOne.ExprEquals(power.Right);
         }
-        public static string Add(AddExpr multi) {
+        static string Add(AddExpr multi) {
             throw new NotImplementedException();
             //var sb = new StringBuilder();
             //multi.Args.Accumulate(x => {
@@ -141,7 +145,7 @@ namespace SharpAlg.Geo.Core {
             //});
             //return sb.ToString();
         }
-        public static string Multiply(MultExpr multi) {
+        static string Multiply(MultExpr multi) {
             throw new NotImplementedException();
             //if(multi.Args.First().ExprEquals(Expr.MinusOne)) {
             //    string exprText = WrapFromAdd(multi.Tail());
@@ -157,17 +161,17 @@ namespace SharpAlg.Geo.Core {
             //});
             //return sb.ToString();
         }
-        public static string Power(PowerExpr power) {
+        static string Power(PowerExpr power) {
             throw new NotImplementedException();
             //if(IsInverseExpression(power)) {
             //    return String.Format("1 / {0}", WrapFromMultiply(power.Left, ExpressionOrder.Default));
             //}
             //return string.Format("{0} ^ {1}", WrapFromPower(power.Left), WrapFromPower(power.Right));
         }
-        public static string Parameter(ParamExpr parameter) {
+        static string Parameter(ParamExpr parameter) {
             return parameter.Name;
         }
-        public static string Sqrt(SqrtExpr sqrtExpr) {
+        static string Sqrt(SqrtExpr sqrtExpr) {
             throw new NotImplementedException();
             //var sb = new StringBuilder(functionExpr.FunctionName);
             //if(!(context.GetFunction(functionExpr.FunctionName) is IConstantFunction)) {
@@ -196,7 +200,7 @@ namespace SharpAlg.Geo.Core {
                     throw new NotImplementedException();
             }
         }
-        public static OperationPriority GetPriority(BinaryOperation operation) {
+        static OperationPriority GetPriority(BinaryOperation operation) {
             switch(operation) {
                 case BinaryOperation.Add:
                     return OperationPriority.Add;
