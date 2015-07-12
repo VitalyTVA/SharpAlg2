@@ -124,28 +124,15 @@ namespace SharpAlg.Geo.Core {
             public BinaryOperationEx Operation { get; private set; }
         }
         public static string Print(Expr expr) {
-            var add = expr as AddExpr;
-            if(add != null)
-                return Add(add);
-            var mult = expr as MultExpr;
-            if(mult != null)
-                return Multiply(mult);
-            //var div = expr as DivExpr;
-            //if(div != null)
-            //    return Divide(div);
-            var power = expr as PowerExpr;
-            if(power != null)
-                return Power(power);
-            var sqrt = expr as SqrtExpr;
-            if(sqrt != null)
-                return Sqrt(sqrt);
-            var param = expr as ParamExpr;
-            if(param != null)
-                return Parameter(param);
-            var @const = expr as ConstExpr;
-            if(@const != null)
-                return Constant(@const);
-            throw new InvalidOperationException();
+            return expr.MatchStrict(
+                Add,
+                Multiply,
+                div => { throw new NotImplementedException(); },
+                Power,
+                Sqrt,
+                Parameter,
+                Constant
+            );
         }
 
         static bool IsMinusExpression(MultExpr multi) {
