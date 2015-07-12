@@ -81,19 +81,21 @@ namespace SharpAlg.Geo.Core {
         //        return new UnaryExpressionInfo(expr, ExpressionEvaluator.GetBinaryOperationEx(Operation));
         //    }
         //}
-        ////(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
-        //class MultiplyUnaryExpressionExtractor : UnaryExpressionExtractor {
-        //    public static readonly MultiplyUnaryExpressionExtractor MultiplyInstance = new MultiplyUnaryExpressionExtractor();
-        //    protected override BinaryOperation Operation { get { return BinaryOperation.Multiply; } }
-        //    protected MultiplyUnaryExpressionExtractor() {
-        //    }
-        //    public override UnaryExpressionInfo Power(PowerExpr power) {
-        //        if(IsInverseExpression(power)) {
-        //            return new UnaryExpressionInfo(power.Left, BinaryOperationEx.Divide);
-        //        }
-        //        return base.Power(power);
-        //    }
-        //}
+        static class MultiplyUnaryExpressionExtractor {
+            public static UnaryExpressionInfo ExtractMultiplyUnaryInfo(Expr expr) {
+                throw new NotImplementedException();
+            }
+            //    public static readonly MultiplyUnaryExpressionExtractor MultiplyInstance = new MultiplyUnaryExpressionExtractor();
+            //    protected override BinaryOperation Operation { get { return BinaryOperation.Multiply; } }
+            //    protected MultiplyUnaryExpressionExtractor() {
+            //    }
+            //    public override UnaryExpressionInfo Power(PowerExpr power) {
+            //        if(IsInverseExpression(power)) {
+            //            return new UnaryExpressionInfo(power.Left, BinaryOperationEx.Divide);
+            //        }
+            //        return base.Power(power);
+            //    }
+        }
         static class AddUnaryExpressionExtractor  {
         //    static readonly AddUnaryExpressionExtractor AddInstance = new AddUnaryExpressionExtractor();
             public static UnaryExpressionInfo ExtractAddUnaryInfo(Expr expr) {
@@ -129,8 +131,10 @@ namespace SharpAlg.Geo.Core {
         }
 
         static bool IsMinusExpression(MultExpr multi) {
-            return multi.Args.Count() == 2 && 
-                (multi.Args.ElementAt(0) as ConstExpr).If(x => x.Value == BigInteger.MinusOne).ReturnSuccess();
+            return multi.Args.Count() == 2 && IsMinusOne(multi.Args.First());
+        }
+        static bool IsMinusOne(Expr expr) {
+            return (expr as ConstExpr).If(x => x.Value == BigInteger.MinusOne).ReturnSuccess();
         }
         static string Add(AddExpr multi) {
             throw new NotImplementedException();
@@ -144,11 +148,11 @@ namespace SharpAlg.Geo.Core {
             return sb.ToString();
         }
         static string Multiply(MultExpr multi) {
+            if(IsMinusOne(multi.Args.First())) {
+                string exprText = WrapFromAdd(multi.Tail());
+                return String.Format("-{0}", exprText);
+            }
             throw new NotImplementedException();
-            //if(multi.Args.First().ExprEquals(Expr.MinusOne)) {
-            //    string exprText = WrapFromAdd(multi.Tail());
-            //    return String.Format("-{0}", exprText);
-            //}
             //var sb = new StringBuilder();
             //multi.Args.Accumulate(x => {
             //    sb.Append(WrapFromMultiply(x, ExpressionOrder.Head));
