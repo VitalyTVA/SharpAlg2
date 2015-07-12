@@ -116,7 +116,7 @@ namespace SharpAlg.Geo.Core {
             return parameter.Name;
         }
         static string Constant(ConstExpr constant) {
-            return constant.Value.ToString();
+            return constant.Value.IsFraction() ? constant.Value.ToString() : constant.Value.Numerator.ToString();
         }
         static string Sqrt(SqrtExpr sqrtExpr) {
             return string.Format("sqrt({0})", sqrtExpr.Value.Print());

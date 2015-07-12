@@ -69,7 +69,6 @@ namespace SharpAlg.Geo.Tests {
             Build(x => 9 - x).AssertSimpleStringRepresentation("9 - x");
             Build(x => -(9 - x)).AssertSimpleStringRepresentation("-(9 - x)");
             Build(x => 9 * x).AssertSimpleStringRepresentation("9 * x");
-            Build(x => 9 / x).AssertSimpleStringRepresentation("9 / x");
             Build((x, y, z) => x + y * z).AssertSimpleStringRepresentation("x + y * z");
             Build((x, y, z) => (x + y) * z).AssertSimpleStringRepresentation("(x + y) * z");
             Build((x, y, z) => z * (x + y)).AssertSimpleStringRepresentation("z * (x + y)");
@@ -78,36 +77,41 @@ namespace SharpAlg.Geo.Tests {
             Build((x, y) => x * y ^ 3).AssertSimpleStringRepresentation("(x * y) ^ 3");
             Build((x, y, z) => x + y + z).AssertSimpleStringRepresentation("x + y + z");
             Build((x, y, z) => x - y - z).AssertSimpleStringRepresentation("x - y - z");
-            Build((x, y, z) => x / y / z).AssertSimpleStringRepresentation("(x / y) / z");
             Build((x, y) => 1 + 2 * x + 3 * y).AssertSimpleStringRepresentation("1 + 2 * x + 3 * y");
             Build((x, y) => (x + 1) ^ (2 * 3)).AssertSimpleStringRepresentation("(x + 1) ^ 6");
 
             Build(x => 9 - (-x)).AssertSimpleStringRepresentation("9 - (-x)");
-            Build(x => 9 / (1 / x)).AssertSimpleStringRepresentation("9 / (1 / x)");
-            Build(x => 9 + 1 / x).AssertSimpleStringRepresentation("9 + 1 / x");
             Build(x => 9 * (-x)).AssertSimpleStringRepresentation("9 * (-x)");
-            Build(x => 9 - (1 / x)).AssertSimpleStringRepresentation("9 - 1 / x");
-            Build(x => 9 / (-x)).AssertSimpleStringRepresentation("9 / (-x)");
             Build(x => x * (-1)).AssertSimpleStringRepresentation("x * (-1)");
 
             Build(x => x ^ 2 ^ 3).AssertSimpleStringRepresentation("(x ^ 2) ^ 3");
             Build(x => (-2) * x).AssertSimpleStringRepresentation("-2 * x");
             Build(x => -2 * (x + 1)).AssertSimpleStringRepresentation("-2 * (x + 1)");
             Build((x, y) => -x + y).AssertSimpleStringRepresentation("-x + y");
+
+            Build((x, y) => y * (-x)).AssertSimpleStringRepresentation("y * (-x)");
+            Build((x, y) => -y * x).AssertSimpleStringRepresentation("(-y) * x");
+
+
+            Build((x, y) =>Sqrt(x + y)).AssertSimpleStringRepresentation("sqrt(x + y)");
+        }
+        [Test]
+        public void ToStringTest_Div() {
+            Build(x => 9 / x).AssertSimpleStringRepresentation("9 / x");
+            Build((x, y, z) => x / y / z).AssertSimpleStringRepresentation("(x / y) / z");
+            Build(x => 9 / (1 / x)).AssertSimpleStringRepresentation("9 / (1 / x)");
+            Build(x => 9 + 1 / x).AssertSimpleStringRepresentation("9 + 1 / x");
+            Build(x => 9 - (1 / x)).AssertSimpleStringRepresentation("9 - 1 / x");
+            Build(x => 9 / (-x)).AssertSimpleStringRepresentation("9 / (-x)");
             Build(x => 1 / (3 + x)).AssertSimpleStringRepresentation("1 / (3 + x)");
             Build(x => (2 + x) / (3 + x)).AssertSimpleStringRepresentation("(2 + x) / (3 + x)");
             Build(x => 2 * x / (3 + x)).AssertSimpleStringRepresentation("(2 * x) / (3 + x)");
             Build((x, y, z) => 2 * x / (y * z)).AssertSimpleStringRepresentation("(2 * x) / (y * z)");
             Build((x, y) => (x ^ 3) / (y ^ 4)).AssertSimpleStringRepresentation("x ^ 3 / y ^ 4");
             Build(x => 1 / (x ^ 3)).AssertSimpleStringRepresentation("1 / x ^ 3");
-            Build((x, y) => y * (-x)).AssertSimpleStringRepresentation("y * (-x)");
-            Build((x, y) => -y * x).AssertSimpleStringRepresentation("(-y) * x");
-
             Build(x => 2 * x / (3 + x)).AssertSimpleStringRepresentation("(2 * x) / (3 + x)");
             Build((x, y, z) => x / y / z).AssertSimpleStringRepresentation("(x / y) / z");
             Build(x => 1 / (3 * x)).AssertSimpleStringRepresentation("1 / (3 * x)");
-
-            Build((x, y) =>Sqrt(x + y)).AssertSimpleStringRepresentation("sqrt(x + y)");
         }
         [Test]
         public void ToStringTest2() {
@@ -149,6 +153,7 @@ namespace SharpAlg.Geo.Tests {
             return expression.Parameters.Select(x => (ParamExpr)x.Name).ToImmutableArray<Expr>();
         }
         public static Expr AssertSimpleStringRepresentation(this Expr expr, string str) {
+            //Assert.AreEqual(str, expr.Print());
             Assert.AreEqual(str, expr.ToString());
             return expr;
         }
