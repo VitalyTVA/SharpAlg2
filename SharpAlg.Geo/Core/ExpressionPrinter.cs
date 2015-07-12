@@ -213,15 +213,15 @@ namespace SharpAlg.Geo.Core {
                     throw new NotImplementedException();
             }
         }
-        //string WrapFromAdd(Expr expr) {
-        //    return Wrap(expr, OperationPriority.Add, ExpressionOrder.Default);
-        //}
-        //string WrapFromMultiply(Expr expr, ExpressionOrder order) {
-        //    return Wrap(expr, OperationPriority.Multiply, order);
-        //}
-        //string WrapFromPower(Expr expr) {
-        //    return Wrap(expr, OperationPriority.Power, ExpressionOrder.Default);
-        //}
+        static string WrapFromAdd(Expr expr) {
+            return Wrap(expr, OperationPriority.Add, ExpressionOrder.Default);
+        }
+        static string WrapFromMultiply(Expr expr, ExpressionOrder order) {
+            return Wrap(expr, OperationPriority.Multiply, order);
+        }
+        static string WrapFromPower(Expr expr) {
+            return Wrap(expr, OperationPriority.Power, ExpressionOrder.Default);
+        }
         static string Wrap(Expr expr, OperationPriority currentPriority, ExpressionOrder order) {
             bool wrap = ExpressionWrapperVisitor.ShouldWrap(expr, currentPriority, order);
             string s = Print(expr);
