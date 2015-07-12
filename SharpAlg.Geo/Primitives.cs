@@ -57,23 +57,23 @@ namespace SharpAlg.Geo {
         }
     }
 
-    public class NewLine {
-        public static NewLine FromPoints(NewPoint p1, NewPoint p2) {
-            var a = Subtract(p1.Y, p2.Y);
-            var b = Subtract(p2.X, p1.X);
-            var c = Subtract(Multiply(p1.X, p2.Y), Multiply(p2.X, p1.Y));
-            return new NewLine(a, b, c);//.FMap(x => x.Convolute());
-        }
-        public readonly NewExpr A, B, C;
-        public NewLine(NewExpr a, NewExpr b, NewExpr c) {
-            this.A = a;
-            this.B = b;
-            this.C = c;
-        }
-        //public override string ToString() {
-        //    return this.PrintObject((c, o) => c.RegisterLine(o, "A", "B", "C"), "A*x + B*y + C");
-        //}
-    }
+    //public class NewLine {
+    //    public static NewLine FromPoints(NewPoint p1, NewPoint p2) {
+    //        var a = Subtract(p1.Y, p2.Y);
+    //        var b = Subtract(p2.X, p1.X);
+    //        var c = Subtract(Multiply(p1.X, p2.Y), Multiply(p2.X, p1.Y));
+    //        return new NewLine(a, b, c).FMap(x => x.Convolute());
+    //    }
+    //    public readonly NewExpr A, B, C;
+    //    public NewLine(NewExpr a, NewExpr b, NewExpr c) {
+    //        this.A = a;
+    //        this.B = b;
+    //        this.C = c;
+    //    }
+    //    //public override string ToString() {
+    //    //    return this.PrintObject((c, o) => c.RegisterLine(o, "A", "B", "C"), "A*x + B*y + C");
+    //    //}
+    //}
 
     public class Circle {
         public static Circle FromPoints(Point p1, Point p2) {
@@ -218,9 +218,9 @@ namespace SharpAlg.Geo {
         public static NewPoint FMap(this NewPoint x, Func<NewExpr, NewExpr> f) {
             return new NewPoint(f(x.X), f(x.Y));
         }
-        public static NewLine FMap(this NewLine x, Func<NewExpr, NewExpr> f) {
-            return new NewLine(f(x.A), f(x.B), f(x.C));
-        }
+        //public static NewLine FMap(this NewLine x, Func<NewExpr, NewExpr> f) {
+        //    return new NewLine(f(x.A), f(x.B), f(x.C));
+        //}
         public static Circle FMap(this Circle x, Func<Expr, Expr> f) {
             return new Circle(f(x.X), f(x.Y), f(x.R));
         }
