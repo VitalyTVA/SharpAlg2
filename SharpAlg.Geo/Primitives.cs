@@ -113,11 +113,18 @@ namespace SharpAlg.Geo {
     public static class LineCircleIntersector {
         static readonly System.Tuple<Point, Point> Intersections;
         static LineCircleIntersector() {
-            var eqXA = "B^2+A^2".Parse();
-            var eqXB = "2*Y*A*B-2*X*B^2+2*C*A".Parse();
-            var eqXC = "2*Y*B*C+Y^2*B^2+C^2+X^2*B^2-R*B^2".Parse();
-            var xRoots = QuadraticEquationHelper.Solve(eqXA, eqXB, eqXC);
-            var yRoots = xRoots.FMap(x => LinesOperations.GetY(x));
+            var a = new Core.ParamExpr("A");
+            var b = new Core.ParamExpr("B");
+            var c = new Core.ParamExpr("C");
+            var x = new Core.ParamExpr("X");
+            var y = new Core.ParamExpr("Y");
+            var r = new Core.ParamExpr("R");
+
+            var eqXA = Build((A, B) => (B ^ 2) + (A ^ 2), a, b);
+            var eqXB = Build((A, B, C, X, Y) => 2 * Y * A * B - 2 * X * (B ^ 2) + 2 * C * A, a, b, c, x, y);
+            var eqXC = Build((A, B, C, X, Y, R) => 2 * Y * B * C + (Y ^ 2) * (B ^ 2) + (C ^ 2) + (X ^ 2) * (B ^ 2) - R * (B ^ 2), a, b, c, x, y, r);
+            var xRoots = QuadraticEquationHelper.Solve(eqXA, eqXB, eqXC).FMap(root => root.ToLegacy());
+            var yRoots = xRoots.FMap(root => LinesOperations.GetY(root));
             Intersections = Tuple.Create(new Point(xRoots.Item1, yRoots.Item1), new Point(xRoots.Item2, yRoots.Item2));
         }
         public static System.Tuple<Point, Point> Intersect(this Line l, Circle c) {
@@ -165,12 +172,12 @@ namespace SharpAlg.Geo {
     public static class QuadraticEquationHelper {
         static readonly System.Tuple<Expr, Expr> Roots;
         static QuadraticEquationHelper() {
-            var A = new Core.ParamExpr("A");
-            var B = new Core.ParamExpr("B");
-            var C = new Core.ParamExpr("C");
-            var D = Build((a, b, c) => Sqrt((b ^ 2) - 4 * a * c), A, B, C);
-            var x1 = Build((a, b, d) => (-b + d) / (2 * a), A, B, D).ToLegacy();
-            var x2 = Build((a, b, d) => (-b - d) / (2 * a), A, B, D).ToLegacy();
+            var a = new Core.ParamExpr("A");
+            var b = new Core.ParamExpr("B");
+            var c = new Core.ParamExpr("C");
+            var d = Build((A, B, C) => Sqrt((B ^ 2) - 4 * A * C), a, b, c);
+            var x1 = Build((A, B, D) => (-B + D) / (2 * A), a, b, d).ToLegacy();
+            var x2 = Build((A, B, D) => (-B - D) / (2 * A), a, b, d).ToLegacy();
             Roots = Tuple.Create(x1, x2);
         }
         public static System.Tuple<Expr, Expr> Solve(Expr a, Expr b, Expr c) {
@@ -179,6 +186,12 @@ namespace SharpAlg.Geo {
                  .Register("B", b)
                  .Register("C", c);
             return Roots.FMap(x => x.Substitute(context));
+        }
+        public static System.Tuple<NewExpr, NewExpr> Solve(NewExpr a, NewExpr b, NewExpr c) {
+            var d = Build((A, B, C) => Sqrt((B ^ 2) - 4 * A * C), a, b, c);
+            var x1 = Build((A, B, D) => (-B + D) / (2 * A), a, b, d);
+            var x2 = Build((A, B, D) => (-B - D) / (2 * A), a, b, d);
+            return Tuple.Create(x1, x2);
         }
     }
 
@@ -192,7 +205,7 @@ namespace SharpAlg.Geo {
         public static Circle FMap(this Circle x, Func<Expr, Expr> f) {
             return new Circle(f(x.X), f(x.Y), f(x.R));
         }
-        public static System.Tuple<T, T> FMap<T>(this System.Tuple<T, T> x, Func<T, T> f) {
+        public static System.Tuple<TResult, TResult> FMap<T, TResult>(this System.Tuple<T, T> x, Func<T, TResult> f) {
             return Tuple.Create(f(x.Item1), f(x.Item2));
         }
     }
