@@ -105,29 +105,40 @@ namespace SharpAlg.Geo.Core {
             throw new CantImplicitlyCreateExpressionException();
             //return new SqrtExpr(value);
         }
-        public static LegacyExpr ToLegacy(this Expr expr) {
-            var add = expr as AddExpr;
-            if(add != null)
-                return LegacyExpr.Add(add.Args.Select(ToLegacy));
-            var mult = expr as MultExpr;
-            if(mult != null)
-                return LegacyExpr.Multiply(mult.Args.Select(ToLegacy));
-            var div = expr as DivExpr;
-            if(div != null)
-                return LegacyExpr.Divide(div.Numerator.ToLegacy(), div.Denominator.ToLegacy());
-            var power = expr as PowerExpr;
-            if(power != null)
-                return LegacyExpr.Power(power.Value.ToLegacy(), new ConstExpr(power.Power).ToLegacy());
-            var sqrt = expr as SqrtExpr;
-            if(sqrt != null)
-                return LegacyExpr.Function("sqrt", sqrt.Value.ToLegacy());
-            var param = expr as ParamExpr;
-            if(param != null)
-                return LegacyExpr.Parameter(param.Name);
-            var @const = expr as ConstExpr;
-            if(@const != null)
-                return Native.ExpressionExtensions.Parse(@const.Value.ToString());
+        public static T MatchStrict<T>(this Expr expr, Func<AddExpr, T> add, Func<MultExpr, T> mult, Func<DivExpr, T> div, Func<PowerExpr, T> power, Func<SqrtExpr, T> sqrt, Func<ParamExpr, T> param, Func<ConstExpr, T> @const) {
+            var addExpr = expr as AddExpr;
+            if(addExpr != null)
+                return add(addExpr);
+            var multExpr = expr as MultExpr;
+            if(multExpr != null)
+                return mult(multExpr);
+            var divExpr = expr as DivExpr;
+            if(divExpr != null)
+                return div(divExpr);
+            var powerExpr = expr as PowerExpr;
+            if(powerExpr != null)
+                return power(powerExpr);
+            var sqrtExpr = expr as SqrtExpr;
+            if(sqrtExpr != null)
+                return sqrt(sqrtExpr);
+            var paramExpr = expr as ParamExpr;
+            if(paramExpr != null)
+                return param(paramExpr);
+            var constExpr = expr as ConstExpr;
+            if(constExpr != null)
+                return @const(constExpr);
             throw new InvalidOperationException();
+        }
+        public static LegacyExpr ToLegacy(this Expr expr) {
+            return expr.MatchStrict(
+                add: x => LegacyExpr.Add(x.Args.Select(ToLegacy)),
+                mult: x => LegacyExpr.Multiply(x.Args.Select(ToLegacy)),
+                div: x => LegacyExpr.Divide(x.Numerator.ToLegacy(), x.Denominator.ToLegacy()),
+                power: x => LegacyExpr.Power(x.Value.ToLegacy(), new ConstExpr(x.Power).ToLegacy()),
+                sqrt: x => LegacyExpr.Function("sqrt", x.Value.ToLegacy()),
+                param: x => LegacyExpr.Parameter(x.Name),
+                @const: x => Native.ExpressionExtensions.Parse(x.Value.ToString())
+            );
         }
         public static Expr Build(Expression<Func<Expr>> f) {
             return BuildExpr(f);
