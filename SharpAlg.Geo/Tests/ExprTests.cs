@@ -105,9 +105,7 @@ namespace SharpAlg.Geo.Tests {
 
             Build(x => 2 * x / (3 + x)).AssertSimpleStringRepresentation("(2 * x) / (3 + x)");
             Build((x, y, z) => x / y / z).AssertSimpleStringRepresentation("(x / y) / z");
-
-            //Expr.Multiply(new Expr[] { ExprTestHelper.AsConstant(2), Expr.Parameter("x"), Expr.Power(Expr.Multiply(Expr.Parameter("y"), Expr.Parameter("z")), Expr.MinusOne) }).AssertSimpleStringRepresentation("2 * x / (y * z)");
-            //Expr.Power(Expr.Multiply(ExprTestHelper.AsConstant(3), Expr.Parameter("x")), Expr.MinusOne).AssertSimpleStringRepresentation("1 / (3 * x)");
+            Build(x => 1 / (3 * x)).AssertSimpleStringRepresentation("1 / (3 * x)");
 
             //"someFunc(x, x + y, x ^ y)".Parse().AssertSimpleStringRepresentation("someFunc(x, x + y, x ^ y)");
 
@@ -125,12 +123,14 @@ namespace SharpAlg.Geo.Tests {
             var x = new ParamExpr("x");
             var y = new ParamExpr("y");
             var z = new ParamExpr("z");
-            Multiply((Expr)(-1), x, y).AssertSimpleStringRepresentation("-x * y");
-            Multiply((Expr)(-2), x, y).AssertSimpleStringRepresentation("-2 * x * y");
+            Multiply(-1, x, y).AssertSimpleStringRepresentation("-x * y");
+            Multiply(-2, x, y).AssertSimpleStringRepresentation("-2 * x * y");
 
-            Add(z, Multiply((Expr)(-1), x, y)).AssertSimpleStringRepresentation("z - x * y");
-            Add(z, Multiply((Expr)(-2), x, y)).AssertSimpleStringRepresentation("z - 2 * x * y");
-            Power(Multiply((Expr)(-1), x, y), 2).AssertSimpleStringRepresentation("(-x * y) ^ 2");
+            Add(z, Multiply(-1, x, y)).AssertSimpleStringRepresentation("z - x * y");
+            Add(z, Multiply(-2, x, y)).AssertSimpleStringRepresentation("z - 2 * x * y");
+            Power(Multiply(-1, x, y), 2).AssertSimpleStringRepresentation("(-x * y) ^ 2");
+
+            Divide(Multiply(2, x), Multiply(y, z)).AssertSimpleStringRepresentation("(2 * x) / (y * z)");
         }
     }
     public static class ExprTestExtensions {
