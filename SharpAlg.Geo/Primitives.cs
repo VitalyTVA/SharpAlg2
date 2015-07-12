@@ -45,18 +45,6 @@ namespace SharpAlg.Geo {
         }
     }
 
-    public class QuadraticEquation {
-        public readonly Expr A, B, C;
-        public QuadraticEquation(Expr a, Expr b, Expr c) {
-            this.A = a;
-            this.B = b;
-            this.C = c;
-        }
-        public override string ToString() {
-            return string.Format("({0})*x^2 + ({1})*x + ({2}) = 0", A.Print(), B.Print(), C.Print());
-        }
-    }
-
     public class Circle {
         public static Circle FromPoints(Point p1, Point p2) {
             var r = Expr.Add(
@@ -128,7 +116,7 @@ namespace SharpAlg.Geo {
             var eqXA = "B^2+A^2".Parse();
             var eqXB = "2*Y*A*B-2*X*B^2+2*C*A".Parse();
             var eqXC = "2*Y*B*C+Y^2*B^2+C^2+X^2*B^2-R*B^2".Parse();
-            var xRoots = new QuadraticEquation(eqXA, eqXB, eqXC).Solve();
+            var xRoots = QuadraticEquationHelper.Solve(eqXA, eqXB, eqXC);
             var yRoots = xRoots.FMap(x => LinesOperations.GetY(x));
             Intersections = Tuple.Create(new Point(xRoots.Item1, yRoots.Item1), new Point(xRoots.Item2, yRoots.Item2));
         }
@@ -149,8 +137,8 @@ namespace SharpAlg.Geo {
             var eqXB = "-4*X0^3-4*R1*X0+4*X0*R2-4*Y0^2*X0".Parse();
             var eqYC = "X0^4+R1^2-2*Y0^2*R2+2*X0^2*Y0^2-2*X0^2*R2+Y0^4+R2^2+2*R1*Y0^2-2*R1*R2-2*R1*X0^2".Parse();
             var eqXC = "Y0^4+R1^2-2*X0^2*R2+2*Y0^2*X0^2-2*Y0^2*R2+X0^4+R2^2+2*R1*X0^2-2*R1*R2-2*R1*Y0^2".Parse();
-            var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
-            var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
+            var xRoots = QuadraticEquationHelper.Solve(eqA, eqXB, eqXC);
+            var yRoots = QuadraticEquationHelper.Solve(eqA, eqYB, eqYC);
             Intersections = Tuple.Create(
                 new Point(xRoots.Item1, yRoots.Item2),
                 new Point(xRoots.Item2, yRoots.Item1)
@@ -180,11 +168,11 @@ namespace SharpAlg.Geo {
             var x2 = Build((a, b, d) => (-b - d) / (2 * a), A, B, D).ToLegacy();
             Roots = Tuple.Create(x1, x2);
         }
-        public static System.Tuple<Expr, Expr> Solve(this QuadraticEquation eq) {
+        public static System.Tuple<Expr, Expr> Solve(Expr a, Expr b, Expr c) {
             var context = ImmutableContext.Empty
-                 .Register("A", eq.A)
-                 .Register("B", eq.B)
-                 .Register("C", eq.C);
+                 .Register("A", a)
+                 .Register("B", b)
+                 .Register("C", c);
             return Roots.FMap(x => x.Substitute(context));
         }
     }

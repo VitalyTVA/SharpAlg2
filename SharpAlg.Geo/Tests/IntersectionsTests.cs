@@ -138,8 +138,7 @@ namespace SharpAlg.Geo.Tests {
         //}
         [Test]
         public void QuadraticEquation() {
-            var eq = new QuadraticEquation("A".Parse(), "B".Parse(), "C".Parse());
-            var roots = eq.Solve();
+            var roots = QuadraticEquationHelper.Solve("A".Parse(), "B".Parse(), "C".Parse());
             var context = ImmutableContext.Empty
                 .RegisterValue("A".Parse(), 1)
                 .RegisterValue("B".Parse(), -2)
@@ -154,8 +153,7 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual(3, roots.Item1.ToReal(context));
             Assert.AreEqual(-1, roots.Item2.ToReal(context));
 
-            eq = new QuadraticEquation("X + 1".Parse(), "Y - 2".Parse(), "Z / 2".Parse());
-            roots = eq.Solve();
+            roots = QuadraticEquationHelper.Solve("X + 1".Parse(), "Y - 2".Parse(), "Z / 2".Parse());
             context = ImmutableContext.Empty
                 .RegisterValue("X".Parse(), 0)
                 .RegisterValue("Y".Parse(), 0)
