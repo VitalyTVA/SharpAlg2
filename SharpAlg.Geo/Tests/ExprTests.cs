@@ -84,7 +84,6 @@ namespace SharpAlg.Geo.Tests {
             Build(x => 9 * (-x)).AssertSimpleStringRepresentation("9 * (-x)");
             Build(x => x * (-1)).AssertSimpleStringRepresentation("x * (-1)");
 
-            Build(x => x ^ 2 ^ 3).AssertSimpleStringRepresentation("(x ^ 2) ^ 3");
             Build(x => (-2) * x).AssertSimpleStringRepresentation("-2 * x");
             Build(x => -2 * (x + 1)).AssertSimpleStringRepresentation("-2 * (x + 1)");
             Build((x, y) => -x + y).AssertSimpleStringRepresentation("-x + y");
@@ -97,6 +96,8 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test]
         public void ToStringTest_Div() {
+            Build(x => x ^ 2 ^ 3).AssertSimpleStringRepresentation("(x ^ 2) ^ 3");
+
             Build(x => 9 / x).AssertSimpleStringRepresentation("9 / x");
             Build((x, y, z) => x / y / z).AssertSimpleStringRepresentation("(x / y) / z");
             Build(x => 9 / (1 / x)).AssertSimpleStringRepresentation("9 / (1 / x)");
@@ -124,16 +125,22 @@ namespace SharpAlg.Geo.Tests {
             Multiply(Const(new BigRational(-2, 3)), x, y).AssertSimpleStringRepresentation("-2/3 * x * y");
             Add(Const(new BigRational(2, 3)), x, y).AssertSimpleStringRepresentation("2/3 + x + y");
             Const(new BigRational(2, 9)).AssertSimpleStringRepresentation("2/9");
-            Divide(2, 9).AssertSimpleStringRepresentation("2 / 9");
-            Power(Const(new BigRational(2, 3)), 4).AssertSimpleStringRepresentation("(2/3) ^ 4");
-            Power(Divide(2, 3), 4).AssertSimpleStringRepresentation("(2 / 3) ^ 4");
-            Power(Const(new BigRational(-2, 3)), 4).AssertSimpleStringRepresentation("(-2/3) ^ 4");
-            Power(Divide(-2, 3), 4).AssertSimpleStringRepresentation("(-2 / 3) ^ 4");
 
             Add(z, Multiply(-1, x, y)).AssertSimpleStringRepresentation("z - x * y");
             Add(z, Multiply(-2, x, y)).AssertSimpleStringRepresentation("z - 2 * x * y");
             Power(Multiply(-1, x, y), 2).AssertSimpleStringRepresentation("(-x * y) ^ 2");
+        }
+        [Test]
+        public void ToStringTest2_Div() {
+            var x = new ParamExpr("x");
+            var y = new ParamExpr("y");
+            var z = new ParamExpr("z");
+            Power(Const(new BigRational(2, 3)), 4).AssertSimpleStringRepresentation("(2/3) ^ 4");
+            Power(Const(new BigRational(-2, 3)), 4).AssertSimpleStringRepresentation("(-2/3) ^ 4");
 
+            Divide(2, 9).AssertSimpleStringRepresentation("2 / 9");
+            Power(Divide(2, 3), 4).AssertSimpleStringRepresentation("(2 / 3) ^ 4");
+            Power(Divide(-2, 3), 4).AssertSimpleStringRepresentation("(-2 / 3) ^ 4");
             Divide(Multiply(2, x), Multiply(y, z)).AssertSimpleStringRepresentation("(2 * x) / (y * z)");
         }
     }
