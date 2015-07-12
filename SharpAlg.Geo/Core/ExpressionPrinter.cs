@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -129,8 +130,8 @@ namespace SharpAlg.Geo.Core {
         }
 
         static bool IsMinusExpression(MultExpr multi) {
-            throw new NotImplementedException();
-            //return multi.Args.Count() == 2 && Expr.MinusOne.ExprEquals(multi.Args.ElementAt(0));
+            return multi.Args.Count() == 2 && 
+                (multi.Args.ElementAt(0) as ConstExpr).If(x => x.Value == BigInteger.MinusOne).ReturnSuccess();
         }
         static string Add(AddExpr multi) {
             throw new NotImplementedException();
