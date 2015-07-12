@@ -134,15 +134,14 @@ namespace SharpAlg.Geo.Core {
         }
         static string Add(AddExpr multi) {
             throw new NotImplementedException();
-            //var sb = new StringBuilder();
-            //multi.Args.Accumulate(x => {
-            //    sb.Append(x.Visit(this));
-            //}, x => {
-            //    UnaryExpressionInfo info = AddUnaryExpressionExtractor.ExtractAddUnaryInfo(x);
-            //    sb.Append(GetBinaryOperationSymbol(info.Operation));
-            //    sb.Append(WrapFromAdd(info.Expr));
-            //});
-            //return sb.ToString();
+            var sb = new StringBuilder();
+            sb.Append(Print(multi.Args.First()));
+            foreach(var expr in multi.Args.Skip(1)) {
+                UnaryExpressionInfo info = AddUnaryExpressionExtractor.ExtractAddUnaryInfo(expr);
+                sb.Append(GetBinaryOperationSymbol(info.Operation));
+                sb.Append(WrapFromAdd(info.Expr));
+            }
+            return sb.ToString();
         }
         static string Multiply(MultExpr multi) {
             throw new NotImplementedException();
