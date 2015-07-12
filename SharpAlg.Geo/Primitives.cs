@@ -132,11 +132,16 @@ namespace SharpAlg.Geo {
     public static class CirclesIntersector {
         static readonly System.Tuple<Point, Point> Intersections;
         static CirclesIntersector() {
-            var eqA = "4*X0^2+4*Y0^2".Parse();
-            var eqYB = "-4*Y0^3-4*R1*Y0+4*Y0*R2-4*X0^2*Y0".Parse();
-            var eqXB = "-4*X0^3-4*R1*X0+4*X0*R2-4*Y0^2*X0".Parse();
-            var eqYC = "X0^4+R1^2-2*Y0^2*R2+2*X0^2*Y0^2-2*X0^2*R2+Y0^4+R2^2+2*R1*Y0^2-2*R1*R2-2*R1*X0^2".Parse();
-            var eqXC = "Y0^4+R1^2-2*X0^2*R2+2*Y0^2*X0^2-2*Y0^2*R2+X0^4+R2^2+2*R1*X0^2-2*R1*R2-2*R1*Y0^2".Parse();
+            var x0= new Core.ParamExpr("X0");
+            var y0 = new Core.ParamExpr("Y0");
+            var r1 = new Core.ParamExpr("R1");
+            var r2 = new Core.ParamExpr("R2");
+
+            var eqA = "4*(X0^2)+4*(Y0^2)".Parse();
+            var eqYB = "-4*(Y0^3)-4*R1*Y0+4*Y0*R2-4*(X0^2)*Y0".Parse();
+            var eqXB = "-4*(X0^3)-4*R1*X0+4*X0*R2-4*(Y0^2)*X0".Parse();
+            var eqYC = "(X0^4)+(R1^2)-2*(Y0^2)*R2+2*(X0^2)*(Y0^2)-2*(X0^2)*R2+(Y0^4)+(R2^2)+2*R1*(Y0^2)-2*R1*R2-2*R1*(X0^2)".Parse();
+            var eqXC = "(Y0^4)+(R1^2)-2*(X0^2)*R2+2*(Y0^2)*(X0^2)-2*(Y0^2)*R2+(X0^4)+(R2^2)+2*R1*(X0^2)-2*R1*R2-2*R1*(Y0^2)".Parse();
             var xRoots = QuadraticEquationHelper.Solve(eqA, eqXB, eqXC);
             var yRoots = QuadraticEquationHelper.Solve(eqA, eqYB, eqYC);
             Intersections = Tuple.Create(
