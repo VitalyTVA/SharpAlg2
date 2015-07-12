@@ -8,17 +8,17 @@ using System.Text;
 
 namespace SharpAlg.Geo.Core {
     public static class ExprPrinter {
-        public enum ExpressionOrder {
+        enum ExpressionOrder {
             Head, Default
         }
-        public enum BinaryOperation {
+        enum BinaryOperation {
             Add, Multiply
         }
-        public enum BinaryOperationEx {
+        enum BinaryOperationEx {
             Add, Subtract, Multiply, Divide
         }
-        public enum OperationPriority {
-            None, Add, Multiply, Power, Factorial
+        enum OperationPriority {
+            None, Add, Multiply, Power
         }
 
         //abstract class UnaryExpressionExtractor : DefaultExpressionVisitor<UnaryExpressionInfo> {
