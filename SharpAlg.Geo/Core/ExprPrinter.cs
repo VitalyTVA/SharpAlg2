@@ -21,27 +21,26 @@ namespace SharpAlg.Geo.Core {
             None, Add, Multiply, Power
         }
 
-        //abstract class UnaryExpressionExtractor : DefaultExpressionVisitor<UnaryExpressionInfo> {
-        //    protected abstract BinaryOperation Operation { get; }
-        //    protected UnaryExpressionExtractor() {
-        //    }
-        //    public override UnaryExpressionInfo Constant(ConstantExpr constant) {
-        //        return constant.Value >= NumberFactory.Zero || Operation != BinaryOperation.Add ?
-        //            base.Constant(constant) :
-        //            new UnaryExpressionInfo(Expr.Constant(NumberFactory.Zero - constant.Value), BinaryOperationEx.Subtract);
-        //    }
-        //    protected override UnaryExpressionInfo GetDefault(Expr expr) {
-        //        return new UnaryExpressionInfo(expr, ExpressionEvaluator.GetBinaryOperationEx(Operation));
-        //    }
-        //}
-        static class MultiplyUnaryExpressionExtractor {
+        static class UnaryExpressionExtractor {
             public static UnaryExpressionInfo ExtractMultiplyUnaryInfo(Expr expr) {
+                Func<Expr, UnaryExpressionInfo> getDefault = x => GetDefault(BinaryOperation.Multiply, x);
                 throw new NotImplementedException();
             }
-            //    public static readonly MultiplyUnaryExpressionExtractor MultiplyInstance = new MultiplyUnaryExpressionExtractor();
-            //    protected override BinaryOperation Operation { get { return BinaryOperation.Multiply; } }
-            //    protected MultiplyUnaryExpressionExtractor() {
-            //    }
+            public static UnaryExpressionInfo ExtractAddUnaryInfo(Expr expr) {
+                Func<Expr, UnaryExpressionInfo> getDefault = x => GetDefault(BinaryOperation.Add, x);
+                throw new NotImplementedException();
+            }
+
+            static UnaryExpressionInfo Constant(BinaryOperation operation, ConstExpr constant) {
+                return constant.Value >= 0 || operation != BinaryOperation.Add ?
+                    GetDefault(operation, constant) :
+                    new UnaryExpressionInfo(ExprExtensions.Const(0 - constant.Value), BinaryOperationEx.Subtract);
+            }
+            static UnaryExpressionInfo GetDefault(BinaryOperation operation, Expr expr) {
+                return new UnaryExpressionInfo(expr, GetBinaryOperationEx(operation));
+            }
+        }
+        static class MultiplyUnaryExpressionExtractor {
             //    public override UnaryExpressionInfo Power(PowerExpr power) {
             //        if(IsInverseExpression(power)) {
             //            return new UnaryExpressionInfo(power.Left, BinaryOperationEx.Divide);
@@ -50,14 +49,6 @@ namespace SharpAlg.Geo.Core {
             //    }
         }
         static class AddUnaryExpressionExtractor  {
-        //    static readonly AddUnaryExpressionExtractor AddInstance = new AddUnaryExpressionExtractor();
-            public static UnaryExpressionInfo ExtractAddUnaryInfo(Expr expr) {
-                throw new NotImplementedException();
-                //return expr.Visit(AddInstance);
-            }
-        //    protected override BinaryOperation Operation { get { return BinaryOperation.Add; } }
-        //    AddUnaryExpressionExtractor() {
-        //    }
         //    public override UnaryExpressionInfo Multiply(MultiplyExpr multi) {
         //        ConstantExpr headConstant = multi.Args.First() as ConstantExpr;
         //        if(headConstant.Return(x => x.Value < NumberFactory.Zero, () => false)) {
@@ -100,7 +91,7 @@ namespace SharpAlg.Geo.Core {
             var sb = new StringBuilder();
             sb.Append(Print(multi.Args.First()));
             foreach(var expr in multi.Args.Skip(1)) {
-                UnaryExpressionInfo info = AddUnaryExpressionExtractor.ExtractAddUnaryInfo(expr);
+                UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractAddUnaryInfo(expr);
                 sb.Append(GetBinaryOperationSymbol(info.Operation));
                 sb.Append(WrapFromAdd(info.Expr));
             }
@@ -114,7 +105,7 @@ namespace SharpAlg.Geo.Core {
             var sb = new StringBuilder();
             sb.Append(WrapFromMultiply(multi.Args.First(), ExpressionOrder.Head));
             foreach(var expr in multi.Args.Skip(1)) {
-                UnaryExpressionInfo info = MultiplyUnaryExpressionExtractor.ExtractMultiplyUnaryInfo(expr);
+                UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractMultiplyUnaryInfo(expr);
                 sb.Append(GetBinaryOperationSymbol(info.Operation));
                 sb.Append(WrapFromMultiply(info.Expr, ExpressionOrder.Default));
             }
