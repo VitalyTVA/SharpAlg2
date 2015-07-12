@@ -230,6 +230,9 @@ namespace SharpAlg.Geo.Core {
         public static Expr Tail(this MultExpr multi) {
             return Multiply(multi.Args.Skip(1).ToArray());
         }
+        public static bool IsFraction(this BigRational value) {
+            return value.Denominator != BigInteger.One;
+        }
     }
     public class CantImplicitlyCreateExpressionException : ApplicationException { }
     public class PowerShouldBePositiveException : ApplicationException { }
