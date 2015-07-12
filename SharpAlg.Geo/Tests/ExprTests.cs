@@ -84,13 +84,11 @@ namespace SharpAlg.Geo.Tests {
 
             Build(x => 9 - (-x)).AssertSimpleStringRepresentation("9 - (-x)");
             Build(x => 9 / (1 / x)).AssertSimpleStringRepresentation("9 / (1 / x)");
-
-            //Expr.Add(ExprTestHelper.AsConstant(9), Expr.Inverse(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 + 1 / x");
-            //Expr.Multiply(ExprTestHelper.AsConstant(9), Expr.Minus(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 * (-x)");
-            //Expr.Add(ExprTestHelper.AsConstant(9), Expr.Minus(Expr.Inverse(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 - 1 / x");
-            //Expr.Multiply(ExprTestHelper.AsConstant(9), Expr.Inverse(Expr.Minus(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 / (-x)");
-
-            //Expr.Multiply(new Expr[] { Expr.Parameter("x"), ExprTestHelper.AsConstant(-1) }).AssertSimpleStringRepresentation("x * (-1)");
+            Build(x => 9 + 1 / x).AssertSimpleStringRepresentation("9 + 1 / x");
+            Build(x => 9 * (-x)).AssertSimpleStringRepresentation("9 * (-x)");
+            Build(x => 9 - (1 / x)).AssertSimpleStringRepresentation("9 - 1 / x");
+            Build(x => 9 / (-x)).AssertSimpleStringRepresentation("9 / (-x)");
+            Build(x => x * (-1)).AssertSimpleStringRepresentation("x * (-1)");
 
             //"x ^ y ^ z".Parse().AssertSimpleStringRepresentation("(x ^ y) ^ z");
             //"(-2) * x".Parse().AssertSimpleStringRepresentation("-2 * x");
