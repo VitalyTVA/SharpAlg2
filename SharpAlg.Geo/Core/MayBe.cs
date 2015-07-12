@@ -39,4 +39,18 @@ namespace SharpAlg.Geo.Core {
             return input;
         }
     }
+    public static class LinqExtensions {
+        public static IEnumerable<T> Yield<T>(this T item) {
+            yield return item;
+        }
+        public static void ForEach<T>(this IEnumerable<T> source, Action<T> action) {
+            foreach(var item in source) {
+                action(item);
+            }
+        }
+        public static IEnumerable<T> Tail<T>(this IEnumerable<T> source) {
+            return source.Skip(1);
+        }
+
+    }
 }

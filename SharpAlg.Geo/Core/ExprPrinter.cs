@@ -47,7 +47,7 @@ namespace SharpAlg.Geo.Core {
                             ConstExpr exprConstant = ExprExtensions.Const(-headConstant.Value);
                             Expr expr2 = (headConstant.Value == BigInteger.MinusOne) ?
                                 multi.Tail() :
-                                ExprExtensions.Multiply(new[] { exprConstant }. Concat(multi.Args.Skip(1)).ToArray());
+                                ExprExtensions.Multiply(exprConstant.Yield().Concat(multi.Args.Tail()).ToArray());
                             return new UnaryExpressionInfo(expr2, BinaryOperationEx.Subtract);
                         }
                         return getDefault(multi);
@@ -111,7 +111,7 @@ namespace SharpAlg.Geo.Core {
         static string Add(AddExpr multi) {
             var sb = new StringBuilder();
             sb.Append(Print(multi.Args.First()));
-            foreach(var expr in multi.Args.Skip(1)) {
+            foreach(var expr in multi.Args.Tail()) {
                 UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractAddUnaryInfo(expr);
                 sb.Append(GetBinaryOperationSymbol(info.Operation));
                 sb.Append(WrapFromAdd(info.Expr));
@@ -125,7 +125,7 @@ namespace SharpAlg.Geo.Core {
             }
             var sb = new StringBuilder();
             sb.Append(WrapFromMultiply(multi.Args.First(), ExpressionOrder.Head));
-            foreach(var expr in multi.Args.Skip(1)) {
+            foreach(var expr in multi.Args.Tail()) {
                 UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractMultiplyUnaryInfo(expr);
                 sb.Append(GetBinaryOperationSymbol(info.Operation));
                 sb.Append(WrapFromMultiply(info.Expr, ExpressionOrder.Default));

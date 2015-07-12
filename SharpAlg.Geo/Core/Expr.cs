@@ -228,7 +228,7 @@ namespace SharpAlg.Geo.Core {
             return new ConstExpr(value);
         }
         public static Expr Tail(this MultExpr multi) {
-            return Multiply(multi.Args.Skip(1).ToArray());
+            return Multiply(multi.Args.Tail().ToArray());
         }
         public static bool IsFraction(this BigRational value) {
             return value.Denominator != BigInteger.One;
