@@ -172,7 +172,7 @@ namespace SharpAlg.Geo.Core {
             return s;
         }
         static bool ShouldWrap(Expr expr, OperationPriority priority, ExpressionOrder order) {
-            Func<OperationPriority, bool> shouldWrap = x => priority > x;
+            Func<OperationPriority, bool> shouldWrap = x => priority >= x;
             return expr.MatchStrict(
                 add: x => shouldWrap(OperationPriority.Add),
                 mult: x => IsMinusExpression(x) || shouldWrap(OperationPriority.Multiply),

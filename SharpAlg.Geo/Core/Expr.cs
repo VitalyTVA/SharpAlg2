@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Collections.Generic;
 using System.Linq;
 using LegacyExpr = SharpAlg.Native.Expr;
+using System.Diagnostics;
 
 namespace SharpAlg.Geo.Core {
     public abstract class Expr {
@@ -105,6 +106,7 @@ namespace SharpAlg.Geo.Core {
             throw new CantImplicitlyCreateExpressionException();
             //return new SqrtExpr(value);
         }
+        [DebuggerNonUserCode]
         public static T MatchStrict<T>(this Expr expr, Func<AddExpr, T> add, Func<MultExpr, T> mult, Func<DivExpr, T> div, Func<PowerExpr, T> power, Func<SqrtExpr, T> sqrt, Func<ParamExpr, T> param, Func<ConstExpr, T> @const) {
             var addExpr = expr as AddExpr;
             if(addExpr != null)
@@ -129,6 +131,7 @@ namespace SharpAlg.Geo.Core {
                 return @const(constExpr);
             throw new InvalidOperationException();
         }
+        [DebuggerNonUserCode]
         public static T MatchDefault<T>(this Expr expr, Func<Expr, T> @default, Func<AddExpr, T> add = null, Func<MultExpr, T> mult = null, Func<DivExpr, T> div = null, Func<PowerExpr, T> power = null, Func<SqrtExpr, T> sqrt = null, Func<ParamExpr, T> param = null, Func<ConstExpr, T> @const = null) {
             return expr.MatchStrict<T>(
                 add ?? @default,
