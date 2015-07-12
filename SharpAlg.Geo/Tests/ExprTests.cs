@@ -90,8 +90,9 @@ namespace SharpAlg.Geo.Tests {
             Build(x => 9 / (-x)).AssertSimpleStringRepresentation("9 / (-x)");
             Build(x => x * (-1)).AssertSimpleStringRepresentation("x * (-1)");
 
-            //"x ^ y ^ z".Parse().AssertSimpleStringRepresentation("(x ^ y) ^ z");
-            //"(-2) * x".Parse().AssertSimpleStringRepresentation("-2 * x");
+            Build(x => x ^ 2 ^ 3).AssertSimpleStringRepresentation("(x ^ 2) ^ 3");
+            Build(x => (-2) * x).AssertSimpleStringRepresentation("-2 * x");
+
             //Expr.Multiply(ExprTestHelper.AsConstant(-2), Expr.Add(Expr.Parameter("x"), ExprTestHelper.AsConstant(1))).AssertSimpleStringRepresentation("-2 * (x + 1)");
             //"-x + y".Parse().AssertSimpleStringRepresentation("-x + y");
             //"1 / (3 + x)".Parse().AssertSimpleStringRepresentation("1 / (3 + x)");
