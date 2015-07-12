@@ -132,6 +132,16 @@ namespace SharpAlg.Geo.Core {
         static string Sqrt(SqrtExpr sqrtExpr) {
             return string.Format("sqrt({0})", Print(sqrtExpr.Value));
         }
+        static BinaryOperationEx GetBinaryOperationEx(BinaryOperation operation) {
+            switch(operation) {
+                case BinaryOperation.Add:
+                    return BinaryOperationEx.Add;
+                case BinaryOperation.Multiply:
+                    return BinaryOperationEx.Multiply;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
         static string GetBinaryOperationSymbol(BinaryOperationEx operation) {
             switch(operation) {
                 case BinaryOperationEx.Add:
