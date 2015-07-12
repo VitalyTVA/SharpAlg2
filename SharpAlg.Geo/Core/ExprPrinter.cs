@@ -41,7 +41,17 @@ namespace SharpAlg.Geo.Core {
                 Func<ConstExpr, UnaryExpressionInfo> getConstant = x => Constant(BinaryOperation.Add, x);
                 return expr.MatchStrict(
                     add: getDefault,
-                    mult: getDefault,
+                    mult: multi => {
+                        ConstExpr headConstant = multi.Args.First() as ConstExpr;
+                        if(headConstant.Return(x => x.Value < 0, () => false)) {
+                            ConstExpr exprConstant = ExprExtensions.Const(-headConstant.Value);
+                            Expr expr2 = (headConstant.Value == BigInteger.MinusOne) ?
+                                multi.Tail() :
+                                ExprExtensions.Multiply(new[] { exprConstant }. Concat(multi.Args.Skip(1)).ToArray());
+                            return new UnaryExpressionInfo(expr2, BinaryOperationEx.Subtract);
+                        }
+                        return getDefault(multi);
+                    },
                     div: getDefault,
                     power: getDefault,
                     sqrt: getDefault,
@@ -58,14 +68,6 @@ namespace SharpAlg.Geo.Core {
             static UnaryExpressionInfo GetDefault(BinaryOperation operation, Expr expr) {
                 return new UnaryExpressionInfo(expr, GetBinaryOperationEx(operation));
             }
-        }
-        static class MultiplyUnaryExpressionExtractor {
-            //    public override UnaryExpressionInfo Power(PowerExpr power) {
-            //        if(IsInverseExpression(power)) {
-            //            return new UnaryExpressionInfo(power.Left, BinaryOperationEx.Divide);
-            //        }
-            //        return base.Power(power);
-            //    }
         }
         static class AddUnaryExpressionExtractor  {
         //    public override UnaryExpressionInfo Multiply(MultiplyExpr multi) {
