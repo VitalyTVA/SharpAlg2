@@ -195,11 +195,11 @@ namespace SharpAlg.Geo.Core {
             return (int)constant.Value;
         }
 
-        public static AddExpr Add(Expr a, Expr b) {
-            return new AddExpr(ImmutableArray.Create(a, b));
+        public static AddExpr Add(params Expr[] args) {
+            return new AddExpr(ImmutableArray.Create(args));
         }
-        public static MultExpr Multiply(Expr a, Expr b) {
-            return new MultExpr(ImmutableArray.Create(a, b));
+        public static MultExpr Multiply(params Expr[] args) {
+            return new MultExpr(ImmutableArray.Create(args));
         }
         public static MultExpr Minus(Expr a) {
             return new MultExpr(ImmutableArray.Create(-1, a));

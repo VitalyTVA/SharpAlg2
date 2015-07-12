@@ -204,9 +204,6 @@ namespace SharpAlg.Geo.Tests {
             //Assert.AreEqual("(0, 1/2 * a)", l1_l2.ToString());
         }
     }
-    //Build((x, y) => -y * x).AssertSimpleStringRepresentation("-y * x");
-    //Build(x => 2 * x / (3 + x)).AssertSimpleStringRepresentation("2 * x / (3 + x)");
-    //Build((x, y, z) => x / y / z).AssertSimpleStringRepresentation("x / y / z");
 
     //Rewriter/Convolute tests
     //Convoulte test/refactoring (Functor)
