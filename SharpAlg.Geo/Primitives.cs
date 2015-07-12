@@ -14,9 +14,6 @@ namespace SharpAlg.Geo {
                 throw new InvalidOperationException();
             return new Point(Expr.Parameter(name + "x"), Expr.Parameter(name + "y"));
         }
-        public static Point FromValues(double x, double y) {
-            return new Point(x.AsConst(), y.AsConst());
-        }
         public readonly Expr X, Y;
         public Point(Expr x, Expr y) {
             this.X = x;
@@ -24,6 +21,21 @@ namespace SharpAlg.Geo {
         }
         public override string ToString() {
             return string.Format("({0}, {1})", X.Print(), Y.Print());
+        }
+    }
+    public class NewPoint {
+        public static NewPoint FromName(char name) {
+            if(!char.IsUpper(name))
+                throw new InvalidOperationException();
+            return new NewPoint(Param(name + "x"), Param(name + "y"));
+        }
+        public readonly NewExpr X, Y;
+        public NewPoint(NewExpr x, NewExpr y) {
+            this.X = x;
+            this.Y = y;
+        }
+        public override string ToString() {
+            return string.Format("({0}, {1})", X, Y);
         }
     }
 

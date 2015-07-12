@@ -275,6 +275,9 @@ namespace SharpAlg.Geo.Core {
         public static ConstExpr Const(BigRational value) {
             return new ConstExpr(value);
         }
+        public static ParamExpr Param(string name) {
+            return new ParamExpr(name);
+        }
         public static Expr Tail(this MultExpr multi) {
             return Multiply(multi.Args.Tail().ToArray());
         }
