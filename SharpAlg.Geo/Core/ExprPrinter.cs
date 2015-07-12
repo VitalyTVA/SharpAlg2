@@ -67,7 +67,7 @@ namespace SharpAlg.Geo.Core {
             public Expr Expr { get; private set; }
             public BinaryOperationEx Operation { get; private set; }
         }
-        public static string Print(Expr expr) {
+        public static string Print(this Expr expr) {
             return expr.MatchStrict(
                 Add,
                 Multiply,
@@ -87,7 +87,7 @@ namespace SharpAlg.Geo.Core {
         }
         static string Add(AddExpr multi) {
             var sb = new StringBuilder();
-            sb.Append(Print(multi.Args.First()));
+            sb.Append(multi.Args.First().Print());
             foreach(var expr in multi.Args.Tail()) {
                 UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractAddUnaryInfo(expr);
                 sb.Append(GetBinaryOperationSymbol(info.Operation));
@@ -119,7 +119,7 @@ namespace SharpAlg.Geo.Core {
             return constant.Value.ToString();
         }
         static string Sqrt(SqrtExpr sqrtExpr) {
-            return string.Format("sqrt({0})", Print(sqrtExpr.Value));
+            return string.Format("sqrt({0})", sqrtExpr.Value.Print());
         }
         static BinaryOperationEx GetBinaryOperationEx(BinaryOperation operation) {
             switch(operation) {
@@ -166,7 +166,7 @@ namespace SharpAlg.Geo.Core {
         }
         static string Wrap(Expr expr, OperationPriority currentPriority, ExpressionOrder order) {
             bool wrap = ShouldWrap(expr, currentPriority, order);
-            string s = Print(expr);
+            string s = expr.Print();
             if(wrap)
                 return "(" + s + ")";
             return s;
