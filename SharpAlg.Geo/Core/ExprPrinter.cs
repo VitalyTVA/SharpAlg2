@@ -115,15 +115,14 @@ namespace SharpAlg.Geo.Core {
         //        return base.Multiply(multi);
         //    }
         //}
-        ////(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
-        //class UnaryExpressionInfo {
-        //    public UnaryExpressionInfo(Expr expr, BinaryOperationEx operation) {
-        //        Operation = operation;
-        //        Expr = expr;
-        //    }
-        //    public Expr Expr { get; private set; }
-        //    public BinaryOperationEx Operation { get; private set; }
-        //}
+        class UnaryExpressionInfo {
+            public UnaryExpressionInfo(Expr expr, BinaryOperationEx operation) {
+                Operation = operation;
+                Expr = expr;
+            }
+            public Expr Expr { get; private set; }
+            public BinaryOperationEx Operation { get; private set; }
+        }
         //#endregion
         public static string Print(Expr expr) {
             throw new NotImplementedException();
