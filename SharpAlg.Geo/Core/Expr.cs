@@ -15,26 +15,22 @@ namespace SharpAlg.Geo.Core {
 
         public static AddExpr operator +(Expr a, Expr b) {
             throw new CantImplicitlyCreateExpressionException();
-            //return new AddExpr(ImmutableArray.Create(a, b));
         }
 
         public static MultExpr operator *(Expr a, Expr b) {
             throw new CantImplicitlyCreateExpressionException();
-            //return new MultExpr(ImmutableArray.Create(a, b));
         }
 
         public static MultExpr operator -(Expr a) {
             throw new CantImplicitlyCreateExpressionException();
-            //return new MultExpr(ImmutableArray.Create(-1, a));
         }
+
         public static AddExpr operator -(Expr a, Expr b) {
             throw new CantImplicitlyCreateExpressionException();
-            //return a + (-b);
         }
 
         public static DivExpr operator /(Expr a, Expr b) {
             throw new CantImplicitlyCreateExpressionException();
-            //return new DivExpr(a, b);
         }
 
         public static PowerExpr operator ^(Expr value,  BigInteger power) {
@@ -169,37 +165,53 @@ namespace SharpAlg.Geo.Core {
             }
             if(expression.NodeType == ExpressionType.Negate) {
                 var unary = expression as UnaryExpression;
-                return Negate(unary.Operand, getArgs);
+                return Minus(BuildCore(unary.Operand, getArgs));
             }
             if(expression.NodeType == ExpressionType.Add) {
                 var binary = expression as BinaryExpression;
-                return new AddExpr(ImmutableArray.Create(BuildCore(binary.Left, getArgs), BuildCore(binary.Right, getArgs)));
+                return Add(BuildCore(binary.Left, getArgs), BuildCore(binary.Right, getArgs));
             }
             if(expression.NodeType == ExpressionType.Subtract) {
                 var binary = expression as BinaryExpression;
-                return new AddExpr(ImmutableArray.Create(BuildCore(binary.Left, getArgs), Negate(binary.Right, getArgs)));
+                return Subtract(BuildCore(binary.Left, getArgs), BuildCore(binary.Right, getArgs));
             }
             if(expression.NodeType == ExpressionType.Multiply) {
                 var binary = expression as BinaryExpression;
-                return new MultExpr(ImmutableArray.Create(BuildCore(binary.Left, getArgs), BuildCore(binary.Right, getArgs)));
+                return Multiply(BuildCore(binary.Left, getArgs), BuildCore(binary.Right, getArgs));
             }
             if(expression.NodeType == ExpressionType.Divide) {
                 var binary = expression as BinaryExpression;
-                return new DivExpr(BuildCore(binary.Left, getArgs), BuildCore(binary.Right, getArgs));
+                return Divide(BuildCore(binary.Left, getArgs), BuildCore(binary.Right, getArgs));
             }
             if(expression.NodeType == ExpressionType.ExclusiveOr) {
                 var binary = expression as BinaryExpression;
-                return new PowerExpr(BuildCore(binary.Left, getArgs), GetConst(binary.Right));
+                return Power(BuildCore(binary.Left, getArgs), GetConst(binary.Right));
             }
             throw new InvalidExpressionException();
-        }
-        static Expr Negate(Expression expression, Func<ParameterExpression, Expr> getArgs) {
-            return new MultExpr(ImmutableArray.Create(-1, (BuildCore(expression, getArgs))));
         }
         static int GetConst(Expression expression) {
             var unary = expression as UnaryExpression;
             var constant = unary.Operand as ConstantExpression;
             return (int)constant.Value;
+        }
+
+        public static AddExpr Add(Expr a, Expr b) {
+            return new AddExpr(ImmutableArray.Create(a, b));
+        }
+        public static MultExpr Multiply(Expr a, Expr b) {
+            return new MultExpr(ImmutableArray.Create(a, b));
+        }
+        public static MultExpr Minus(Expr a) {
+            return new MultExpr(ImmutableArray.Create(-1, a));
+        }
+        public static AddExpr Subtract(Expr a, Expr b) {
+            return Add(a, Minus(b));
+        }
+        public static DivExpr Divide(Expr a, Expr b) {
+            return new DivExpr(a, b);
+        }
+        public static PowerExpr Power(Expr value, BigInteger power) {
+            return new PowerExpr(value, power);
         }
     }
     public class CantImplicitlyCreateExpressionException : ApplicationException { }
