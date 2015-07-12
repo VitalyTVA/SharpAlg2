@@ -175,11 +175,9 @@ namespace SharpAlg.Geo {
             var A = new Core.ParamExpr("A");
             var B = new Core.ParamExpr("B");
             var C = new Core.ParamExpr("C");
-            var d = Build((a, b, c) => Sqrt((b ^ 2) - 4 * a * c), A, B, C).ToLegacy().Convolute();
-
-            //var d = "(B^2-4*A*C)^(1/2)";
-            var x1 = string.Format("(-B+{0})/(2*A)", d.Print()).Parse();
-            var x2 = string.Format("(-B-{0})/(2*A)", d.Print()).Parse();
+            var D = Build((a, b, c) => Sqrt((b ^ 2) - 4 * a * c), A, B, C);
+            var x1 = Build((a, b, d) => (-b + d) / (2 * a), A, B, D).ToLegacy();
+            var x2 = Build((a, b, d) => (-b - d) / (2 * a), A, B, D).ToLegacy();
             Roots = Tuple.Create(x1, x2);
         }
         public static System.Tuple<Expr, Expr> Solve(this QuadraticEquation eq) {
