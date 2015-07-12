@@ -118,8 +118,9 @@ namespace SharpAlg.Geo.Tests {
             //"2/3 + y".Parse().AssertSimpleStringRepresentation("2/3 + y");
             //"2/3^2".Parse().AssertSimpleStringRepresentation("2/9");
             //"(-4/6)^2".Parse().AssertSimpleStringRepresentation("4/9");
-            //"(2/3)^x".Parse().AssertSimpleStringRepresentation("(2/3) ^ x");
-            //"(-2/3)^x".Parse().AssertSimpleStringRepresentation("(-2/3) ^ x");
+
+            //Build(x => (2 / 3) ^ 4).AssertSimpleStringRepresentation("(2 / 3) ^ 4");
+            //Build(x => (-2 / 3) ^ 4).AssertSimpleStringRepresentation("(-2 / 3) ^ 4");
         }
     }
     public static class ExprTestExtensions {
