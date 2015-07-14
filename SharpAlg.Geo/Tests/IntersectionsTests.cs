@@ -47,20 +47,18 @@ namespace SharpAlg.Geo.Tests {
             );
         }
         void AssertLineAndCircleIntersection(RealPoint a, RealPoint b, RealPoint c, RealPoint d, RealPoint x1, RealPoint x2) {
-            var A = Point.FromName('A');
-            var B = Point.FromName('B');
-            var C = Point.FromName('C');
-            var D = Point.FromName('D');
-            var line = Line.FromPoints(A, B);
-            var circle = Circle.FromPoints(C, D);
+            var A = NewPoint.FromName('A');
+            var B = NewPoint.FromName('B');
+            var C = NewPoint.FromName('C');
+            var D = NewPoint.FromName('D');
+            var line = NewLine.FromPoints(A, B);
+            var circle = NewCircle.FromPoints(C, D);
             var X = line.Intersect(circle);
             var context = ImmutableContext.Empty
                 .RegisterPoint(A, a.X, a.Y)
                 .RegisterPoint(B, b.X, b.Y)
                 .RegisterPoint(C, c.X, c.Y)
                 .RegisterPoint(D, d.X, d.Y);
-            var line_ = Line.FromPoints(A, B).FMap(x => x.Substitute(context));
-            var circle_ = Circle.FromPoints(C, D).FMap(x => x.Substitute(context));
             AssertHelper.ArePointsEqual(x1, X.Item1.ToRealPoint(context));
             AssertHelper.ArePointsEqual(x2, X.Item2.ToRealPoint(context));
         }
