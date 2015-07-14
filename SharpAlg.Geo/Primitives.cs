@@ -274,6 +274,22 @@ namespace SharpAlg.Geo {
                 .FMap(tuple => tuple.FMap(x => x.Convolute()));
         }
     }
+    public static class NewCirclesIntersector {
+        public static System.Tuple<NewPoint, NewPoint> Intersect(this NewCircle c1, NewCircle c2) {
+            var c = c2.Offset(c1.Center.Invert());
+            var eqA = Build((X0, Y0) => 4 * (X0 ^ 2) + 4 * (Y0 ^ 2), c.X, c.Y);
+            var eqYB = Build((X0, Y0, R1, R2) => -4 * (Y0 ^ 3) - 4 * R1 * Y0 + 4 * Y0 * R2 - 4 * (X0 ^ 2) * Y0, c.X, c.Y, c1.R, c.R);
+            var eqXB = Build((X0, Y0, R1, R2) => -4 * (X0 ^ 3) - 4 * R1 * X0 + 4 * X0 * R2 - 4 * (Y0 ^ 2) * X0, c.X, c.Y, c1.R, c.R);
+            var eqYC = Build((X0, Y0, R1, R2) => (X0 ^ 4) + (R1 ^ 2) - 2 * (Y0 ^ 2) * R2 + 2 * (X0 ^ 2) * (Y0 ^ 2) - 2 * (X0 ^ 2) * R2 + (Y0 ^ 4) + (R2 ^ 2) + 2 * R1 * (Y0 ^ 2) - 2 * R1 * R2 - 2 * R1 * (X0 ^ 2), c.X, c.Y, c1.R, c.R);
+            var eqXC = Build((X0, Y0, R1, R2) => (Y0 ^ 4) + (R1 ^ 2) - 2 * (X0 ^ 2) * R2 + 2 * (Y0 ^ 2) * (X0 ^ 2) - 2 * (Y0 ^ 2) * R2 + (X0 ^ 4) + (R2 ^ 2) + 2 * R1 * (X0 ^ 2) - 2 * R1 * R2 - 2 * R1 * (Y0 ^ 2), c.X, c.Y, c1.R, c.R);
+            var xRoots = QuadraticEquationHelper.Solve(eqA, eqXB, eqXC);
+            var yRoots = QuadraticEquationHelper.Solve(eqA, eqYB, eqYC);
+            return Tuple.Create(
+                new NewPoint(xRoots.Item1, yRoots.Item2),
+                new NewPoint(xRoots.Item2, yRoots.Item1)
+            );
+        }
+    }
 
     public static class QuadraticEquationHelper {
         public static System.Tuple<NewExpr, NewExpr> Solve(NewExpr a, NewExpr b, NewExpr c) {
@@ -368,8 +384,14 @@ namespace SharpAlg.Geo {
         public static Point Offset(this Point p, Point offset) {
             return new Point(Expr.Add(p.X, offset.X), Expr.Add(p.Y, offset.Y));
         }
+        public static NewPoint Offset(this NewPoint p, NewPoint offset) {
+            return new NewPoint(Add(p.X, offset.X), Add(p.Y, offset.Y));
+        }
         public static Point Invert(this Point p) {
             return new Point(Expr.Minus(p.X), Expr.Minus(p.Y));
+        }
+        public static NewPoint Invert(this NewPoint p) {
+            return new NewPoint(Minus(p.X), Minus(p.Y));
         }
         public static Point Middle(Point p1, Point p2) {
             return new Point(Expr.Add(p1.X, p2.X).GetHalf(), Expr.Add(p1.Y, p2.Y).GetHalf());
@@ -377,6 +399,10 @@ namespace SharpAlg.Geo {
         public static Circle Offset(this Circle c, Point offset) {
             var center = c.Center.Offset(offset);
             return new Circle(center.X, center.Y, c.R);
+        }
+        public static NewCircle Offset(this NewCircle c, NewPoint offset) {
+            var center = c.Center.Offset(offset);
+            return new NewCircle(center.X, center.Y, c.R);
         }
         public static Expr Substitute(this Expr expr, IContext context) {
             return ExprSubstitutor.Substitute(expr, context);
