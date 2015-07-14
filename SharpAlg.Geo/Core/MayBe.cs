@@ -53,4 +53,69 @@ namespace SharpAlg.Geo.Core {
         }
 
     }
+    public class NoMatchException : ApplicationException { }
+
+    //default can be only last and only call
+    public struct Matcher<T, TResult> {
+        readonly T x;
+        readonly TResult result;
+        readonly bool hasResult;
+        public Matcher(T x) {
+            this.x = x;
+            this.result = default(TResult);
+            this.hasResult = false;
+        }
+        public TResult Result {
+            get {
+                if(hasResult)
+                    return result;
+                throw new NoMatchException();
+            }
+        }
+        public Matcher(TResult result) {
+            this.x = default(T);
+            this.result = result;
+            this.hasResult = true;
+        }
+        public Matcher<T, TResult> Case(Func<T, bool> predicate, Func<T, TResult> result) {
+            if(hasResult)
+                return this;
+            if(predicate(x))
+                return new Matcher<T, TResult>(result(x));
+            return this;
+        }
+        public Matcher<T, TResult> Case(Func<T, bool> predicate, TResult result) {
+            return Case(predicate, x => result);
+        }
+
+        public Matcher<T, TResult> Default(TResult result) {
+            return Default(x => result);
+        }
+        public Matcher<T, TResult> Default(Func<T, TResult> result) {
+            return Case(x => true, result);
+        }
+
+        public Matcher<T, TResult> Case<TOther>(TResult result) where TOther : class, T {
+            return Case<TOther>(x => result);
+        }
+        public Matcher<T, TResult> Case<TOther>(Func<T, TResult> result) where TOther : class, T {
+            return Case<TOther>(x => true, result);
+        }
+
+
+        public Matcher<T, TResult> Case<TOther>(Func<TOther, bool> predicate, TResult value) where TOther : class, T {
+            return Case<TOther>(predicate, x => value);
+        }
+        public Matcher<T, TResult> Case<TOther>(Func<TOther, bool> predicate, Func<T, TResult> result) where TOther : class, T {
+            return Case(x => (x is TOther) && predicate((TOther)x), result);
+        }
+    }
+    public static class Matcher {
+        public static Matcher<T, TResult> Case<T, TResult>(this T value, Func<T, bool> predicate, Func<T, TResult> result) {
+            return new Matcher<T, TResult>(value).Case(predicate, result);
+        }
+        public static Matcher<T, TResult> Case<T, TResult>(this T value, Func<T, bool> predicate, TResult result) {
+            return new Matcher<T, TResult>(value).Case(predicate, result);
+        }
+    }
 }
