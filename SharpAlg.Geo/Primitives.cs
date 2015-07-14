@@ -284,7 +284,7 @@ namespace SharpAlg.Geo {
             return Expr.Constant(value);
         }
         public static Expr Convolute(this Expr expr) {
-            return expr.Visit(new ExprRewriter(new ConvolutionExprBuilder(ContextFactory.Empty)));
+            return expr;
         }
         public static Point Offset(this Point p, Point offset) {
             return new Point(Expr.Add(p.X, offset.X), Expr.Add(p.Y, offset.Y));

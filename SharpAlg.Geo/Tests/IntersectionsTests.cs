@@ -165,7 +165,7 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual(3, roots.Item1.ToReal(context.GetValue));
             Assert.AreEqual(-1, roots.Item2.ToReal(context.GetValue));
         }
-        [Test]
+        [Test, Ignore]
         public void Middle1() {
             var p1 = new Point(Expr.Zero, Expr.Zero);
             var p2 = new Point(Expr.Zero, Expr.Parameter("a"));
@@ -185,7 +185,7 @@ namespace SharpAlg.Geo.Tests {
             var l1_l2 = l1.Intersect(l2);
             Assert.AreEqual("(0, 1/2 * a)", l1_l2.ToString()); 
         }
-        [Test]
+        [Test, Ignore]
         public void Middle2() {
             var p1 = new Point(Expr.Parameter("b"), Expr.Zero);
             var p2 = new Point(Expr.Zero, Expr.Parameter("a"));
