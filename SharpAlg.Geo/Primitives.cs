@@ -57,23 +57,23 @@ namespace SharpAlg.Geo {
         }
     }
 
-    //public class NewLine {
-    //    public static NewLine FromPoints(NewPoint p1, NewPoint p2) {
-    //        var a = Subtract(p1.Y, p2.Y);
-    //        var b = Subtract(p2.X, p1.X);
-    //        var c = Subtract(Multiply(p1.X, p2.Y), Multiply(p2.X, p1.Y));
-    //        return new NewLine(a, b, c).FMap(x => x.Convolute());
-    //    }
-    //    public readonly NewExpr A, B, C;
-    //    public NewLine(NewExpr a, NewExpr b, NewExpr c) {
-    //        this.A = a;
-    //        this.B = b;
-    //        this.C = c;
-    //    }
-    //    //public override string ToString() {
-    //    //    return this.PrintObject((c, o) => c.RegisterLine(o, "A", "B", "C"), "A*x + B*y + C");
-    //    //}
-    //}
+    public class NewLine {
+        public static NewLine FromPoints(NewPoint p1, NewPoint p2) {
+            var a = Subtract(p1.Y, p2.Y);
+            var b = Subtract(p2.X, p1.X);
+            var c = Subtract(Multiply(p1.X, p2.Y), Multiply(p2.X, p1.Y));
+            return new NewLine(a, b, c);
+        }
+        public readonly NewExpr A, B, C;
+        public NewLine(NewExpr a, NewExpr b, NewExpr c) {
+            this.A = a;
+            this.B = b;
+            this.C = c;
+        }
+        public override string ToString() {
+            return Build((A, B, C, x, y) => A * x + B * y + C, A, B, C, Param("x"), Param("y")).ToString();
+        }
+    }
 
     public class Circle {
         public static Circle FromPoints(Point p1, Point p2) {
@@ -92,6 +92,26 @@ namespace SharpAlg.Geo {
         }
         public override string ToString() {
             return this.PrintObject((c, o) => c.RegisterCircle(o, "X", "Y", "R"), "(x - X)^2 + (y - Y)^2 - R");
+        }
+    }
+
+    public class NewCircle {
+        public static NewCircle FromPoints(NewPoint p1, NewPoint p2) {
+            var r = Add(
+                        Subtract(p1.X, p2.X).Square(),
+                        Subtract(p1.Y, p2.Y).Square()
+                    );
+            return new NewCircle(p1.X, p1.Y, r);
+        }
+        public readonly NewExpr X, Y, R;
+        public NewPoint Center { get { return new NewPoint(X, Y); } }
+        public NewCircle(NewExpr x, NewExpr y, NewExpr r) {
+            this.X = x;
+            this.Y = y;
+            this.R = r;
+        }
+        public override string ToString() {
+            return Build((X, Y, R, x, y) => ((x - X) ^ 2) + ((y - Y) ^ 2) - R, X, Y, R, Param("x"), Param("y")).ToString();
         }
     }
     public static class LinesOperations {
@@ -237,6 +257,9 @@ namespace SharpAlg.Geo {
         }
         public static Expr Square(this Expr e) {
             return Expr.Power(e, Two);
+        }
+        public static NewExpr Square(this NewExpr e) {
+            return Core.ExprExtensions.Power(e, 2);
         }
         public static Expr Multiply(this Expr e, Expr multiplier) {
             return Expr.Multiply(e, multiplier);
