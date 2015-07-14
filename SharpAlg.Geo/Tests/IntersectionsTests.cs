@@ -165,40 +165,40 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test, Ignore]
         public void Middle1() {
-            var p1 = new Point(Expr.Zero, Expr.Zero);
-            var p2 = new Point(Expr.Zero, Expr.Parameter("a"));
-            var l1 = Line.FromPoints(p1, p2);
+            var p1 = new NewPoint(0, 0);
+            var p2 = new NewPoint(0, Param("a"));
+            var l1 = NewLine.FromPoints(p1, p2);
             Assert.AreEqual("-a * x", l1.ToString());
 
-            var c1 = Circle.FromPoints(p1, p2);
-            var c2 = Circle.FromPoints(p2, p1);
+            var c1 = NewCircle.FromPoints(p1, p2);
+            var c2 = NewCircle.FromPoints(p2, p1);
             Assert.AreEqual("x ^ 2 + y ^ 2 - a ^ 2", c1.ToString());
             Assert.AreEqual("x ^ 2 + (y - a) ^ 2 - a ^ 2", c2.ToString());
 
             var c1_c2 = c1.Intersect(c2);
             Assert.AreEqual("(1/8 * (48 * a ^ 6) ^ (1/2) * a ^ (-2), 1/2 * a)", c1_c2.Item1.ToString());
             Assert.AreEqual("(-1/8 * (48 * a ^ 6) ^ (1/2) * a ^ (-2), 1/2 * a)", c1_c2.Item2.ToString());
-            var l2 = Line.FromPoints(c1_c2.Item1, c1_c2.Item2);
+            var l2 = NewLine.FromPoints(c1_c2.Item1, c1_c2.Item2);
 
             var l1_l2 = l1.Intersect(l2);
             Assert.AreEqual("(0, 1/2 * a)", l1_l2.ToString()); 
         }
         [Test, Ignore]
         public void Middle2() {
-            var p1 = new Point(Expr.Parameter("b"), Expr.Zero);
-            var p2 = new Point(Expr.Zero, Expr.Parameter("a"));
-            var l1 = Line.FromPoints(p1, p2);
+            var p1 = new NewPoint(Param("b"), 0);
+            var p2 = new NewPoint(0, Param("a"));
+            var l1 = NewLine.FromPoints(p1, p2);
             Assert.AreEqual("-a * x - b * y + b * a", l1.ToString());
 
-            var c1 = Circle.FromPoints(p1, p2);
-            var c2 = Circle.FromPoints(p2, p1);
+            var c1 = NewCircle.FromPoints(p1, p2);
+            var c2 = NewCircle.FromPoints(p2, p1);
             Assert.AreEqual("(x - b) ^ 2 + y ^ 2 - b ^ 2 - a ^ 2", c1.ToString());
             Assert.AreEqual("x ^ 2 + (y - a) ^ 2 - b ^ 2 - a ^ 2", c2.ToString());
 
             var c1_c2 = c1.Intersect(c2);
             //Assert.AreEqual("(1/8 * 48 ^ (1/2) * a, 1/2 * a)", c1_c2.Item1.ToString());
             //Assert.AreEqual("(-1/8 * 48 ^ (1/2) * a, 1/2 * a)", c1_c2.Item2.ToString());
-            var l2 = Line.FromPoints(c1_c2.Item1, c1_c2.Item2);
+            var l2 = NewLine.FromPoints(c1_c2.Item1, c1_c2.Item2);
 
             var l1_l2 = l1.Intersect(l2);
             //Assert.AreEqual("(0, 1/2 * a)", l1_l2.ToString());
