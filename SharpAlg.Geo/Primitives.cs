@@ -166,26 +166,12 @@ namespace SharpAlg.Geo {
             var y = Build((A1, B1, C1, A2, B2, C2) => (C1 * A2 - C2 * A1) / (A1 * B2 - A2 * B1), l1.A, l1.B, l1.C, l2.A, l2.B, l2.C);
             return new NewPoint(x, y);
         }
-
-        //static Expr GetTangent() {
-        //    return "(A1*B2-A2*B1)/(A1*A2 + B1*B2)".Parse();
-        //}
-        //static Expr GetCotangent() {
-        //    return "(A1*A2 + B1*B2)/(A1*B2-A2*B1)".Parse();
-        //}
-        //public static Expr TangentBetween(Line l1, Line l2) {
-        //    return GetTwoLinesExpression(l1, l2, Tangent);
-        //}
-        //public static Expr CotangentBetween(Line l1, Line l2) {
-        //    return GetTwoLinesExpression(l1, l2, Cotangent);
-        //}
-        //static Expr GetTwoLinesExpression(Line l1, Line l2, Expr expr) {
-        //    var context = ImmutableContext.Empty
-        //        .RegisterLine(l1, "A1", "B1", "C1")
-        //        .RegisterLine(l2, "A2", "B2", "C2");
-        //    return expr.Substitute(context).Convolute();
-        //}
-
+        public static NewExpr TangentBetween(NewLine l1, NewLine l2) {
+            return Build((A1, B1, A2, B2) => (A1 * B2 - A2 * B1) / (A1 * A2 + B1 * B2), l1.A, l1.B, l2.A, l2.B);
+        }
+        public static NewExpr CotangentBetween(NewLine l1, NewLine l2) {
+            return Build((A1, B1, A2, B2) => (A1 * A2 + B1 * B2) / (A1 * B2 - A2 * B1), l1.A, l1.B, l2.A, l2.B);
+        }
         public static NewExpr GetY(NewLine l, NewExpr x) {
             return Build((A, B, C, X) => -(A * X + C) / B, l.A, l.B, l.C, x);
         }
