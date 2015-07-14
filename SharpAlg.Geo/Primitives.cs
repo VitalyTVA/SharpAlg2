@@ -161,27 +161,11 @@ namespace SharpAlg.Geo {
         }
     }
     public static class NewLinesOperations {
-        //static readonly Point Intersection;
-        //static readonly Expr Tangent;
-        //static readonly Expr Cotangent;
-        //static readonly Expr YExpr = "-(A*x+C)/B".Parse();
-        //static LinesOperations() {
-        //    Intersection = GetIntersection();
-        //    Tangent = GetTangent();
-        //    Cotangent = GetCotangent();
-        //}
-        //static Point GetIntersection() {
-        //    const string divider = "(A1*B2-A2*B1)";
-        //    var x = ("(B1*C2-B2*C1)/" + divider).Parse();
-        //    var y = ("(C1*A2-C2*A1)/" + divider).Parse();
-        //    return new Point(x, y);
-        //}
-        //public static Point Intersect(this Line l1, Line l2) {
-        //    var context = ImmutableContext.Empty
-        //        .RegisterLine(l1, "A1", "B1", "C1")
-        //        .RegisterLine(l2, "A2", "B2", "C2");
-        //    return Intersection.Substitute(context).FMap(x => x.Convolute());
-        //}
+        public static NewPoint Intersect(this NewLine l1, NewLine l2) {
+            var x = Build((A1, B1, C1, A2, B2, C2) => (B1 * C2 - B2 * C1) / (A1 * B2 - A2 * B1), l1.A, l1.B, l1.C, l2.A, l2.B, l2.C);
+            var y = Build((A1, B1, C1, A2, B2, C2) => (C1 * A2 - C2 * A1) / (A1 * B2 - A2 * B1), l1.A, l1.B, l1.C, l2.A, l2.B, l2.C);
+            return new NewPoint(x, y);
+        }
 
         //static Expr GetTangent() {
         //    return "(A1*B2-A2*B1)/(A1*A2 + B1*B2)".Parse();
