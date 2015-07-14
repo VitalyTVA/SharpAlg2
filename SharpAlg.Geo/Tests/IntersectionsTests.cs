@@ -107,12 +107,12 @@ namespace SharpAlg.Geo.Tests {
             );
         }
         void AssertCirclesIntersection(RealPoint a, RealPoint b, RealPoint c, RealPoint d, RealPoint x1, RealPoint x2) {
-            var A = Point.FromName('A');
-            var B = Point.FromName('B');
-            var C = Point.FromName('C');
-            var D = Point.FromName('D');
-            var c1 = Circle.FromPoints(A, B);
-            var c2 = Circle.FromPoints(C, D);
+            var A = NewPoint.FromName('A');
+            var B = NewPoint.FromName('B');
+            var C = NewPoint.FromName('C');
+            var D = NewPoint.FromName('D');
+            var c1 = NewCircle.FromPoints(A, B);
+            var c2 = NewCircle.FromPoints(C, D);
             var X = c1.Intersect(c2);
             var context = ImmutableContext.Empty
                 .RegisterPoint(A, a.X, a.Y)

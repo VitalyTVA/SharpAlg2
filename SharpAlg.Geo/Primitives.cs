@@ -257,7 +257,7 @@ namespace SharpAlg.Geo {
             return Tuple.Create(
                 new NewPoint(xRoots.Item1, yRoots.Item2),
                 new NewPoint(xRoots.Item2, yRoots.Item1)
-            );
+            ).FMap(x => x.Offset(c1.Center));
         }
     }
 
