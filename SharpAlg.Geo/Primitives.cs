@@ -320,9 +320,18 @@ namespace SharpAlg.Geo {
                 .RegisterValue((ParameterExpr)p.X, x)
                 .RegisterValue((ParameterExpr)p.Y, y);
         }
+        public static ImmutableContext RegisterPoint(this ImmutableContext context, NewPoint p, double x, double y) {
+            return context
+                .RegisterValue((Core.ParamExpr)p.X, x)
+                .RegisterValue((Core.ParamExpr)p.Y, y);
+        }
         public static ImmutableContext RegisterValue(this ImmutableContext context, ParameterExpr parameter, double value) {
             return context
                 .Register(parameter.ParameterName, Expr.Constant(value));
+        }
+        public static ImmutableContext RegisterValue(this ImmutableContext context, Core.ParamExpr parameter, double value) {
+            return context
+                .Register(parameter.Name, Expr.Constant(value));
         }
         public static ImmutableContext RegisterValue(this ImmutableContext context, string name, double value) {
             return context.RegisterValue(Expr.Parameter(name), value);
@@ -340,6 +349,9 @@ namespace SharpAlg.Geo {
                 .Register(r, c.R);
         }
         public static RealPoint ToRealPoint(this Point p, ImmutableContext context) {
+            return new RealPoint(p.X.ToReal(context), p.Y.ToReal(context));
+        }
+        public static RealPoint ToRealPoint(this NewPoint p, ImmutableContext context) {
             return new RealPoint(p.X.ToReal(context), p.Y.ToReal(context));
         }
         public static double ToReal(this Expr expr, ImmutableContext context) {

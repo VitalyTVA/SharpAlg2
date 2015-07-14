@@ -179,6 +179,9 @@ namespace SharpAlg.Geo.Core {
                 @const: x => (double)x
             );
         }
+        public static double ToReal(this Expr expr, ImmutableContext context) {
+            return expr.ToReal(context.GetValue);
+        }
         public static Expr Build(Expression<Func<Expr>> f) {
             return BuildExpr(f);
         }

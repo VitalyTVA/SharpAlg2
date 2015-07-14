@@ -10,12 +10,12 @@ namespace SharpAlg.Geo.Tests {
     public class IntersectionsTests {
         [Test]
         public void LinesIntersetions() {
-            var A = Point.FromName('A');
-            var B = Point.FromName('B');
-            var C = Point.FromName('C');
-            var D = Point.FromName('D');
-            var m = Line.FromPoints(A, B);
-            var n = Line.FromPoints(C, D);
+            var A = NewPoint.FromName('A');
+            var B = NewPoint.FromName('B');
+            var C = NewPoint.FromName('C');
+            var D = NewPoint.FromName('D');
+            var m = NewLine.FromPoints(A, B);
+            var n = NewLine.FromPoints(C, D);
             var X = m.Intersect(n);
             var context = ImmutableContext.Empty
                 .RegisterPoint(A, 2, 1)
@@ -147,23 +147,23 @@ namespace SharpAlg.Geo.Tests {
                 .RegisterValue("A", 1)
                 .RegisterValue("B", -2)
                 .RegisterValue("C", -3);
-            Assert.AreEqual(3, roots.Item1.ToReal(context.GetValue));
-            Assert.AreEqual(-1, roots.Item2.ToReal(context.GetValue));
+            Assert.AreEqual(3, roots.Item1.ToReal(context));
+            Assert.AreEqual(-1, roots.Item2.ToReal(context));
 
             context = ImmutableContext.Empty
                 .RegisterValue("A", 2)
                 .RegisterValue("B", -4)
                 .RegisterValue("C", -6);
-            Assert.AreEqual(3, roots.Item1.ToReal(context.GetValue));
-            Assert.AreEqual(-1, roots.Item2.ToReal(context.GetValue));
+            Assert.AreEqual(3, roots.Item1.ToReal(context));
+            Assert.AreEqual(-1, roots.Item2.ToReal(context));
 
             roots = QuadraticEquationHelper.Solve(Build(X => X + 1), Build(Y => Y -2), Build(Z => Z / 2));
             context = ImmutableContext.Empty
                 .RegisterValue("X", 0)
                 .RegisterValue("Y", 0)
                 .RegisterValue("Z", -6);
-            Assert.AreEqual(3, roots.Item1.ToReal(context.GetValue));
-            Assert.AreEqual(-1, roots.Item2.ToReal(context.GetValue));
+            Assert.AreEqual(3, roots.Item1.ToReal(context));
+            Assert.AreEqual(-1, roots.Item2.ToReal(context));
         }
         [Test, Ignore]
         public void Middle1() {
