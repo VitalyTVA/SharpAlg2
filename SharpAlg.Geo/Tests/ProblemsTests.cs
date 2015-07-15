@@ -1,11 +1,8 @@
 using NUnit.Framework;
 using System.Linq;
-using SharpAlg.Native;
-using SharpAlg.Native.Builder;
-using System.Windows;
 using RealPoint = System.Windows.Point;
-using NewExpr = SharpAlg.Geo.Core.Expr;
 using static SharpAlg.Geo.Core.ExprExtensions;
+using SharpAlg.Geo.Core;
 
 namespace SharpAlg.Geo.Tests {
     [TestFixture]
@@ -63,7 +60,7 @@ namespace SharpAlg.Geo.Tests {
             return string.Format("simplify({0});", res);
             //Clipboard.SetText(mappleCommand);
         }
-        NewExpr GetAngleBisectionZeroAssertion(Point A, Point B, Point C) {
+        Expr GetAngleBisectionZeroAssertion(Point A, Point B, Point C) {
             var l1 = Line.FromPoints(A, B);
             var l2 = Line.FromPoints(A, C);
 
@@ -95,7 +92,7 @@ assume(Cy>0);
 simplify({0});
 ", res);
         }
-        NewExpr GetPerpendicularZeroAssertion(Point A, Point B, Point C) {
+        Expr GetPerpendicularZeroAssertion(Point A, Point B, Point C) {
             var l1 = Line.FromPoints(A, B);
 
             var c = Circle.FromPoints(C, A);
@@ -132,7 +129,7 @@ assume(R>0);
 simplify({0});
 ", res);
         }
-        NewExpr GetPerpendocularZeroAssertion2(Line l, Circle c) {
+        Expr GetPerpendocularZeroAssertion2(Line l, Circle c) {
             var A = l.Intersect(c).Item2;
             var B = l.Intersect(c).Item1;
             var l2 = Line.FromPoints(c.Center, B);

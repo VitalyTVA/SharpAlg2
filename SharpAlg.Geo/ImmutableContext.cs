@@ -1,9 +1,4 @@
-using SharpAlg.Native;
-using SharpAlg.Native.Builder;
-using System;
 using System.Collections.Immutable;
-using System.Linq;
-using RealPoint = System.Windows.Point;
 
 namespace SharpAlg.Geo {
     public class ImmutableContext {

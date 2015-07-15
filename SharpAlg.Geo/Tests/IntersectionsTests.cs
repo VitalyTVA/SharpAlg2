@@ -1,7 +1,5 @@
 ﻿using NUnit.Framework;
-using SharpAlg.Native;
 using RealPoint = System.Windows.Point;
-using NewExpr = SharpAlg.Geo.Core.Expr;
 using static SharpAlg.Geo.Core.ExprExtensions;
 using static SharpAlg.Geo.Tests.ExprTestExtensions;
 

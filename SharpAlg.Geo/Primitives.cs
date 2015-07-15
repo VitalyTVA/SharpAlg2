@@ -3,8 +3,8 @@ using System.Collections.Immutable;
 using System.Linq;
 using RealPoint = System.Windows.Point;
 using static SharpAlg.Geo.Core.ExprExtensions;
-using NewExpr = SharpAlg.Geo.Core.Expr;
 using Numerics;
+using SharpAlg.Geo.Core;
 
 namespace SharpAlg.Geo {
     public class Point {
@@ -13,8 +13,8 @@ namespace SharpAlg.Geo {
                 throw new InvalidOperationException();
             return new Point(Param(name + "x"), Param(name + "y"));
         }
-        public readonly NewExpr X, Y;
-        public Point(NewExpr x, NewExpr y) {
+        public readonly Expr X, Y;
+        public Point(Expr x, Expr y) {
             this.X = x;
             this.Y = y;
         }
@@ -30,8 +30,8 @@ namespace SharpAlg.Geo {
             var c = Subtract(Multiply(p1.X, p2.Y), Multiply(p2.X, p1.Y));
             return new Line(a, b, c);
         }
-        public readonly NewExpr A, B, C;
-        public Line(NewExpr a, NewExpr b, NewExpr c) {
+        public readonly Expr A, B, C;
+        public Line(Expr a, Expr b, Expr c) {
             this.A = a;
             this.B = b;
             this.C = c;
@@ -49,9 +49,9 @@ namespace SharpAlg.Geo {
                     );
             return new Circle(p1.X, p1.Y, r);
         }
-        public readonly NewExpr X, Y, R;
+        public readonly Expr X, Y, R;
         public Point Center { get { return new Point(X, Y); } }
-        public Circle(NewExpr x, NewExpr y, NewExpr r) {
+        public Circle(Expr x, Expr y, Expr r) {
             this.X = x;
             this.Y = y;
             this.R = r;
@@ -66,13 +66,13 @@ namespace SharpAlg.Geo {
             var y = Build((A1, B1, C1, A2, B2, C2) => (C1 * A2 - C2 * A1) / (A1 * B2 - A2 * B1), l1.A, l1.B, l1.C, l2.A, l2.B, l2.C);
             return new Point(x, y);
         }
-        public static NewExpr TangentBetween(Line l1, Line l2) {
+        public static Expr TangentBetween(Line l1, Line l2) {
             return Build((A1, B1, A2, B2) => (A1 * B2 - A2 * B1) / (A1 * A2 + B1 * B2), l1.A, l1.B, l2.A, l2.B);
         }
-        public static NewExpr CotangentBetween(Line l1, Line l2) {
+        public static Expr CotangentBetween(Line l1, Line l2) {
             return Build((A1, B1, A2, B2) => (A1 * A2 + B1 * B2) / (A1 * B2 - A2 * B1), l1.A, l1.B, l2.A, l2.B);
         }
-        public static NewExpr GetY(Line l, NewExpr x) {
+        public static Expr GetY(Line l, Expr x) {
             return Build((A, B, C, X) => -(A * X + C) / B, l.A, l.B, l.C, x);
         }
     }
@@ -104,7 +104,7 @@ namespace SharpAlg.Geo {
     }
 
     public static class QuadraticEquationHelper {
-        public static System.Tuple<NewExpr, NewExpr> Solve(NewExpr a, NewExpr b, NewExpr c) {
+        public static System.Tuple<Expr, Expr> Solve(Expr a, Expr b, Expr c) {
             var d = Build((A, B, C) => Sqrt((B ^ 2) - 4 * A * C), a, b, c);
             var x1 = Build((A, B, D) => (-B + D) / (2 * A), a, b, d);
             var x2 = Build((A, B, D) => (-B - D) / (2 * A), a, b, d);
@@ -113,7 +113,7 @@ namespace SharpAlg.Geo {
     }
 
     public static class Functor {
-        public static Point FMap(this Point x, Func<NewExpr, NewExpr> f) {
+        public static Point FMap(this Point x, Func<Expr, Expr> f) {
             return new Point(f(x.X), f(x.Y));
         }
         public static System.Tuple<TResult, TResult> FMap<T, TResult>(this System.Tuple<T, T> x, Func<T, TResult> f) {
@@ -122,10 +122,10 @@ namespace SharpAlg.Geo {
     }
 
     public static class ExprHelper {
-        public static NewExpr Square(this NewExpr e) {
+        public static Expr Square(this Expr e) {
             return Core.ExprExtensions.Power(e, 2);
         }
-        public static NewExpr GetHalf(this NewExpr e) {
+        public static Expr GetHalf(this Expr e) {
             return Core.ExprExtensions.Multiply(e, Const(new BigRational(1, 2)));
         }
         public static ImmutableContext RegisterPoint(this ImmutableContext context, Point p, double x, double y) {
