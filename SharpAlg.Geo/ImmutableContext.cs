@@ -6,23 +6,17 @@ using System.Linq;
 using RealPoint = System.Windows.Point;
 
 namespace SharpAlg.Geo {
-    public class ImmutableContext : IContext {
-        public static readonly ImmutableContext Empty = new ImmutableContext(ImmutableDictionary<string, Expr>.Empty);
-        ImmutableDictionary<string, Expr> names;
-        ImmutableContext(ImmutableDictionary<string, Expr> names) {
-            this.names = names;
-        }
-        Function IContext.GetFunction(string name) {
-            return null;
-        }
-        Expr IContext.GetValue(string name) {
-            return names.TryGetValue(name);
+    public class ImmutableContext {
+        public static readonly ImmutableContext Empty = new ImmutableContext(ImmutableDictionary<string, double>.Empty);
+        ImmutableDictionary<string, double> values;
+        ImmutableContext(ImmutableDictionary<string, double> names) {
+            this.values = names;
         }
         public double GetValue(string name) {
-            return ((IContext)this).GetValue(name).Evaluate(this).ToDouble();
+            return values[name];
         }
-        public ImmutableContext Register(string name, Expr value) {
-            return new ImmutableContext(names.Add(name, value));
+        public ImmutableContext Register(string name, double value) {
+            return new ImmutableContext(values.Add(name, value));
         }
     }
 }

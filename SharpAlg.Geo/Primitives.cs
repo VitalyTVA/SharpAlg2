@@ -135,7 +135,7 @@ namespace SharpAlg.Geo {
         }
         public static ImmutableContext RegisterValue(this ImmutableContext context, Core.ParamExpr parameter, double value) {
             return context
-                .Register(parameter.Name, SharpAlg.Native.Expr.Constant(value));
+                .Register(parameter.Name, value);
         }
         public static ImmutableContext RegisterValue(this ImmutableContext context, string name, double value) {
             return context.RegisterValue(Param(name), value);
