@@ -18,6 +18,13 @@ namespace SharpAlg.Geo.Tests {
             }.Select(x => "restart;" + x + "\r\n\r\n\r\n"));
         }
         #region middle
+        [Test]
+        public void MiddleOfLineSegment_Calc() {
+            var x = NewPoint.FromName('X');
+            var y = NewPoint.FromName('Y');
+            var point = GetMiddleOfLineSegmentZeroAssertion(x, y);
+            AssertHelper.ArePointsEqual(new RealPoint(0, 0), point.ToRealPoint(ImmutableContext.Empty.RegisterPoint(x, 1, 2).RegisterPoint(y, 5, 9)));
+        }
         string MiddleOfLineSegment_Maple() {
             var res = GetMiddleOfLineSegmentZeroAssertion(NewPoint.FromName('X'), NewPoint.FromName('Y'));
             return string.Format("simplify({0}); simplify({1});", res.X, res.Y);
