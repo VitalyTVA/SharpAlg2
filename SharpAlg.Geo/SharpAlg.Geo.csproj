@@ -67,24 +67,6 @@
     <Compile Include="Tests\ProblemsTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpAlg.Core\SharpAlg.Core.csproj">
-      <Project>{a823e596-e03f-4896-8946-5cae2ba1c65d}</Project>
-      <Name>SharpAlg.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpAlg.Implementation\SharpAlg.Implementation.csproj">
-      <Project>{06bd00af-1f46-4df4-a61e-e05d412d90b4}</Project>
-      <Name>SharpAlg.Implementation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpAlg.Parser\SharpAlg.Parser.csproj">
-      <Project>{a20747c7-601e-454a-83d5-d53fc6724f71}</Project>
-      <Name>SharpAlg.Parser</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpAlg\SharpAlg.csproj">
-      <Project>{01dee02a-1f6c-46a9-b945-65e9de87498e}</Project>
-      <Name>SharpAlg</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

@@ -5,7 +5,6 @@ using Numerics;
 using System.Linq.Expressions;
 using System.Collections.Generic;
 using System.Linq;
-using LegacyExpr = SharpAlg.Native.Expr;
 using System.Diagnostics;
 
 namespace SharpAlg.Geo.Core {
