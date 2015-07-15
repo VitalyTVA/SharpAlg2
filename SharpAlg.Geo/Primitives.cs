@@ -6,6 +6,7 @@ using System.Linq;
 using RealPoint = System.Windows.Point;
 using static SharpAlg.Geo.Core.ExprExtensions;
 using NewExpr = SharpAlg.Geo.Core.Expr;
+using Numerics;
 
 namespace SharpAlg.Geo {
     public class Point {
@@ -312,6 +313,9 @@ namespace SharpAlg.Geo {
         public static Expr GetHalf(this Expr e) {
             return e.Multiply(Half);
         }
+        public static NewExpr GetHalf(this NewExpr e) {
+            return Core.ExprExtensions.Multiply(e, Const(new BigRational(1, 2)));
+        }
         //public static bool IsPrimitive(this Point p) {
         //    return p.X is ParameterExpr && p.Y is ParameterExpr;
         //}
@@ -377,6 +381,9 @@ namespace SharpAlg.Geo {
         }
         public static Point Middle(Point p1, Point p2) {
             return new Point(Expr.Add(p1.X, p2.X).GetHalf(), Expr.Add(p1.Y, p2.Y).GetHalf());
+        }
+        public static NewPoint Middle(NewPoint p1, NewPoint p2) {
+            return new NewPoint(Add(p1.X, p2.X).GetHalf(), Add(p1.Y, p2.Y).GetHalf());
         }
         public static Circle Offset(this Circle c, Point offset) {
             var center = c.Center.Offset(offset);

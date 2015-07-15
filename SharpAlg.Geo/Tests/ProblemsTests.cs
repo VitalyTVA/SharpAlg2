@@ -19,17 +19,17 @@ namespace SharpAlg.Geo.Tests {
         }
         #region middle
         string MiddleOfLineSegment_Maple() {
-            var res = GetMiddleOfLineSegmentZeroAssertion(Point.FromName('X'), Point.FromName('Y'));
-            return string.Format("simplify({0}); simplify({1});", res.X.Print(), res.Y.Print());
+            var res = GetMiddleOfLineSegmentZeroAssertion(NewPoint.FromName('X'), NewPoint.FromName('Y'));
+            return string.Format("simplify({0}); simplify({1});", res.X, res.Y);
         }
-        Point GetMiddleOfLineSegmentZeroAssertion(Point p1, Point p2) {
-            var l1 = Line.FromPoints(p1, p2);
+        NewPoint GetMiddleOfLineSegmentZeroAssertion(NewPoint p1, NewPoint p2) {
+            var l1 = NewLine.FromPoints(p1, p2);
 
-            var c1 = Circle.FromPoints(p1, p2);
-            var c2 = Circle.FromPoints(p2, p1);
+            var c1 = NewCircle.FromPoints(p1, p2);
+            var c2 = NewCircle.FromPoints(p2, p1);
 
             var c1_c2 = c1.Intersect(c2);
-            var l2 = Line.FromPoints(c1_c2.Item1, c1_c2.Item2);
+            var l2 = NewLine.FromPoints(c1_c2.Item1, c1_c2.Item2);
 
             var l1_l2 = l1.Intersect(l2);
 
