@@ -33,13 +33,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-    <ProjectReference Include="..\SharpAlg.Core\SharpAlg.Core.csproj">
-      <Project>{a823e596-e03f-4896-8946-5cae2ba1c65d}</Project>
-      <Name>SharpAlg.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <Content Include="Coco.exe" />
   </ItemGroup>

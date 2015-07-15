@@ -82,10 +82,6 @@
     <Compile Include="SR.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpAlg.Core\SharpAlg.Core.csproj">
-      <Project>{a823e596-e03f-4896-8946-5cae2ba1c65d}</Project>
-      <Name>SharpAlg.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SharpAlg.Parser\SharpAlg.Parser.csproj">
       <Project>{a20747c7-601e-454a-83d5-d53fc6724f71}</Project>
       <Name>SharpAlg.Parser</Name>
