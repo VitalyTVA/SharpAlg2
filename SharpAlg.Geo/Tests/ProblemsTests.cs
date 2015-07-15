@@ -115,31 +115,31 @@ simplify({0});
         #region perpendicular
         [Test]
         public void Perpendicular2_Calc() {
-            var res = GetPerpendocularZeroAssertion2(new Line(Expr.Zero, Expr.One, 4d.AsConst()), new Circle(Expr.Zero, Expr.Zero, 25d.AsConst()));
+            var res = GetPerpendocularZeroAssertion2(new NewLine(0, 1, 4), new NewCircle(0, 0, 25));
             Assert.AreEqual(0, res.ToReal(ImmutableContext.Empty));
             //Assert.IsTrue(res.ExprEquals(Expr.Zero));
         }
-        [Test, Ignore]
+        [Test]
         public void Perpendicular2_Calc2() {
-            var res = GetPerpendocularZeroAssertion2(new Line(Expr.Zero, Expr.One, 4d.AsConst()), new Circle(Expr.Zero, Expr.Zero, 25d.AsConst()));
-            Assert.IsTrue(res.ExprEquals(Expr.Zero));
+            var res = GetPerpendocularZeroAssertion2(new NewLine(0, 1, 4), new NewCircle(0, 0, 25));
+            Assert.AreEqual(0, res.ToReal(ImmutableContext.Empty));
         }
         string Perpendicular2_Maple() {
             //var res = GetPerpendocularZeroAssertion2(new Line(Expr.Parameter("k"), Expr.One, Expr.Parameter("b")), new Circle(Expr.Zero, Expr.Zero, Expr.Parameter("R")));
-            var res = GetPerpendocularZeroAssertion2(new Line(Expr.Zero, Expr.One, Expr.Parameter("b")), new Circle(Expr.Parameter("X0"), Expr.Parameter("Y0"), Expr.Parameter("R")));
+            var res = GetPerpendocularZeroAssertion2(new NewLine(0, 1, Param("b")), new NewCircle(Param("X0"), Param("Y0"), Param("R")));
             return string.Format(@"
 assume(R>0);
 simplify({0});
-", res.Print());
+", res);
         }
-        Expr GetPerpendocularZeroAssertion2(Line l, Circle c) {
+        NewExpr GetPerpendocularZeroAssertion2(NewLine l, NewCircle c) {
             var A = l.Intersect(c).Item2;
             var B = l.Intersect(c).Item1;
-            var l2 = Line.FromPoints(c.Center, B);
+            var l2 = NewLine.FromPoints(c.Center, B);
             var C = l2.Intersect(c).Item2;
-            var l3 = Line.FromPoints(A, C);
+            var l3 = NewLine.FromPoints(A, C);
 
-            var cotangent = LinesOperations.CotangentBetween(l, l3);
+            var cotangent = NewLinesOperations.CotangentBetween(l, l3);
             return cotangent;
         }
         #endregion

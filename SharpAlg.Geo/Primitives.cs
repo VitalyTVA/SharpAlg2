@@ -213,38 +213,6 @@ namespace SharpAlg.Geo {
             return Tuple.Create(new NewPoint(xRoots.Item1, yRoots.Item1), new NewPoint(xRoots.Item2, yRoots.Item2));
         }
     }
-    public static class CirclesIntersector {
-        static readonly System.Tuple<Point, Point> Intersections;
-        static CirclesIntersector() {
-            var x0= new Core.ParamExpr("X0");
-            var y0 = new Core.ParamExpr("Y0");
-            var r1 = new Core.ParamExpr("R1");
-            var r2 = new Core.ParamExpr("R2");
-
-            var eqA = Build((X0, Y0) => 4 * (X0 ^ 2) + 4 * (Y0 ^ 2), x0, y0);
-            var eqYB = Build((X0, Y0, R1, R2) => -4 * (Y0 ^ 3) - 4 * R1 * Y0 + 4 * Y0 * R2 - 4 * (X0 ^ 2) * Y0, x0, y0, r1, r2);
-            var eqXB = Build((X0, Y0, R1, R2) => -4 * (X0 ^ 3) - 4 * R1 * X0 + 4 * X0 * R2 - 4 * (Y0 ^ 2) * X0, x0, y0, r1, r2);
-            var eqYC = Build((X0, Y0, R1, R2) => (X0 ^ 4) + (R1 ^ 2) - 2 * (Y0 ^ 2) * R2 + 2 * (X0 ^ 2) * (Y0 ^ 2) - 2 * (X0 ^ 2) * R2 + (Y0 ^ 4) + (R2 ^ 2) + 2 * R1 * (Y0 ^ 2) - 2 * R1 * R2 - 2 * R1 * (X0 ^ 2), x0, y0, r1, r2);
-            var eqXC = Build((X0, Y0, R1, R2) => (Y0 ^ 4) + (R1 ^ 2) - 2 * (X0 ^ 2) * R2 + 2 * (Y0 ^ 2) * (X0 ^ 2) - 2 * (Y0 ^ 2) * R2 + (X0 ^ 4) + (R2 ^ 2) + 2 * R1 * (X0 ^ 2) - 2 * R1 * R2 - 2 * R1 * (Y0 ^ 2), x0, y0, r1, r2);
-            var xRoots = QuadraticEquationHelper.Solve(eqA, eqXB, eqXC).FMap(x => x.ToLegacy());
-            var yRoots = QuadraticEquationHelper.Solve(eqA, eqYB, eqYC).FMap(x => x.ToLegacy());
-            Intersections = Tuple.Create(
-                new Point(xRoots.Item1, yRoots.Item2),
-                new Point(xRoots.Item2, yRoots.Item1)
-            );
-
-        }
-        public static System.Tuple<Point, Point> Intersect(this Circle c1, Circle c2) {
-            var c = c2.Offset(c1.Center.Invert());
-            var context = ImmutableContext.Empty
-                .Register("R1", c1.R)
-                .RegisterCircle(c, "X0", "Y0", "R2");
-            return Intersections
-                .Substitute(context)
-                .FMap(x => x.Offset(c1.Center))
-                .FMap(tuple => tuple.FMap(x => x.Convolute()));
-        }
-    }
     public static class NewCirclesIntersector {
         public static System.Tuple<NewPoint, NewPoint> Intersect(this NewCircle c1, NewCircle c2) {
             var c = c2.Offset(c1.Center.Invert());
