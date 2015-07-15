@@ -9,21 +9,6 @@ using NewExpr = SharpAlg.Geo.Core.Expr;
 using Numerics;
 
 namespace SharpAlg.Geo {
-    public class Point {
-        public static Point FromName(char name) {
-            if(!char.IsUpper(name))
-                throw new InvalidOperationException();
-            return new Point(Expr.Parameter(name + "x"), Expr.Parameter(name + "y"));
-        }
-        public readonly Expr X, Y;
-        public Point(Expr x, Expr y) {
-            this.X = x;
-            this.Y = y;
-        }
-        public override string ToString() {
-            return string.Format("({0}, {1})", X.Print(), Y.Print());
-        }
-    }
     public class NewPoint {
         public static NewPoint FromName(char name) {
             if(!char.IsUpper(name))
@@ -130,9 +115,6 @@ namespace SharpAlg.Geo {
     }
 
     public static class Functor {
-        public static Point FMap(this Point x, Func<Expr, Expr> f) {
-            return new Point(f(x.X), f(x.Y));
-        }
         public static NewPoint FMap(this NewPoint x, Func<NewExpr, NewExpr> f) {
             return new NewPoint(f(x.X), f(x.Y));
         }
@@ -171,11 +153,6 @@ namespace SharpAlg.Geo {
         //public static bool IsPrimitive(this Point p) {
         //    return p.X is ParameterExpr && p.Y is ParameterExpr;
         //}
-        public static ImmutableContext RegisterPoint(this ImmutableContext context, Point p, double x, double y) {
-            return context
-                .RegisterValue((ParameterExpr)p.X, x)
-                .RegisterValue((ParameterExpr)p.Y, y);
-        }
         public static ImmutableContext RegisterPoint(this ImmutableContext context, NewPoint p, double x, double y) {
             return context
                 .RegisterValue((Core.ParamExpr)p.X, x)
@@ -192,9 +169,6 @@ namespace SharpAlg.Geo {
         public static ImmutableContext RegisterValue(this ImmutableContext context, string name, double value) {
             return context.RegisterValue(Expr.Parameter(name), value);
         }
-        public static RealPoint ToRealPoint(this Point p, ImmutableContext context) {
-            return new RealPoint(p.X.ToReal(context), p.Y.ToReal(context));
-        }
         public static RealPoint ToRealPoint(this NewPoint p, ImmutableContext context) {
             return new RealPoint(p.X.ToReal(context), p.Y.ToReal(context));
         }
@@ -207,20 +181,11 @@ namespace SharpAlg.Geo {
         public static Expr Convolute(this Expr expr) {
             return expr;
         }
-        public static Point Offset(this Point p, Point offset) {
-            return new Point(Expr.Add(p.X, offset.X), Expr.Add(p.Y, offset.Y));
-        }
         public static NewPoint Offset(this NewPoint p, NewPoint offset) {
             return new NewPoint(Add(p.X, offset.X), Add(p.Y, offset.Y));
         }
-        public static Point Invert(this Point p) {
-            return new Point(Expr.Minus(p.X), Expr.Minus(p.Y));
-        }
         public static NewPoint Invert(this NewPoint p) {
             return new NewPoint(Minus(p.X), Minus(p.Y));
-        }
-        public static Point Middle(Point p1, Point p2) {
-            return new Point(Expr.Add(p1.X, p2.X).GetHalf(), Expr.Add(p1.Y, p2.Y).GetHalf());
         }
         public static NewPoint Middle(NewPoint p1, NewPoint p2) {
             return new NewPoint(Add(p1.X, p2.X).GetHalf(), Add(p1.Y, p2.Y).GetHalf());
