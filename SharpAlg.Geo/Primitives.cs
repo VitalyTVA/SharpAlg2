@@ -127,14 +127,6 @@ namespace SharpAlg.Geo {
     }
 
     public static class ExprHelper {
-        public static readonly Expr Half = "1/2".Parse();
-        public static readonly Expr Two = "2".Parse();
-        public static Expr Sqrt(this Expr e) {
-            return Expr.Power(e, Half);
-        }
-        public static Expr Square(this Expr e) {
-            return Expr.Power(e, Two);
-        }
         public static NewExpr Square(this NewExpr e) {
             return Core.ExprExtensions.Power(e, 2);
         }
@@ -143,9 +135,6 @@ namespace SharpAlg.Geo {
         }
         public static Expr Power(this Expr e, Expr power) {
             return Expr.Power(e, power);
-        }
-        public static Expr GetHalf(this Expr e) {
-            return e.Multiply(Half);
         }
         public static NewExpr GetHalf(this NewExpr e) {
             return Core.ExprExtensions.Multiply(e, Const(new BigRational(1, 2)));

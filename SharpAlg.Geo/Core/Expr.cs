@@ -143,17 +143,6 @@ namespace SharpAlg.Geo.Core {
                 @const ?? @default
             );
         }
-        public static LegacyExpr ToLegacy(this Expr expr) {
-            return expr.MatchStrict(
-                add: x => LegacyExpr.Add(x.Args.Select(ToLegacy)),
-                mult: x => LegacyExpr.Multiply(x.Args.Select(ToLegacy)),
-                div: x => LegacyExpr.Divide(x.Numerator.ToLegacy(), x.Denominator.ToLegacy()),
-                power: x => LegacyExpr.Power(x.Value.ToLegacy(), new ConstExpr(x.Power).ToLegacy()),
-                sqrt: x => LegacyExpr.Power(x.Value.ToLegacy(), ExprHelper.Half),
-                param: x => LegacyExpr.Parameter(x.Name),
-                @const: x => Native.ExpressionExtensions.Parse(x.Value.ToString())
-            );//.Convolute();
-        }
         static T Evaluate<T>(this Expr expr, Func<T, T, T> add, Func<T, T, T> mult, Func<T, T, T> div, Func<T, T, T> power, Func<T, T> sqrt, Func<string, T> param, Func<BigRational, T> @const) {
             //Func<Expr, T> eval = x => x.Evaluate(add, mult, div, power, sqrt, param, @const);
             Func<Expr, T> doEval = null;
