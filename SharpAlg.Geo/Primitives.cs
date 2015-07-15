@@ -40,24 +40,6 @@ namespace SharpAlg.Geo {
         }
     }
 
-    public class Line {
-        public static Line FromPoints(Point p1, Point p2) {
-            var a = Expr.Subtract(p1.Y, p2.Y);
-            var b = Expr.Subtract(p2.X, p1.X);
-            var c = Expr.Subtract(Expr.Multiply(p1.X, p2.Y), Expr.Multiply(p2.X, p1.Y));
-            return new Line(a, b, c).FMap(x => x.Convolute());
-        }
-        public readonly Expr A, B, C;
-        public Line(Expr a, Expr b, Expr c) {
-            this.A = a;
-            this.B = b;
-            this.C = c;
-        }
-        public override string ToString() {
-            return this.PrintObject((c, o) => c.RegisterLine(o, "A", "B", "C"),  "A*x + B*y + C");
-        }
-    }
-
     public class NewLine {
         public static NewLine FromPoints(NewPoint p1, NewPoint p2) {
             var a = Subtract(p1.Y, p2.Y);
@@ -73,26 +55,6 @@ namespace SharpAlg.Geo {
         }
         public override string ToString() {
             return Build((A, B, C, x, y) => A * x + B * y + C, A, B, C, Param("x"), Param("y")).ToString();
-        }
-    }
-
-    public class Circle {
-        public static Circle FromPoints(Point p1, Point p2) {
-            var r = Expr.Add(
-                        Expr.Subtract(p1.X, p2.X).Square(),
-                        Expr.Subtract(p1.Y, p2.Y).Square()
-                    );
-            return new Circle(p1.X, p1.Y, r).FMap(x => x.Convolute());
-        }
-        public readonly Expr X, Y, R;
-        public Point Center { get { return new Point(X, Y); } }
-        public Circle(Expr x, Expr y, Expr r) {
-            this.X = x;
-            this.Y = y;
-            this.R = r;
-        }
-        public override string ToString() {
-            return this.PrintObject((c, o) => c.RegisterCircle(o, "X", "Y", "R"), "(x - X)^2 + (y - Y)^2 - R");
         }
     }
 
@@ -171,18 +133,12 @@ namespace SharpAlg.Geo {
         public static Point FMap(this Point x, Func<Expr, Expr> f) {
             return new Point(f(x.X), f(x.Y));
         }
-        public static Line FMap(this Line x, Func<Expr, Expr> f) {
-            return new Line(f(x.A), f(x.B), f(x.C));
-        }
         public static NewPoint FMap(this NewPoint x, Func<NewExpr, NewExpr> f) {
             return new NewPoint(f(x.X), f(x.Y));
         }
         //public static NewLine FMap(this NewLine x, Func<NewExpr, NewExpr> f) {
         //    return new NewLine(f(x.A), f(x.B), f(x.C));
         //}
-        public static Circle FMap(this Circle x, Func<Expr, Expr> f) {
-            return new Circle(f(x.X), f(x.Y), f(x.R));
-        }
         public static System.Tuple<TResult, TResult> FMap<T, TResult>(this System.Tuple<T, T> x, Func<T, TResult> f) {
             return Tuple.Create(f(x.Item1), f(x.Item2));
         }
@@ -236,18 +192,6 @@ namespace SharpAlg.Geo {
         public static ImmutableContext RegisterValue(this ImmutableContext context, string name, double value) {
             return context.RegisterValue(Expr.Parameter(name), value);
         }
-        public static ImmutableContext RegisterLine(this ImmutableContext context, Line l, string a, string b, string c) {
-            return context
-                .Register(a, l.A)
-                .Register(b, l.B)
-                .Register(c, l.C);
-        }
-        public static ImmutableContext RegisterCircle(this ImmutableContext context, Circle c, string x, string y, string r) {
-            return context
-                .Register(x, c.X)
-                .Register(y, c.Y)
-                .Register(r, c.R);
-        }
         public static RealPoint ToRealPoint(this Point p, ImmutableContext context) {
             return new RealPoint(p.X.ToReal(context), p.Y.ToReal(context));
         }
@@ -281,91 +225,9 @@ namespace SharpAlg.Geo {
         public static NewPoint Middle(NewPoint p1, NewPoint p2) {
             return new NewPoint(Add(p1.X, p2.X).GetHalf(), Add(p1.Y, p2.Y).GetHalf());
         }
-        public static Circle Offset(this Circle c, Point offset) {
-            var center = c.Center.Offset(offset);
-            return new Circle(center.X, center.Y, c.R);
-        }
         public static NewCircle Offset(this NewCircle c, NewPoint offset) {
             var center = c.Center.Offset(offset);
             return new NewCircle(center.X, center.Y, c.R);
-        }
-        public static Expr Substitute(this Expr expr, IContext context) {
-            return ExprSubstitutor.Substitute(expr, context);
-        }
-        public static Point Substitute(this Point p, IContext context) {
-            return p.FMap(x => x.Substitute(context));
-        }
-        public static System.Tuple<Point, Point> Substitute(this System.Tuple<Point, Point> p, IContext context) {
-            return p.FMap(x => x.Substitute(context));
-        }
-        public static string PrintObject<T>(this T obj, Func<ImmutableContext, T, ImmutableContext> register, string expr) {
-            var context = register(ImmutableContext.Empty, obj);
-            return expr.Transform(context);
-        }
-        static string Transform(this string expr, IContext context) { 
-            return expr.Parse().Substitute(context).Convolute().Print();
-        }
-    }
-    public class ExprSubstitutor : IExpressionVisitor<Expr> {
-        public static Expr Substitute(Expr expr, IContext context) {
-            return expr.Visit(new ExprSubstitutor(context));
-        }
-        readonly IContext context;
-        ExprSubstitutor(IContext context) {
-            this.context = context;
-        }
-        Expr IExpressionVisitor<Expr>.Constant(ConstantExpr constant) {
-            return constant;
-        }
-
-        Expr IExpressionVisitor<Expr>.Parameter(ParameterExpr parameter) {
-            return context.GetValue(parameter.ParameterName) ?? parameter;
-        }
-
-        Expr IExpressionVisitor<Expr>.Add(AddExpr multi) {
-            return Expr.Add(multi.Args.Select(x => x.Visit(this)));
-        }
-
-        Expr IExpressionVisitor<Expr>.Multiply(MultiplyExpr multi) {
-            return Expr.Multiply(multi.Args.Select(x => x.Visit(this)));
-        }
-
-        Expr IExpressionVisitor<Expr>.Power(PowerExpr power) {
-            return Expr.Power(power.Left.Visit(this), power.Right.Visit(this));
-        }
-
-        Expr IExpressionVisitor<Expr>.Function(FunctionExpr functionExpr) {
-            throw new NotImplementedException();
-        }
-    }
-    public class ExprRewriter : IExpressionVisitor<Expr> {
-        readonly ExprBuilder builder;
-        public ExprRewriter(ExprBuilder builder) {
-            this.builder = builder;
-        }
-        Expr IExpressionVisitor<Expr>.Constant(ConstantExpr constant) {
-            return constant;
-        }
-
-        Expr IExpressionVisitor<Expr>.Parameter(ParameterExpr parameter) {
-            return parameter;
-        }
-
-        Expr IExpressionVisitor<Expr>.Add(AddExpr multi) {
-            return multi.Args.Select(x => x.Visit(this)).Aggregate((x, y) => builder.Add(x, y));
-        }
-
-        Expr IExpressionVisitor<Expr>.Multiply(MultiplyExpr multi) {
-            return multi.Args.Select(x => x.Visit(this)).Aggregate((x, y) => builder.Multiply(x, y));
-        }
-
-        Expr IExpressionVisitor<Expr>.Power(PowerExpr power) {
-            return builder.Power(power.Left.Visit(this), power.Right.Visit(this));
-        }
-
-        Expr IExpressionVisitor<Expr>.Function(FunctionExpr functionExpr) {
-            throw new NotImplementedException();
-            //return builder.Function(functionExpr.FunctionName, functionExpr.Args);
         }
     }
 }
