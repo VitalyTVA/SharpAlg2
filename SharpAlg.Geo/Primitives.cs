@@ -1,6 +1,4 @@
-﻿using SharpAlg.Native;
-using SharpAlg.Native.Builder;
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using System.Linq;
 using RealPoint = System.Windows.Point;
@@ -135,16 +133,12 @@ namespace SharpAlg.Geo {
                 .RegisterValue((Core.ParamExpr)p.X, x)
                 .RegisterValue((Core.ParamExpr)p.Y, y);
         }
-        public static ImmutableContext RegisterValue(this ImmutableContext context, ParameterExpr parameter, double value) {
-            return context
-                .Register(parameter.ParameterName, Expr.Constant(value));
-        }
         public static ImmutableContext RegisterValue(this ImmutableContext context, Core.ParamExpr parameter, double value) {
             return context
-                .Register(parameter.Name, Expr.Constant(value));
+                .Register(parameter.Name, SharpAlg.Native.Expr.Constant(value));
         }
         public static ImmutableContext RegisterValue(this ImmutableContext context, string name, double value) {
-            return context.RegisterValue(Expr.Parameter(name), value);
+            return context.RegisterValue(Param(name), value);
         }
         public static RealPoint ToRealPoint(this Point p, ImmutableContext context) {
             return new RealPoint(p.X.ToReal(context), p.Y.ToReal(context));
