@@ -115,52 +115,6 @@ namespace SharpAlg.Geo {
             return Build((X, Y, R, x, y) => ((x - X) ^ 2) + ((y - Y) ^ 2) - R, X, Y, R, Param("x"), Param("y")).ToString();
         }
     }
-    public static class LinesOperations {
-        static readonly Point Intersection;
-        static readonly Expr Tangent;
-        static readonly Expr Cotangent;
-        static readonly Expr YExpr = "-(A*x+C)/B".Parse();
-        static LinesOperations() {
-            Intersection = GetIntersection();
-            Tangent = GetTangent();
-            Cotangent = GetCotangent();
-        }
-        static Point GetIntersection() {
-            const string divider = "(A1*B2-A2*B1)";
-            var x = ("(B1*C2-B2*C1)/" + divider).Parse();
-            var y = ("(C1*A2-C2*A1)/" + divider).Parse();
-            return new Point(x, y);
-        }
-        public static Point Intersect(this Line l1, Line l2) {
-            var context = ImmutableContext.Empty
-                .RegisterLine(l1, "A1", "B1", "C1")
-                .RegisterLine(l2, "A2", "B2", "C2");
-            return Intersection.Substitute(context).FMap(x => x.Convolute());
-        }
-
-        static Expr GetTangent() {
-            return "(A1*B2-A2*B1)/(A1*A2 + B1*B2)".Parse();
-        }
-        static Expr GetCotangent() {
-            return "(A1*A2 + B1*B2)/(A1*B2-A2*B1)".Parse();
-        }
-        public static Expr TangentBetween(Line l1, Line l2) {
-            return GetTwoLinesExpression(l1, l2, Tangent);
-        }
-        public static Expr CotangentBetween(Line l1, Line l2) {
-            return GetTwoLinesExpression(l1, l2, Cotangent);
-        }
-        static Expr GetTwoLinesExpression(Line l1, Line l2, Expr expr) {
-            var context = ImmutableContext.Empty
-                .RegisterLine(l1, "A1", "B1", "C1")
-                .RegisterLine(l2, "A2", "B2", "C2");
-            return expr.Substitute(context).Convolute();
-        }
-
-        public static Expr GetY(Expr x) {
-            return YExpr.Substitute(ImmutableContext.Empty.Register("x", x));
-        }
-    }
     public static class NewLinesOperations {
         public static NewPoint Intersect(this NewLine l1, NewLine l2) {
             var x = Build((A1, B1, C1, A2, B2, C2) => (B1 * C2 - B2 * C1) / (A1 * B2 - A2 * B1), l1.A, l1.B, l1.C, l2.A, l2.B, l2.C);
@@ -175,32 +129,6 @@ namespace SharpAlg.Geo {
         }
         public static NewExpr GetY(NewLine l, NewExpr x) {
             return Build((A, B, C, X) => -(A * X + C) / B, l.A, l.B, l.C, x);
-        }
-    }
-    public static class LineCircleIntersector {
-        static readonly System.Tuple<Point, Point> Intersections;
-        static LineCircleIntersector() {
-            var a = new Core.ParamExpr("A");
-            var b = new Core.ParamExpr("B");
-            var c = new Core.ParamExpr("C");
-            var x = new Core.ParamExpr("X");
-            var y = new Core.ParamExpr("Y");
-            var r = new Core.ParamExpr("R");
-
-            var eqXA = Build((A, B) => (B ^ 2) + (A ^ 2), a, b);
-            var eqXB = Build((A, B, C, X, Y) => 2 * Y * A * B - 2 * X * (B ^ 2) + 2 * C * A, a, b, c, x, y);
-            var eqXC = Build((A, B, C, X, Y, R) => 2 * Y * B * C + (Y ^ 2) * (B ^ 2) + (C ^ 2) + (X ^ 2) * (B ^ 2) - R * (B ^ 2), a, b, c, x, y, r);
-            var xRoots = QuadraticEquationHelper.Solve(eqXA, eqXB, eqXC).FMap(root => root.ToLegacy());
-            var yRoots = xRoots.FMap(root => LinesOperations.GetY(root));
-            Intersections = Tuple.Create(new Point(xRoots.Item1, yRoots.Item1), new Point(xRoots.Item2, yRoots.Item2));
-        }
-        public static System.Tuple<Point, Point> Intersect(this Line l, Circle c) {
-            var context = ImmutableContext.Empty
-                .RegisterLine(l, "A", "B", "C")
-                .RegisterCircle(c, "X", "Y", "R");
-            return Intersections
-                .Substitute(context)
-                .FMap(tuple => tuple.FMap(x => x.Convolute()));
         }
     }
     public static class NewLineCircleIntersector {
