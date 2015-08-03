@@ -150,9 +150,9 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreNotEqual(expr, (ParamExpr)"b");
             Assert.AreEqual(expr, expr);
 
-            Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
-            Assert.AreEqual(expr.GetHashCode(), ((ParamExpr)"a").GetHashCode());
-            Assert.AreNotEqual(expr.GetHashCode(), ((ParamExpr)"b").GetHashCode());
+            AssertHashCodesAreEqual(expr, expr);
+            AssertHashCodesAreEqual(expr, (ParamExpr)"a");
+            AssertHashCodesAreNotEqual(expr, ((ParamExpr)"b"));
 
         }
         [Test]
@@ -162,10 +162,9 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreNotEqual(expr, new SqrtExpr((ParamExpr)"a"));
             Assert.AreEqual(expr, expr);
 
-            Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
-            Assert.AreEqual(expr.GetHashCode(), new SqrtExpr((ParamExpr)"a").GetHashCode());
-            Assert.AreNotEqual(expr.GetHashCode(), new SqrtExpr((ParamExpr)"b").GetHashCode());
-
+            AssertHashCodesAreEqual(expr, expr);
+            AssertHashCodesAreEqual(expr, new SqrtExpr((ParamExpr)"a"));
+            AssertHashCodesAreNotEqual(expr, new SqrtExpr((ParamExpr)"b"));
         }
         [Test]
         public void ConstEqualsAndGetHashCode() {
@@ -174,8 +173,8 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreNotEqual(expr, (Expr)2);
             Assert.AreEqual(expr, expr);
 
-            Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
-            Assert.AreEqual(expr.GetHashCode(), ((Expr)1).GetHashCode());
+            AssertHashCodesAreEqual(expr, expr);
+            AssertHashCodesAreEqual(expr, ((Expr)1));
             AssertHashCodesAreNotEqual(expr, (Expr)2);
         }
         [Test]
@@ -184,8 +183,8 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreNotEqual(expr, Power((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
 
-            Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
-            Assert.AreEqual(expr.GetHashCode(), Power((ParamExpr)"a", 2).GetHashCode());
+            AssertHashCodesAreEqual(expr, expr);
+            AssertHashCodesAreEqual(expr, Power((ParamExpr)"a", 2));
             AssertHashCodesAreNotEqual(expr, Power((ParamExpr)"b", 2));
             AssertHashCodesAreNotEqual(expr, Power((ParamExpr)"a", 3));
         }
@@ -195,8 +194,8 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreNotEqual(expr, Add((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
 
-            Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
-            Assert.AreEqual(expr.GetHashCode(), Add((ParamExpr)"a", 2).GetHashCode());
+            AssertHashCodesAreEqual(expr, expr);
+            AssertHashCodesAreEqual(expr, Add((ParamExpr)"a", 2));
             AssertHashCodesAreNotEqual(expr, Add((ParamExpr)"b", 2));
             AssertHashCodesAreNotEqual(expr, Add((ParamExpr)"a", 3));
         }
@@ -206,8 +205,8 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreNotEqual(expr, Multiply((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
 
-            Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
-            Assert.AreEqual(expr.GetHashCode(), Multiply((ParamExpr)"a", 2).GetHashCode());
+            AssertHashCodesAreEqual(expr, expr);
+            AssertHashCodesAreEqual(expr, Multiply((ParamExpr)"a", 2));
             AssertHashCodesAreNotEqual(expr, Multiply((ParamExpr)"b", 2));
             AssertHashCodesAreNotEqual(expr, Multiply((ParamExpr)"a", 3));
         }
@@ -217,8 +216,8 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreNotEqual(expr, Divide((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
 
-            Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
-            Assert.AreEqual(expr.GetHashCode(), Divide((ParamExpr)"a", 2).GetHashCode());
+            AssertHashCodesAreEqual(expr, expr);
+            AssertHashCodesAreEqual(expr, Divide((ParamExpr)"a", 2));
             AssertHashCodesAreNotEqual(expr, Divide((ParamExpr)"b", 2));
             AssertHashCodesAreNotEqual(expr, Divide((ParamExpr)"a", 3));
         }
