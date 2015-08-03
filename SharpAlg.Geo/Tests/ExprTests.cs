@@ -142,6 +142,45 @@ namespace SharpAlg.Geo.Tests {
             Power(Divide(-2, 3), 4).AssertSimpleStringRepresentation("((-2) / 3) ^ 4");
             Divide(Multiply(2, x), Multiply(y, z)).AssertSimpleStringRepresentation("(2 * x) / (y * z)");
         }
+
+        [Test]
+        public void ParamEquals() {
+            var param = (ParamExpr)"a";
+            Assert.AreNotEqual(param, (ParamExpr)"a");
+            Assert.AreNotEqual(param, (ParamExpr)"b");
+            Assert.AreEqual(param, param);
+        }
+        [Test]
+        public void ConstEquals() {
+            Expr @const = 1;
+            Assert.AreNotEqual(@const, (Expr)1);
+            Assert.AreNotEqual(@const, (Expr)2);
+            Assert.AreEqual(@const, @const);
+        }
+        [Test]
+        public void PowerEquals() {
+            Expr expr = new PowerExpr((ParamExpr)"a", 2);
+            Assert.AreNotEqual(expr, new PowerExpr((ParamExpr)"a", 2));
+            Assert.AreEqual(expr, expr);
+        }
+        [Test]
+        public void AddEquals() {
+            Expr expr = new AddExpr(ImmutableArray.Create<Expr>((ParamExpr)"a", 2));
+            Assert.AreNotEqual(expr, new AddExpr(ImmutableArray.Create<Expr>((ParamExpr)"a", 2)));
+            Assert.AreEqual(expr, expr);
+        }
+        [Test]
+        public void MultEquals() {
+            Expr expr = new MultExpr(ImmutableArray.Create<Expr>((ParamExpr)"a", 2));
+            Assert.AreNotEqual(expr, new MultExpr(ImmutableArray.Create<Expr>((ParamExpr)"a", 2)));
+            Assert.AreEqual(expr, expr);
+        }
+        [Test]
+        public void DivEquals() {
+            Expr expr = new DivExpr((ParamExpr)"a", 2);
+            Assert.AreNotEqual(expr, new DivExpr((ParamExpr)"a", 2));
+            Assert.AreEqual(expr, expr);
+        }
     }
     public static class ExprTestExtensions {
         public static Expr Build(Expression<Func<Expr, Expr>> f) {
