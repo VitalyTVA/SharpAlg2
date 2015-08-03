@@ -144,41 +144,50 @@ namespace SharpAlg.Geo.Tests {
         }
 
         [Test]
-        public void ParamEquals() {
-            var param = (ParamExpr)"a";
-            Assert.AreNotEqual(param, (ParamExpr)"a");
-            Assert.AreNotEqual(param, (ParamExpr)"b");
-            Assert.AreEqual(param, param);
+        public void ParamEqualsAndHashCode() {
+            var expr = (ParamExpr)"a";
+            Assert.AreNotEqual(expr, (ParamExpr)"a");
+            Assert.AreNotEqual(expr, (ParamExpr)"b");
+            Assert.AreEqual(expr, expr);
+
+            Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
+            Assert.AreEqual(expr.GetHashCode(), ((ParamExpr)"a").GetHashCode());
+            Assert.AreNotEqual(expr.GetHashCode(), ((ParamExpr)"b").GetHashCode());
+
         }
         [Test]
-        public void ConstEquals() {
-            Expr @const = 1;
-            Assert.AreNotEqual(@const, (Expr)1);
-            Assert.AreNotEqual(@const, (Expr)2);
-            Assert.AreEqual(@const, @const);
+        public void ConstEqualsAndHashCode() {
+            Expr expr = 1;
+            Assert.AreNotEqual(expr, (Expr)1);
+            Assert.AreNotEqual(expr, (Expr)2);
+            Assert.AreEqual(expr, expr);
+
+            Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
+            Assert.AreEqual(expr.GetHashCode(), ((Expr)1).GetHashCode());
+            Assert.AreNotEqual(expr.GetHashCode(), ((Expr)2).GetHashCode());
         }
         [Test]
         public void PowerEquals() {
-            Expr expr = new PowerExpr((ParamExpr)"a", 2);
-            Assert.AreNotEqual(expr, new PowerExpr((ParamExpr)"a", 2));
+            Expr expr = Power((ParamExpr)"a", 2);
+            Assert.AreNotEqual(expr, Power((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
         }
         [Test]
         public void AddEquals() {
-            Expr expr = new AddExpr(ImmutableArray.Create<Expr>((ParamExpr)"a", 2));
-            Assert.AreNotEqual(expr, new AddExpr(ImmutableArray.Create<Expr>((ParamExpr)"a", 2)));
+            Expr expr = Add((ParamExpr)"a", 2);
+            Assert.AreNotEqual(expr, Add((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
         }
         [Test]
         public void MultEquals() {
-            Expr expr = new MultExpr(ImmutableArray.Create<Expr>((ParamExpr)"a", 2));
-            Assert.AreNotEqual(expr, new MultExpr(ImmutableArray.Create<Expr>((ParamExpr)"a", 2)));
+            Expr expr = Multiply((ParamExpr)"a", 2);
+            Assert.AreNotEqual(expr, Multiply((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
         }
         [Test]
         public void DivEquals() {
-            Expr expr = new DivExpr((ParamExpr)"a", 2);
-            Assert.AreNotEqual(expr, new DivExpr((ParamExpr)"a", 2));
+            Expr expr = Divide((ParamExpr)"a", 2);
+            Assert.AreNotEqual(expr, Divide((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
         }
     }

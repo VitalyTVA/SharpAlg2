@@ -38,28 +38,34 @@ namespace SharpAlg.Geo.Core {
             //return new PowerExpr(value, power);
         }
 
-        public override string ToString() {
-            return this.Print();
+        readonly int hashCode;
+        protected Expr(int hashCode) {
+            this.hashCode = hashCode;
         }
+        public override string ToString() => this.Print();
+        public override int GetHashCode() => hashCode;
     }
 
     public class AddExpr : Expr {
         public readonly ImmutableArray<Expr> Args;
-        public AddExpr(ImmutableArray<Expr> args) {
+        public AddExpr(ImmutableArray<Expr> args) 
+            : base(0) {
             Args = args;
         }
     }
 
     public class MultExpr : Expr {
         public readonly ImmutableArray<Expr> Args;
-        public MultExpr(ImmutableArray<Expr> args) {
+        public MultExpr(ImmutableArray<Expr> args) 
+            : base(0) {
             Args = args;
         }
     }
 
     public class DivExpr : Expr {
         public readonly Expr Numerator, Denominator;
-        public DivExpr(Expr numerator, Expr denominator) {
+        public DivExpr(Expr numerator, Expr denominator)
+            : base(0) {
             Numerator = numerator;
             Denominator = denominator;
         }
@@ -68,7 +74,8 @@ namespace SharpAlg.Geo.Core {
     public class PowerExpr : Expr {
         public readonly Expr Value;
         public readonly BigInteger Power;
-        public PowerExpr(Expr value, BigInteger power) {
+        public PowerExpr(Expr value, BigInteger power)
+            : base(0) {
             if(power < 1)
                 throw new PowerShouldBePositiveException();
             Value = value;
@@ -78,7 +85,8 @@ namespace SharpAlg.Geo.Core {
 
     public class SqrtExpr : Expr {
         public readonly Expr Value;
-        public SqrtExpr(Expr value) {
+        public SqrtExpr(Expr value)
+            : base(0) {
             Value = value;
         }
     }
@@ -88,14 +96,16 @@ namespace SharpAlg.Geo.Core {
             return new ParamExpr(name);
         }
         public readonly string Name;
-        public ParamExpr(string name) {
+        public ParamExpr(string name)
+            : base(name.GetHashCode()) {
             Name = name;
         }
     }
 
     public class ConstExpr : Expr {
         public readonly BigRational Value;
-        public ConstExpr(BigRational value) {
+        public ConstExpr(BigRational value)
+            : base(value.GetHashCode()) {
             Value = value;
         }
     }
@@ -167,30 +177,23 @@ namespace SharpAlg.Geo.Core {
                 @const: x => (double)x
             );
         }
-        public static double ToReal(this Expr expr, ImmutableContext context) {
-            return expr.ToReal(context.GetValue);
-        }
-        public static Expr Build(Expression<Func<Expr>> f) {
-            return BuildExpr(f);
-        }
-        public static Expr Build(Expression<Func<Expr, Expr>> f, Expr x1) {
-            return BuildExpr(f, x1);
-        }
-        public static Expr Build(Expression<Func<Expr, Expr, Expr>> f, Expr x1, Expr x2) {
-            return BuildExpr(f, x1, x2);
-        }
-        public static Expr Build(Expression<Func<Expr, Expr, Expr, Expr>> f, Expr x1, Expr x2, Expr x3) {
-            return BuildExpr(f, x1, x2, x3);
-        }
-        public static Expr Build(Expression<Func<Expr, Expr, Expr, Expr, Expr>> f, Expr x1, Expr x2, Expr x3, Expr x4) {
-            return BuildExpr(f, x1, x2, x3, x4);
-        }
-        public static Expr Build(Expression<Func<Expr, Expr, Expr, Expr, Expr, Expr>> f, Expr x1, Expr x2, Expr x3, Expr x4, Expr x5) {
-            return BuildExpr(f, x1, x2, x3, x4, x5);
-        }
-        public static Expr Build(Expression<Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr>> f, Expr x1, Expr x2, Expr x3, Expr x4, Expr x5, Expr x6) {
-            return BuildExpr(f, x1, x2, x3, x4, x5, x6);
-        }
+        public static double ToReal(this Expr expr, ImmutableContext context) => expr.ToReal(context.GetValue);
+
+        public static Expr Build(Expression<Func<Expr>> f) 
+            => BuildExpr(f);
+        public static Expr Build(Expression<Func<Expr, Expr>> f, Expr x1) 
+            =>  BuildExpr(f, x1);
+        public static Expr Build(Expression<Func<Expr, Expr, Expr>> f, Expr x1, Expr x2) 
+            => BuildExpr(f, x1, x2);
+        public static Expr Build(Expression<Func<Expr, Expr, Expr, Expr>> f, Expr x1, Expr x2, Expr x3) 
+            => BuildExpr(f, x1, x2, x3);
+        public static Expr Build(Expression<Func<Expr, Expr, Expr, Expr, Expr>> f, Expr x1, Expr x2, Expr x3, Expr x4) 
+            => BuildExpr(f, x1, x2, x3, x4); 
+        public static Expr Build(Expression<Func<Expr, Expr, Expr, Expr, Expr, Expr>> f, Expr x1, Expr x2, Expr x3, Expr x4, Expr x5) 
+            => BuildExpr(f, x1, x2, x3, x4, x5);
+        public static Expr Build(Expression<Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr>> f, Expr x1, Expr x2, Expr x3, Expr x4, Expr x5, Expr x6) 
+            => BuildExpr(f, x1, x2, x3, x4, x5, x6);
+
 
         static Expr BuildExpr(LambdaExpression expression, params Expr[] args) {
             if(expression.Parameters.Count != args.Length) {
