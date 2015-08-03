@@ -186,7 +186,7 @@ namespace SharpAlg.Geo.Tests {
 
             AssertHashCodesAreEqual(expr, expr);
             AssertHashCodesAreEqual(expr, Power((ParamExpr)"a", 2));
-            AssertHashCodesAreNotEqual(expr, Power((ParamExpr)"baaaa", 2));
+            AssertHashCodesAreNotEqual(expr, Power((ParamExpr)"b", 2));
             AssertHashCodesAreNotEqual(expr, Power((ParamExpr)"a", 3));
         }
         [Test]

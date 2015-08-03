@@ -139,7 +139,7 @@ namespace SharpAlg.Geo.Core {
         public static int Sqrt(Expr value) 
             => Single(SqrtSalt, value);
 
-        static int Pair<T1, T2>(int salt, T1 value1, T2 value2) => salt ^ value1.GetHashCode() & value2.GetHashCode();
+        static int Pair<T1, T2>(int salt, T1 value1, T2 value2) => salt ^ value1.GetHashCode() ^ value2.GetHashCode();
         static int Single<T>(int salt, T value) => salt ^ value.GetHashCode();
         static int Sequence<T>(int salt, IEnumerable<T> args) => args.Aggregate(salt, (hash, x) => hash ^ x.GetHashCode());
     }
