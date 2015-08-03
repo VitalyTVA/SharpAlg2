@@ -49,7 +49,7 @@ namespace SharpAlg.Geo.Core {
     public class AddExpr : Expr {
         public readonly ImmutableArray<Expr> Args;
         public AddExpr(ImmutableArray<Expr> args) 
-            : base(0) {
+            : base(HashCodeProvider.Add(args)) {
             Args = args;
         }
     }
@@ -57,7 +57,7 @@ namespace SharpAlg.Geo.Core {
     public class MultExpr : Expr {
         public readonly ImmutableArray<Expr> Args;
         public MultExpr(ImmutableArray<Expr> args) 
-            : base(0) {
+            : base(HashCodeProvider.Mult(args)) {
             Args = args;
         }
     }
@@ -65,7 +65,7 @@ namespace SharpAlg.Geo.Core {
     public class DivExpr : Expr {
         public readonly Expr Numerator, Denominator;
         public DivExpr(Expr numerator, Expr denominator)
-            : base(0) {
+            : base(HashCodeProvider.Div(numerator, denominator)) {
             Numerator = numerator;
             Denominator = denominator;
         }
@@ -115,7 +115,12 @@ namespace SharpAlg.Geo.Core {
         public static int Param(string name) => name.GetHashCode();
         public static int Const(BigRational value) => value.GetHashCode();
         public static int Power(Expr value, BigInteger power) => value.GetHashCode() ^ power.GetHashCode();
+        public static int Div(Expr numerator, Expr denominator) => numerator.GetHashCode() ^ denominator.GetHashCode();
         public static int Sqrt(Expr value) => value.GetHashCode();
+        public static int Add(IEnumerable<Expr> args) => Sequence(args);
+        public static int Mult(IEnumerable<Expr> args) => Sequence(args);
+
+        static int Sequence(IEnumerable<Expr> args) => args.Aggregate(0, (hash, x) => hash ^ x.GetHashCode());
     }
 
     public static class ExprExtensions {

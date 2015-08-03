@@ -179,7 +179,7 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreNotEqual(expr.GetHashCode(), ((Expr)2).GetHashCode());
         }
         [Test]
-        public void PowerEquals() {
+        public void PowerEqualsAndGetHashCode() {
             Expr expr = Power((ParamExpr)"a", 2);
             Assert.AreNotEqual(expr, Power((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
@@ -190,22 +190,37 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreNotEqual(expr.GetHashCode(), Power((ParamExpr)"a", 3).GetHashCode());
         }
         [Test]
-        public void AddEquals() {
+        public void AddEqualsAndGetHashCode() {
             Expr expr = Add((ParamExpr)"a", 2);
             Assert.AreNotEqual(expr, Add((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
+
+            Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
+            Assert.AreEqual(expr.GetHashCode(), Add((ParamExpr)"a", 2).GetHashCode());
+            Assert.AreNotEqual(expr.GetHashCode(), Add((ParamExpr)"b", 2).GetHashCode());
+            Assert.AreNotEqual(expr.GetHashCode(), Add((ParamExpr)"a", 3).GetHashCode());
         }
         [Test]
         public void MultEquals() {
             Expr expr = Multiply((ParamExpr)"a", 2);
             Assert.AreNotEqual(expr, Multiply((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
+
+            Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
+            Assert.AreEqual(expr.GetHashCode(), Multiply((ParamExpr)"a", 2).GetHashCode());
+            Assert.AreNotEqual(expr.GetHashCode(), Multiply((ParamExpr)"b", 2).GetHashCode());
+            Assert.AreNotEqual(expr.GetHashCode(), Multiply((ParamExpr)"a", 3).GetHashCode());
         }
         [Test]
         public void DivEquals() {
             Expr expr = Divide((ParamExpr)"a", 2);
             Assert.AreNotEqual(expr, Divide((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
+
+            Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
+            Assert.AreEqual(expr.GetHashCode(), Divide((ParamExpr)"a", 2).GetHashCode());
+            Assert.AreNotEqual(expr.GetHashCode(), Divide((ParamExpr)"b", 2).GetHashCode());
+            Assert.AreNotEqual(expr.GetHashCode(), Divide((ParamExpr)"a", 3).GetHashCode());
         }
     }
     public static class ExprTestExtensions {
