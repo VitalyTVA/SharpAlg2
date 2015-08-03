@@ -111,7 +111,20 @@ namespace SharpAlg.Geo.Core {
     }
 
     public static class HashCodeProvider {
-        //TODO mix with salt
+        readonly static int ParamSalt, ConstSalt, PowerSalt, DivSalt, SqrtSalt, AddSalt, MultSalt;
+        static HashCodeProvider() {
+            var rnd = new Random(0);
+            Func<int> getSalt = () => rnd.Next(int.MinValue, int.MaxValue);
+            ParamSalt = getSalt();
+            ConstSalt = getSalt();
+            PowerSalt = getSalt();
+            DivSalt = getSalt();
+            SqrtSalt = getSalt();
+            AddSalt = getSalt();
+            MultSalt = getSalt();
+        }
+
+
         public static int Param(string name) => name.GetHashCode();
         public static int Const(BigRational value) => value.GetHashCode();
         public static int Power(Expr value, BigInteger power) => value.GetHashCode() ^ power.GetHashCode();

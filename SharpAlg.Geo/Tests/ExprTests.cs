@@ -176,7 +176,7 @@ namespace SharpAlg.Geo.Tests {
 
             Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
             Assert.AreEqual(expr.GetHashCode(), ((Expr)1).GetHashCode());
-            Assert.AreNotEqual(expr.GetHashCode(), ((Expr)2).GetHashCode());
+            AssertHashCodesAreNotEqual(expr, (Expr)2);
         }
         [Test]
         public void PowerEqualsAndGetHashCode() {
@@ -186,8 +186,8 @@ namespace SharpAlg.Geo.Tests {
 
             Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
             Assert.AreEqual(expr.GetHashCode(), Power((ParamExpr)"a", 2).GetHashCode());
-            Assert.AreNotEqual(expr.GetHashCode(), Power((ParamExpr)"b", 2).GetHashCode());
-            Assert.AreNotEqual(expr.GetHashCode(), Power((ParamExpr)"a", 3).GetHashCode());
+            AssertHashCodesAreNotEqual(expr, Power((ParamExpr)"b", 2));
+            AssertHashCodesAreNotEqual(expr, Power((ParamExpr)"a", 3));
         }
         [Test]
         public void AddEqualsAndGetHashCode() {
@@ -197,8 +197,8 @@ namespace SharpAlg.Geo.Tests {
 
             Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
             Assert.AreEqual(expr.GetHashCode(), Add((ParamExpr)"a", 2).GetHashCode());
-            Assert.AreNotEqual(expr.GetHashCode(), Add((ParamExpr)"b", 2).GetHashCode());
-            Assert.AreNotEqual(expr.GetHashCode(), Add((ParamExpr)"a", 3).GetHashCode());
+            AssertHashCodesAreNotEqual(expr, Add((ParamExpr)"b", 2));
+            AssertHashCodesAreNotEqual(expr, Add((ParamExpr)"a", 3));
         }
         [Test]
         public void MultEquals() {
@@ -208,8 +208,8 @@ namespace SharpAlg.Geo.Tests {
 
             Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
             Assert.AreEqual(expr.GetHashCode(), Multiply((ParamExpr)"a", 2).GetHashCode());
-            Assert.AreNotEqual(expr.GetHashCode(), Multiply((ParamExpr)"b", 2).GetHashCode());
-            Assert.AreNotEqual(expr.GetHashCode(), Multiply((ParamExpr)"a", 3).GetHashCode());
+            AssertHashCodesAreNotEqual(expr, Multiply((ParamExpr)"b", 2));
+            AssertHashCodesAreNotEqual(expr, Multiply((ParamExpr)"a", 3));
         }
         [Test]
         public void DivEquals() {
@@ -219,9 +219,19 @@ namespace SharpAlg.Geo.Tests {
 
             Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
             Assert.AreEqual(expr.GetHashCode(), Divide((ParamExpr)"a", 2).GetHashCode());
-            Assert.AreNotEqual(expr.GetHashCode(), Divide((ParamExpr)"b", 2).GetHashCode());
-            Assert.AreNotEqual(expr.GetHashCode(), Divide((ParamExpr)"a", 3).GetHashCode());
+            AssertHashCodesAreNotEqual(expr, Divide((ParamExpr)"b", 2));
+            AssertHashCodesAreNotEqual(expr, Divide((ParamExpr)"a", 3));
         }
+        static void AssertHashCodesAreEqual<T>(T a, T b) {
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+        static void AssertHashCodesAreNotEqual<T>(T a, T b) {
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+        //[Test]
+        //public void HasCodeSalt() {
+        //    Assert.AreNotEqual(.GetHashCode(), Divide((ParamExpr)"b", 2).GetHashCode());
+        //}
     }
     public static class ExprTestExtensions {
         public static Expr Build(Expression<Func<Expr, Expr>> f) {
