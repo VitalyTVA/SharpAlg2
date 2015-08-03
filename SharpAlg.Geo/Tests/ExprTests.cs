@@ -8,6 +8,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using static SharpAlg.Geo.Core.ExprExtensions;
 using static SharpAlg.Geo.Tests.ExprTestExtensions;
+using System.Diagnostics;
 
 namespace SharpAlg.Geo.Tests {
     [TestFixture]
@@ -185,7 +186,7 @@ namespace SharpAlg.Geo.Tests {
 
             AssertHashCodesAreEqual(expr, expr);
             AssertHashCodesAreEqual(expr, Power((ParamExpr)"a", 2));
-            AssertHashCodesAreNotEqual(expr, Power((ParamExpr)"b", 2));
+            AssertHashCodesAreNotEqual(expr, Power((ParamExpr)"baaaa", 2));
             AssertHashCodesAreNotEqual(expr, Power((ParamExpr)"a", 3));
         }
         [Test]
@@ -221,16 +222,23 @@ namespace SharpAlg.Geo.Tests {
             AssertHashCodesAreNotEqual(expr, Divide((ParamExpr)"b", 2));
             AssertHashCodesAreNotEqual(expr, Divide((ParamExpr)"a", 3));
         }
+        [Test]
+        public void HashCodeSalt() {
+            AssertHashCodesAreNotEqual<Expr>((ParamExpr)"b", new SqrtExpr((ParamExpr)"b"));
+            AssertHashCodesAreNotEqual<Expr>(2, new SqrtExpr(2));
+
+            AssertHashCodesAreNotEqual<Expr>((ParamExpr)"b", Add((ParamExpr)"b"));
+            AssertHashCodesAreNotEqual<Expr>(Multiply((ParamExpr)"b"), Add((ParamExpr)"b"));
+            AssertHashCodesAreNotEqual<Expr>(Divide((ParamExpr)"b", 2), Add((ParamExpr)"b", 2));
+        }
+        [DebuggerStepThrough]
         static void AssertHashCodesAreEqual<T>(T a, T b) {
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
+        [DebuggerStepThrough]
         static void AssertHashCodesAreNotEqual<T>(T a, T b) {
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
-        //[Test]
-        //public void HasCodeSalt() {
-        //    Assert.AreNotEqual(.GetHashCode(), Divide((ParamExpr)"b", 2).GetHashCode());
-        //}
     }
     public static class ExprTestExtensions {
         public static Expr Build(Expression<Func<Expr, Expr>> f) {
