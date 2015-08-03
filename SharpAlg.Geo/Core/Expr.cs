@@ -75,7 +75,7 @@ namespace SharpAlg.Geo.Core {
         public readonly Expr Value;
         public readonly BigInteger Power;
         public PowerExpr(Expr value, BigInteger power)
-            : base(value.GetHashCode() ^ power.GetHashCode()) {
+            : base(HashCodeProvider.Power(value, power)) {
             if(power < 1)
                 throw new PowerShouldBePositiveException();
             Value = value;
@@ -86,7 +86,7 @@ namespace SharpAlg.Geo.Core {
     public class SqrtExpr : Expr {
         public readonly Expr Value;
         public SqrtExpr(Expr value)
-            : base(0) {
+            : base(HashCodeProvider.Sqrt(value)) {
             Value = value;
         }
     }
@@ -97,7 +97,7 @@ namespace SharpAlg.Geo.Core {
         }
         public readonly string Name;
         public ParamExpr(string name)
-            : base(name.GetHashCode()) {
+            : base(HashCodeProvider.Param(name)) {
             Name = name;
         }
     }
@@ -105,9 +105,17 @@ namespace SharpAlg.Geo.Core {
     public class ConstExpr : Expr {
         public readonly BigRational Value;
         public ConstExpr(BigRational value)
-            : base(value.GetHashCode()) {
+            : base(HashCodeProvider.Const(value)) {
             Value = value;
         }
+    }
+
+    public static class HashCodeProvider {
+        //TODO mix with salt
+        public static int Param(string name) => name.GetHashCode();
+        public static int Const(BigRational value) => value.GetHashCode();
+        public static int Power(Expr value, BigInteger power) => value.GetHashCode() ^ power.GetHashCode();
+        public static int Sqrt(Expr value) => value.GetHashCode();
     }
 
     public static class ExprExtensions {

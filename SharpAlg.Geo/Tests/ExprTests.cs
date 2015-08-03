@@ -156,6 +156,18 @@ namespace SharpAlg.Geo.Tests {
 
         }
         [Test]
+        public void SqrtEqualsAndGetHashCode() {
+            var expr = new SqrtExpr((ParamExpr)"a");
+            Assert.AreNotEqual(expr, new SqrtExpr((ParamExpr)"a"));
+            Assert.AreNotEqual(expr, new SqrtExpr((ParamExpr)"a"));
+            Assert.AreEqual(expr, expr);
+
+            Assert.AreEqual(expr.GetHashCode(), expr.GetHashCode());
+            Assert.AreEqual(expr.GetHashCode(), new SqrtExpr((ParamExpr)"a").GetHashCode());
+            Assert.AreNotEqual(expr.GetHashCode(), new SqrtExpr((ParamExpr)"b").GetHashCode());
+
+        }
+        [Test]
         public void ConstEqualsAndGetHashCode() {
             Expr expr = 1;
             Assert.AreNotEqual(expr, (Expr)1);
