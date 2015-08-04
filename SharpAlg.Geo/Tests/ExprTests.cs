@@ -45,7 +45,7 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreSame(a, a_power_five.Value);
             Assert.AreEqual((BigInteger)5, a_power_five.Power);
 
-            DivExpr a_div_five = (DivExpr)(DivExpr)Build((x, y) => x / y, a, five);
+            DivExpr a_div_five = (DivExpr)Build((x, y) => x / y, a, five);
             Assert.AreSame(a, a_div_five.Numerator);
             //if(a_div_five == a_div_five) { }
 
@@ -153,7 +153,7 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual(expr, expr);
 
             AssertHashCodesAreEqual(expr, expr);
-            AssertHashCodesAreEqual(expr, (ParamExpr)"a");
+            AssertHashCodesAreEqual(expr, "a");
             AssertHashCodesAreNotEqual(expr, ((ParamExpr)"b"));
 
         }
