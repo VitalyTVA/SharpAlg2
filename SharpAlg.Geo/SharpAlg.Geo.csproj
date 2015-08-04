@@ -69,6 +69,7 @@
     <Compile Include="Core\ExprPrinter.cs" />
     <Compile Include="Core\MayBe.cs" />
     <Compile Include="ImmutableContext.cs" />
+    <Compile Include="PrimitiveOperations.cs" />
     <Compile Include="Primitives.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\ExprTests.cs" />
