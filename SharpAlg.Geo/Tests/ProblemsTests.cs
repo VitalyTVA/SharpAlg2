@@ -35,10 +35,10 @@ namespace SharpAlg.Geo.Tests {
             var c1 = Circle.FromPoints(p1, p2);
             var c2 = Circle.FromPoints(p2, p1);
 
-            var c1_c2 = builder.Intersect(c1, c2);
+            var c1_c2 = builder.IntersectCircles(c1, c2);
             var l2 = Line.FromPoints(c1_c2.Item1, c1_c2.Item2);
 
-            var l1_l2 = builder.Intersect(l1, l2);
+            var l1_l2 = builder.IntersectLines(l1, l2);
 
             var expected = ExprHelper.Middle(p1, p2);
             return l1_l2.Offset(expected.Invert());
@@ -66,12 +66,12 @@ namespace SharpAlg.Geo.Tests {
             var l2 = Line.FromPoints(A, C);
 
             var c = Circle.FromPoints(A, C);
-            var c_l2 = builder.Intersect(l1, c).Item1;
+            var c_l2 = builder.IntersectLineAndCircle(l1, c).Item1;
 
             var middle = ExprHelper.Middle(C, c_l2);//TODO make real
             var bisectrissa = Line.FromPoints(A, middle);
 
-            return Add(builder.TangentBetween(l1, bisectrissa), builder.TangentBetween(l2, bisectrissa));
+            return Add(builder.TangentBetweenLines(l1, bisectrissa), builder.TangentBetweenLines(l2, bisectrissa));
         }
         #endregion
 
@@ -98,13 +98,13 @@ simplify({0});
 
             var c = Circle.FromPoints(C, A);
 
-            var D = builder.Intersect(l1, c).Item1; //????
+            var D = builder.IntersectLineAndCircle(l1, c).Item1; //????
             var l2 = Line.FromPoints(C, D);
-            var E = builder.Intersect(l2, c).Item2; //????1
+            var E = builder.IntersectLineAndCircle(l2, c).Item2; //????1
 
             var l3 = Line.FromPoints(E, A);
 
-            var cotangent = builder.CotangentBetween(l1, l3);
+            var cotangent = builder.CotangentBetweenLine(l1, l3);
             return cotangent;
 
         } 
@@ -131,13 +131,13 @@ simplify({0});
 ", res);
         }
         Expr GetPerpendocularZeroAssertion2(Line l, Circle c) {
-            var A = builder.Intersect(l, c).Item2;
-            var B = builder.Intersect(l, c).Item1;
+            var A = builder.IntersectLineAndCircle(l, c).Item2;
+            var B = builder.IntersectLineAndCircle(l, c).Item1;
             var l2 = Line.FromPoints(c.Center, B);
-            var C = builder.Intersect(l2, c).Item2;
+            var C = builder.IntersectLineAndCircle(l2, c).Item2;
             var l3 = Line.FromPoints(A, C);
 
-            var cotangent = builder.CotangentBetween(l, l3);
+            var cotangent = builder.CotangentBetweenLine(l, l3);
             return cotangent;
         }
         #endregion
