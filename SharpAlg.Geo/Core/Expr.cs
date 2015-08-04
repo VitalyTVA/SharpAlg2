@@ -14,27 +14,27 @@ namespace SharpAlg.Geo.Core {
         }
 
         public static AddExpr operator +(Expr a, Expr b) {
-            throw new CantImplicitlyCreateExpressionException();
+            throw new CannotImplicitlyCreateExpressionException();
         }
 
         public static MultExpr operator *(Expr a, Expr b) {
-            throw new CantImplicitlyCreateExpressionException();
+            throw new CannotImplicitlyCreateExpressionException();
         }
 
         public static MultExpr operator -(Expr a) {
-            throw new CantImplicitlyCreateExpressionException();
+            throw new CannotImplicitlyCreateExpressionException();
         }
 
         public static AddExpr operator -(Expr a, Expr b) {
-            throw new CantImplicitlyCreateExpressionException();
+            throw new CannotImplicitlyCreateExpressionException();
         }
 
         public static DivExpr operator /(Expr a, Expr b) {
-            throw new CantImplicitlyCreateExpressionException();
+            throw new CannotImplicitlyCreateExpressionException();
         }
 
         public static PowerExpr operator ^(Expr value,  BigInteger power) {
-            throw new CantImplicitlyCreateExpressionException();
+            throw new CannotImplicitlyCreateExpressionException();
             //return new PowerExpr(value, power);
         }
 
@@ -146,7 +146,7 @@ namespace SharpAlg.Geo.Core {
 
     public static class ExprExtensions {
         public static SqrtExpr Sqrt(Expr value) {
-            throw new CantImplicitlyCreateExpressionException();
+            throw new CannotImplicitlyCreateExpressionException();
             //return new SqrtExpr(value);
         }
         [DebuggerStepThrough]
@@ -254,24 +254,20 @@ namespace SharpAlg.Geo.Core {
                 var unary = expression as UnaryExpression;
                 return Minus(BuildCore(unary.Operand, getArgs));
             }
+            var binary = expression as BinaryExpression;
             if(expression.NodeType == ExpressionType.Add) {
-                var binary = expression as BinaryExpression;
                 return Add(BuildCore(binary.Left, getArgs), BuildCore(binary.Right, getArgs));
             }
             if(expression.NodeType == ExpressionType.Subtract) {
-                var binary = expression as BinaryExpression;
                 return Subtract(BuildCore(binary.Left, getArgs), BuildCore(binary.Right, getArgs));
             }
             if(expression.NodeType == ExpressionType.Multiply) {
-                var binary = expression as BinaryExpression;
                 return Multiply(BuildCore(binary.Left, getArgs), BuildCore(binary.Right, getArgs));
             }
             if(expression.NodeType == ExpressionType.Divide) {
-                var binary = expression as BinaryExpression;
                 return Divide(BuildCore(binary.Left, getArgs), BuildCore(binary.Right, getArgs));
             }
             if(expression.NodeType == ExpressionType.ExclusiveOr) {
-                var binary = expression as BinaryExpression;
                 return Power(BuildCore(binary.Left, getArgs), GetConst(binary.Right));
             }
             throw new InvalidExpressionException();
@@ -313,7 +309,7 @@ namespace SharpAlg.Geo.Core {
             return value.Denominator != BigInteger.One;
         }
     }
-    public class CantImplicitlyCreateExpressionException : ApplicationException { }
-    public class PowerShouldBePositiveException : ApplicationException { }
-    public class InvalidExpressionException : ApplicationException { }
+    public class CannotImplicitlyCreateExpressionException : Exception { }
+    public class PowerShouldBePositiveException : Exception { }
+    public class InvalidExpressionException : Exception { }
 }

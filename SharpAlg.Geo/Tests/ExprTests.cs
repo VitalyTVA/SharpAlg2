@@ -12,9 +12,9 @@ using System.Diagnostics;
 
 namespace SharpAlg.Geo.Tests {
     [TestFixture]
-    public class ExprTests {
+    public static class ExprTests {
         [Test]
-        public void BasicStuffTest() {
+        public static void BasicStuffTest() {
             Expr five = 5;
             Assert.AreEqual((BigRational)5, ((ConstExpr)five).Value);
 
@@ -45,23 +45,24 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreSame(a, a_power_five.Value);
             Assert.AreEqual((BigInteger)5, a_power_five.Power);
 
-            DivExpr a_div_five = (DivExpr)Build((x, y) => x / y, a, five);
-            Assert.AreSame(a, a_plus_five.Args[0]);
+            DivExpr a_div_five = (DivExpr)(DivExpr)Build((x, y) => x / y, a, five);
+            Assert.AreSame(a, a_div_five.Numerator);
+            //if(a_div_five == a_div_five) { }
 
             MultExpr minus_a = (MultExpr)Build(x => -x, a);
             Assert.AreEqual(2, minus_a.Args.Length);
             Assert.AreEqual((BigRational)(-1), ((ConstExpr)minus_a.Args[0]).Value);
             Assert.AreSame(a, minus_a.Args[1]);
 
-            Assert.Throws<PowerShouldBePositiveException>(() => { var t = Build(x => x ^ 0, a); });
-            Assert.Throws<PowerShouldBePositiveException>(() => { var t = Build(x => x ^ -1, a); });
-            Assert.Throws<InvalidExpressionException>(() => { var t = Build(x => SomeFunc(x), a); });
+            Assert.Throws<PowerShouldBePositiveException>(() => { Build(x => x ^ 0, a); });
+            Assert.Throws<PowerShouldBePositiveException>(() => { Build(x => x ^ -1, a); });
+            Assert.Throws<InvalidExpressionException>(() => { Build(x => SomeFunc(x), a); });
         }
         static Expr SomeFunc(Expr e) {
             throw new NotImplementedException();
         }
         [Test]
-        public void ToStringTest() {
+        public static void ToStringTest() {
             Build(() => 9).AssertSimpleStringRepresentation("9");
             Build(() => -9).AssertSimpleStringRepresentation("-9");
             Build(x => x).AssertSimpleStringRepresentation("x");
@@ -97,7 +98,7 @@ namespace SharpAlg.Geo.Tests {
             Build((x, y) =>Sqrt(x + y)).AssertSimpleStringRepresentation("sqrt(x + y)");
         }
         [Test]
-        public void ToStringTest_Div() {
+        public static void ToStringTest_Div() {
             Build(x => 9 / x).AssertSimpleStringRepresentation("9 / x");
             Build((x, y, z) => x / y / z).AssertSimpleStringRepresentation("(x / y) / z");
             Build(x => 9 / (1 / x)).AssertSimpleStringRepresentation("9 / (1 / x)");
@@ -115,7 +116,7 @@ namespace SharpAlg.Geo.Tests {
             Build(x => 1 / (3 * x)).AssertSimpleStringRepresentation("1 / (3 * x)");
         }
         [Test]
-        public void ToStringTest2() {
+        public static void ToStringTest2() {
             var x = new ParamExpr("x");
             var y = new ParamExpr("y");
             var z = new ParamExpr("z");
@@ -133,7 +134,7 @@ namespace SharpAlg.Geo.Tests {
             Power(Multiply(-1, x, y), 2).AssertSimpleStringRepresentation("(-x * y) ^ 2");
         }
         [Test]
-        public void ToStringTest2_Div() {
+        public static void ToStringTest2_Div() {
             var x = new ParamExpr("x");
             var y = new ParamExpr("y");
             var z = new ParamExpr("z");
@@ -145,7 +146,7 @@ namespace SharpAlg.Geo.Tests {
         }
 
         [Test]
-        public void ParamEqualsAndGetHashCode() {
+        public static void ParamEqualsAndGetHashCode() {
             var expr = (ParamExpr)"a";
             Assert.AreNotEqual(expr, (ParamExpr)"a");
             Assert.AreNotEqual(expr, (ParamExpr)"b");
@@ -157,7 +158,7 @@ namespace SharpAlg.Geo.Tests {
 
         }
         [Test]
-        public void SqrtEqualsAndGetHashCode() {
+        public static void SqrtEqualsAndGetHashCode() {
             var expr = new SqrtExpr((ParamExpr)"a");
             Assert.AreNotEqual(expr, new SqrtExpr((ParamExpr)"a"));
             Assert.AreNotEqual(expr, new SqrtExpr((ParamExpr)"a"));
@@ -168,7 +169,7 @@ namespace SharpAlg.Geo.Tests {
             AssertHashCodesAreNotEqual(expr, new SqrtExpr((ParamExpr)"b"));
         }
         [Test]
-        public void ConstEqualsAndGetHashCode() {
+        public static void ConstEqualsAndGetHashCode() {
             Expr expr = 1;
             Assert.AreNotEqual(expr, (Expr)1);
             Assert.AreNotEqual(expr, (Expr)2);
@@ -179,7 +180,7 @@ namespace SharpAlg.Geo.Tests {
             AssertHashCodesAreNotEqual(expr, (Expr)2);
         }
         [Test]
-        public void PowerEqualsAndGetHashCode() {
+        public static void PowerEqualsAndGetHashCode() {
             Expr expr = Power((ParamExpr)"a", 2);
             Assert.AreNotEqual(expr, Power((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
@@ -190,7 +191,7 @@ namespace SharpAlg.Geo.Tests {
             AssertHashCodesAreNotEqual(expr, Power((ParamExpr)"a", 3));
         }
         [Test]
-        public void AddEqualsAndGetHashCode() {
+        public static void AddEqualsAndGetHashCode() {
             Expr expr = Add((ParamExpr)"a", 2);
             Assert.AreNotEqual(expr, Add((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
@@ -201,7 +202,7 @@ namespace SharpAlg.Geo.Tests {
             AssertHashCodesAreNotEqual(expr, Add((ParamExpr)"a", 3));
         }
         [Test]
-        public void MultEquals() {
+        public static void MultEquals() {
             Expr expr = Multiply((ParamExpr)"a", 2);
             Assert.AreNotEqual(expr, Multiply((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
@@ -212,7 +213,7 @@ namespace SharpAlg.Geo.Tests {
             AssertHashCodesAreNotEqual(expr, Multiply((ParamExpr)"a", 3));
         }
         [Test]
-        public void DivEquals() {
+        public static void DivEquals() {
             Expr expr = Divide((ParamExpr)"a", 2);
             Assert.AreNotEqual(expr, Divide((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
@@ -223,7 +224,7 @@ namespace SharpAlg.Geo.Tests {
             AssertHashCodesAreNotEqual(expr, Divide((ParamExpr)"a", 3));
         }
         [Test]
-        public void HashCodeSalt() {
+        public static void HashCodeSalt() {
             AssertHashCodesAreNotEqual<Expr>((ParamExpr)"b", new SqrtExpr((ParamExpr)"b"));
             AssertHashCodesAreNotEqual<Expr>(2, new SqrtExpr(2));
 

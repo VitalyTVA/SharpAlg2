@@ -148,16 +148,6 @@ namespace SharpAlg.Geo.Core {
                     throw new NotImplementedException();
             }
         }
-        static OperationPriority GetPriority(BinaryOperation operation) {
-            switch(operation) {
-                case BinaryOperation.Add:
-                    return OperationPriority.Add;
-                case BinaryOperation.Multiply:
-                    return OperationPriority.Multiply;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
         static string WrapFromAdd(Expr expr) {
             return Wrap(expr, OperationPriority.Add, ExpressionOrder.Default);
         }
