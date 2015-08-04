@@ -1,20 +1,19 @@
 ﻿using NUnit.Framework;
 using RealPoint = System.Windows.Point;
 using static SharpAlg.Geo.Core.ExprExtensions;
-using static SharpAlg.Geo.Tests.ExprTestExtensions;
 
 namespace SharpAlg.Geo.Tests {
     [TestFixture]
-    public static class IntersectionsTests {
+    public class IntersectionsTests : ExprTestsBase {
         [Test]
-        public static void LinesIntersetions() {
+        public void LinesIntersetions() {
             var A = Point.FromName('A');
             var B = Point.FromName('B');
             var C = Point.FromName('C');
             var D = Point.FromName('D');
             var m = Line.FromPoints(A, B);
             var n = Line.FromPoints(C, D);
-            var X = m.Intersect(n);
+            var X = builder.Intersect(m, n);
             var context = ImmutableContext.Empty
                 .RegisterPoint(A, 2, 1)
                 .RegisterPoint(B, 8, 4)
@@ -23,7 +22,7 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual(new RealPoint(4, 2), X.ToRealPoint(context));
         }
         [Test]
-        public static void LineAndCircleIntersection1() {
+        public void LineAndCircleIntersection1() {
             AssertLineAndCircleIntersection(
                 new RealPoint(-9, 5),
                 new RealPoint(12, 8),
@@ -34,7 +33,7 @@ namespace SharpAlg.Geo.Tests {
             );
         }
         [Test]
-        public static void LineAndCircleIntersection2() {
+        public void LineAndCircleIntersection2() {
             AssertLineAndCircleIntersection(
                 new RealPoint(3, 4),
                 new RealPoint(6, 0),
@@ -44,14 +43,14 @@ namespace SharpAlg.Geo.Tests {
                 new RealPoint(0, 8)
             );
         }
-        static void AssertLineAndCircleIntersection(RealPoint a, RealPoint b, RealPoint c, RealPoint d, RealPoint x1, RealPoint x2) {
+        void AssertLineAndCircleIntersection(RealPoint a, RealPoint b, RealPoint c, RealPoint d, RealPoint x1, RealPoint x2) {
             var A = Point.FromName('A');
             var B = Point.FromName('B');
             var C = Point.FromName('C');
             var D = Point.FromName('D');
             var line = Line.FromPoints(A, B);
             var circle = Circle.FromPoints(C, D);
-            var X = line.Intersect(circle);
+            var X = builder.Intersect(line, circle);
             var context = ImmutableContext.Empty
                 .RegisterPoint(A, a.X, a.Y)
                 .RegisterPoint(B, b.X, b.Y)
@@ -61,7 +60,7 @@ namespace SharpAlg.Geo.Tests {
             AssertHelper.ArePointsEqual(x2, X.Item2.ToRealPoint(context));
         }
         [Test]
-        public static void CirclesIntersection1() {
+        public void CirclesIntersection1() {
             AssertCirclesIntersection(
                 new RealPoint(0, 0),
                 new RealPoint(0, 5),
@@ -72,7 +71,7 @@ namespace SharpAlg.Geo.Tests {
             );
         }
         [Test]
-        public static void CirclesIntersection2() {
+        public void CirclesIntersection2() {
             AssertCirclesIntersection(
                 new RealPoint(0, 0),
                 new RealPoint(0, 5),
@@ -83,7 +82,7 @@ namespace SharpAlg.Geo.Tests {
             );
         }
         [Test]
-        public static void CirclesIntersection3() {
+        public void CirclesIntersection3() {
             AssertCirclesIntersection(
                 new RealPoint(0 + 1, 0 + 2),
                 new RealPoint(0 + 1, 5 + 2),
@@ -94,7 +93,7 @@ namespace SharpAlg.Geo.Tests {
             );
         }
         [Test]
-        public static void CirclesIntersection4() {
+        public void CirclesIntersection4() {
             AssertCirclesIntersection(
                 new RealPoint(-1, 2),
                 new RealPoint(-1, -2),
@@ -104,14 +103,14 @@ namespace SharpAlg.Geo.Tests {
                 new RealPoint(-1.9196363335788034, 3.9728484447717376042)
             );
         }
-        static void AssertCirclesIntersection(RealPoint a, RealPoint b, RealPoint c, RealPoint d, RealPoint x1, RealPoint x2) {
+        void AssertCirclesIntersection(RealPoint a, RealPoint b, RealPoint c, RealPoint d, RealPoint x1, RealPoint x2) {
             var A = Point.FromName('A');
             var B = Point.FromName('B');
             var C = Point.FromName('C');
             var D = Point.FromName('D');
             var c1 = Circle.FromPoints(A, B);
             var c2 = Circle.FromPoints(C, D);
-            var X = c1.Intersect(c2);
+            var X = builder.Intersect(c1, c2);
             var context = ImmutableContext.Empty
                 .RegisterPoint(A, a.X, a.Y)
                 .RegisterPoint(B, b.X, b.Y)
@@ -136,9 +135,9 @@ namespace SharpAlg.Geo.Tests {
         //    Assert.AreEqual(new RealPoint(5, 7), X.Item1.ToRealPoint(context));
         //}
         [Test]
-        public static void QuadraticEquation() {
+        public void QuadraticEquation() {
 
-            var roots = QuadraticEquationHelper.Solve((Core.ParamExpr)"A", (Core.ParamExpr)"B", (Core.ParamExpr)"C");
+            var roots =  builder.SolveQuadraticEquation((Core.ParamExpr)"A", (Core.ParamExpr)"B", (Core.ParamExpr)"C");
             var context = ImmutableContext.Empty
                 .RegisterValue("A", 1)
                 .RegisterValue("B", -2)
@@ -153,7 +152,7 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual(3, roots.Item1.ToReal(context));
             Assert.AreEqual(-1, roots.Item2.ToReal(context));
 
-            roots = QuadraticEquationHelper.Solve(Build(X => X + 1), Build(Y => Y -2), Build(Z => Z / 2));
+            roots = builder.SolveQuadraticEquation(builder.Build(X => X + 1), builder.Build(Y => Y -2), builder.Build(Z => Z / 2));
             context = ImmutableContext.Empty
                 .RegisterValue("X", 0)
                 .RegisterValue("Y", 0)
@@ -162,7 +161,7 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual(-1, roots.Item2.ToReal(context));
         }
         [Test, Ignore]
-        public static void Middle1() {
+        public void Middle1() {
             var p1 = new Point(0, 0);
             var p2 = new Point(0, Param("a"));
             var l1 = Line.FromPoints(p1, p2);
@@ -173,16 +172,16 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual("x ^ 2 + y ^ 2 - a ^ 2", c1.ToString());
             Assert.AreEqual("x ^ 2 + (y - a) ^ 2 - a ^ 2", c2.ToString());
 
-            var c1_c2 = c1.Intersect(c2);
+            var c1_c2 = builder.Intersect(c1, c2);
             Assert.AreEqual("(1/8 * (48 * a ^ 6) ^ (1/2) * a ^ (-2), 1/2 * a)", c1_c2.Item1.ToString());
             Assert.AreEqual("(-1/8 * (48 * a ^ 6) ^ (1/2) * a ^ (-2), 1/2 * a)", c1_c2.Item2.ToString());
             var l2 = Line.FromPoints(c1_c2.Item1, c1_c2.Item2);
 
-            var l1_l2 = l1.Intersect(l2);
+            var l1_l2 = builder.Intersect(l1, l2);
             Assert.AreEqual("(0, 1/2 * a)", l1_l2.ToString()); 
         }
         [Test, Ignore]
-        public static void Middle2() {
+        public void Middle2() {
             var p1 = new Point(Param("b"), 0);
             var p2 = new Point(0, Param("a"));
             var l1 = Line.FromPoints(p1, p2);
@@ -193,13 +192,13 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual("(x - b) ^ 2 + y ^ 2 - b ^ 2 - a ^ 2", c1.ToString());
             Assert.AreEqual("x ^ 2 + (y - a) ^ 2 - b ^ 2 - a ^ 2", c2.ToString());
 
-            var c1_c2 = c1.Intersect(c2);
+            var c1_c2 = builder.Intersect(c1, c2);
             //Assert.AreEqual("(1/8 * 48 ^ (1/2) * a, 1/2 * a)", c1_c2.Item1.ToString());
             //Assert.AreEqual("(-1/8 * 48 ^ (1/2) * a, 1/2 * a)", c1_c2.Item2.ToString());
             var l2 = Line.FromPoints(c1_c2.Item1, c1_c2.Item2);
 
             //var l1_l2 = 
-                l1.Intersect(l2);
+                builder.Intersect(l1, l2);
             //Assert.AreEqual("(0, 1/2 * a)", l1_l2.ToString());
         }
     }

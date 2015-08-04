@@ -7,113 +7,118 @@ using System.Linq.Expressions;
 using System.Collections.Immutable;
 using System.Linq;
 using static SharpAlg.Geo.Core.ExprExtensions;
-using static SharpAlg.Geo.Tests.ExprTestExtensions;
 using System.Diagnostics;
 
 namespace SharpAlg.Geo.Tests {
+    public class ExprTestsBase {
+        protected Builder builder;
+        [SetUp]
+        public void SetUp() {
+            builder = new Builder();
+        }
+    }
     [TestFixture]
-    public static class ExprTests {
+    public class ExprTests : ExprTestsBase {
         [Test]
-        public static void BasicStuffTest() {
+        public void BasicStuffTest() {
             Expr five = 5;
             Assert.AreEqual((BigRational)5, ((ConstExpr)five).Value);
 
             ParamExpr a = "A";
             Assert.AreEqual("A", a.Name);
 
-            AddExpr a_plus_five = (AddExpr)Build(x => x + 5, a);
+            AddExpr a_plus_five = (AddExpr)builder.Build(x => x + 5, a);
             Assert.AreEqual(2, a_plus_five.Args.Length);
             Assert.AreSame(a, a_plus_five.Args[0]);
             Assert.AreEqual((BigRational)5, ((ConstExpr)a_plus_five.Args[1]).Value);
 
-            AddExpr five_minus_a = (AddExpr)Build(x => 5 - x, a);
+            AddExpr five_minus_a = (AddExpr)builder.Build(x => 5 - x, a);
             Assert.AreEqual(2, five_minus_a.Args.Length);
             Assert.AreEqual((BigRational)5, ((ConstExpr)five_minus_a.Args[0]).Value);
             Assert.AreEqual((BigRational)(-1), ((ConstExpr)(five_minus_a.Args[1] as MultExpr).Args[0]).Value);
             Assert.AreSame(a, (five_minus_a.Args[1] as MultExpr).Args[1]);
 
 
-            MultExpr five_mult_a = (MultExpr)Build(x => 5 * x, a);
+            MultExpr five_mult_a = (MultExpr)builder.Build(x => 5 * x, a);
             Assert.AreEqual(2, five_mult_a.Args.Length);
             Assert.AreEqual((BigRational)5, ((ConstExpr)five_mult_a.Args[0]).Value);
             Assert.AreSame(a, five_mult_a.Args[1]);
 
-            SqrtExpr sqrt_a = (SqrtExpr)Build(x => Sqrt(x), a);
+            SqrtExpr sqrt_a = (SqrtExpr)builder.Build(x => Sqrt(x), a);
             Assert.AreSame(a, sqrt_a.Value);
 
-            PowerExpr a_power_five = (PowerExpr)Build(x => x ^ 5, a);
+            PowerExpr a_power_five = (PowerExpr)builder.Build(x => x ^ 5, a);
             Assert.AreSame(a, a_power_five.Value);
             Assert.AreEqual((BigInteger)5, a_power_five.Power);
 
-            DivExpr a_div_five = (DivExpr)Build((x, y) => x / y, a, five);
+            DivExpr a_div_five = (DivExpr)builder.Build((x, y) => x / y, a, five);
             Assert.AreSame(a, a_div_five.Numerator);
             //if(a_div_five == a_div_five) { }
 
-            MultExpr minus_a = (MultExpr)Build(x => -x, a);
+            MultExpr minus_a = (MultExpr)builder.Build(x => -x, a);
             Assert.AreEqual(2, minus_a.Args.Length);
             Assert.AreEqual((BigRational)(-1), ((ConstExpr)minus_a.Args[0]).Value);
             Assert.AreSame(a, minus_a.Args[1]);
 
-            Assert.Throws<PowerShouldBePositiveException>(() => { Build(x => x ^ 0, a); });
-            Assert.Throws<PowerShouldBePositiveException>(() => { Build(x => x ^ -1, a); });
-            Assert.Throws<InvalidExpressionException>(() => { Build(x => SomeFunc(x), a); });
+            Assert.Throws<PowerShouldBePositiveException>(() => { builder.Build(x => x ^ 0, a); });
+            Assert.Throws<PowerShouldBePositiveException>(() => { builder.Build(x => x ^ -1, a); });
+            Assert.Throws<InvalidExpressionException>(() => { builder.Build(x => SomeFunc(x), a); });
         }
         static Expr SomeFunc(Expr e) {
             throw new NotImplementedException();
         }
         [Test]
-        public static void ToStringTest() {
-            Build(() => 9).AssertSimpleStringRepresentation("9");
-            Build(() => -9).AssertSimpleStringRepresentation("-9");
-            Build(x => x).AssertSimpleStringRepresentation("x");
-            Build(x => -x).AssertSimpleStringRepresentation("-x");
-            Build(x => 9 + x).AssertSimpleStringRepresentation("9 + x");
-            Build(x => 9 - x).AssertSimpleStringRepresentation("9 - x");
-            Build(x => -(9 - x)).AssertSimpleStringRepresentation("-(9 - x)");
-            Build(x => 9 * x).AssertSimpleStringRepresentation("9 * x");
-            Build((x, y, z) => x + y * z).AssertSimpleStringRepresentation("x + y * z");
-            Build((x, y, z) => (x + y) * z).AssertSimpleStringRepresentation("(x + y) * z");
-            Build((x, y, z) => z * (x + y)).AssertSimpleStringRepresentation("z * (x + y)");
-            Build(x => x ^ 4).AssertSimpleStringRepresentation("x ^ 4");
-            Build((x, y) => x * (y ^ 3)).AssertSimpleStringRepresentation("x * y ^ 3");
-            Build((x, y) => x * y ^ 3).AssertSimpleStringRepresentation("(x * y) ^ 3");
-            Build(x => x ^ 2 ^ 3).AssertSimpleStringRepresentation("(x ^ 2) ^ 3");
-            Build((x, y, z) => x + y + z).AssertSimpleStringRepresentation("x + y + z");
-            Build((x, y, z) => x - y - z).AssertSimpleStringRepresentation("x - y - z");
-            Build((x, y) => 1 + 2 * x + 3 * y).AssertSimpleStringRepresentation("1 + 2 * x + 3 * y");
-            Build((x, y) => (x + 1) ^ (2 * 3)).AssertSimpleStringRepresentation("(x + 1) ^ 6");
+        public void ToStringTest() {
+            builder.Build(() => 9).AssertSimpleStringRepresentation("9");
+            builder.Build(() => -9).AssertSimpleStringRepresentation("-9");
+            builder.Build(x => x).AssertSimpleStringRepresentation("x");
+            builder.Build(x => -x).AssertSimpleStringRepresentation("-x");
+            builder.Build(x => 9 + x).AssertSimpleStringRepresentation("9 + x");
+            builder.Build(x => 9 - x).AssertSimpleStringRepresentation("9 - x");
+            builder.Build(x => -(9 - x)).AssertSimpleStringRepresentation("-(9 - x)");
+            builder.Build(x => 9 * x).AssertSimpleStringRepresentation("9 * x");
+            builder.Build((x, y, z) => x + y * z).AssertSimpleStringRepresentation("x + y * z");
+            builder.Build((x, y, z) => (x + y) * z).AssertSimpleStringRepresentation("(x + y) * z");
+            builder.Build((x, y, z) => z * (x + y)).AssertSimpleStringRepresentation("z * (x + y)");
+            builder.Build(x => x ^ 4).AssertSimpleStringRepresentation("x ^ 4");
+            builder.Build((x, y) => x * (y ^ 3)).AssertSimpleStringRepresentation("x * y ^ 3");
+            builder.Build((x, y) => x * y ^ 3).AssertSimpleStringRepresentation("(x * y) ^ 3");
+            builder.Build(x => x ^ 2 ^ 3).AssertSimpleStringRepresentation("(x ^ 2) ^ 3");
+            builder.Build((x, y, z) => x + y + z).AssertSimpleStringRepresentation("x + y + z");
+            builder.Build((x, y, z) => x - y - z).AssertSimpleStringRepresentation("x - y - z");
+            builder.Build((x, y) => 1 + 2 * x + 3 * y).AssertSimpleStringRepresentation("1 + 2 * x + 3 * y");
+            builder.Build((x, y) => (x + 1) ^ (2 * 3)).AssertSimpleStringRepresentation("(x + 1) ^ 6");
 
-            Build(x => 9 - (-x)).AssertSimpleStringRepresentation("9 - (-x)");
-            Build(x => 9 * (-x)).AssertSimpleStringRepresentation("9 * (-x)");
-            Build(x => x * (-1)).AssertSimpleStringRepresentation("x * (-1)");
+            builder.Build(x => 9 - (-x)).AssertSimpleStringRepresentation("9 - (-x)");
+            builder.Build(x => 9 * (-x)).AssertSimpleStringRepresentation("9 * (-x)");
+            builder.Build(x => x * (-1)).AssertSimpleStringRepresentation("x * (-1)");
 
-            Build(x => (-2) * x).AssertSimpleStringRepresentation("-2 * x");
-            Build(x => -2 * (x + 1)).AssertSimpleStringRepresentation("-2 * (x + 1)");
-            Build((x, y) => -x + y).AssertSimpleStringRepresentation("-x + y");
+            builder.Build(x => (-2) * x).AssertSimpleStringRepresentation("-2 * x");
+            builder.Build(x => -2 * (x + 1)).AssertSimpleStringRepresentation("-2 * (x + 1)");
+            builder.Build((x, y) => -x + y).AssertSimpleStringRepresentation("-x + y");
 
-            Build((x, y) => y * (-x)).AssertSimpleStringRepresentation("y * (-x)");
-            Build((x, y) => -y * x).AssertSimpleStringRepresentation("(-y) * x");
+            builder.Build((x, y) => y * (-x)).AssertSimpleStringRepresentation("y * (-x)");
+            builder.Build((x, y) => -y * x).AssertSimpleStringRepresentation("(-y) * x");
 
-
-            Build((x, y) =>Sqrt(x + y)).AssertSimpleStringRepresentation("sqrt(x + y)");
+            builder.Build((x, y) =>Sqrt(x + y)).AssertSimpleStringRepresentation("sqrt(x + y)");
         }
         [Test]
-        public static void ToStringTest_Div() {
-            Build(x => 9 / x).AssertSimpleStringRepresentation("9 / x");
-            Build((x, y, z) => x / y / z).AssertSimpleStringRepresentation("(x / y) / z");
-            Build(x => 9 / (1 / x)).AssertSimpleStringRepresentation("9 / (1 / x)");
-            Build(x => 9 + 1 / x).AssertSimpleStringRepresentation("9 + 1 / x");
-            Build(x => 9 - (1 / x)).AssertSimpleStringRepresentation("9 - 1 / x");
-            Build(x => 9 / (-x)).AssertSimpleStringRepresentation("9 / (-x)");
-            Build(x => 1 / (3 + x)).AssertSimpleStringRepresentation("1 / (3 + x)");
-            Build(x => (2 + x) / (3 + x)).AssertSimpleStringRepresentation("(2 + x) / (3 + x)");
-            Build(x => 2 * x / (3 + x)).AssertSimpleStringRepresentation("(2 * x) / (3 + x)");
-            Build((x, y, z) => 2 * x / (y * z)).AssertSimpleStringRepresentation("(2 * x) / (y * z)");
-            Build((x, y) => (x ^ 3) / (y ^ 4)).AssertSimpleStringRepresentation("x ^ 3 / y ^ 4");
-            Build(x => 1 / (x ^ 3)).AssertSimpleStringRepresentation("1 / x ^ 3");
-            Build(x => 2 * x / (3 + x)).AssertSimpleStringRepresentation("(2 * x) / (3 + x)");
-            Build((x, y, z) => x / y / z).AssertSimpleStringRepresentation("(x / y) / z");
-            Build(x => 1 / (3 * x)).AssertSimpleStringRepresentation("1 / (3 * x)");
+        public void ToStringTest_Div() {
+            builder.Build(x => 9 / x).AssertSimpleStringRepresentation("9 / x");
+            builder.Build((x, y, z) => x / y / z).AssertSimpleStringRepresentation("(x / y) / z");
+            builder.Build(x => 9 / (1 / x)).AssertSimpleStringRepresentation("9 / (1 / x)");
+            builder.Build(x => 9 + 1 / x).AssertSimpleStringRepresentation("9 + 1 / x");
+            builder.Build(x => 9 - (1 / x)).AssertSimpleStringRepresentation("9 - 1 / x");
+            builder.Build(x => 9 / (-x)).AssertSimpleStringRepresentation("9 / (-x)");
+            builder.Build(x => 1 / (3 + x)).AssertSimpleStringRepresentation("1 / (3 + x)");
+            builder.Build(x => (2 + x) / (3 + x)).AssertSimpleStringRepresentation("(2 + x) / (3 + x)");
+            builder.Build(x => 2 * x / (3 + x)).AssertSimpleStringRepresentation("(2 * x) / (3 + x)");
+            builder.Build((x, y, z) => 2 * x / (y * z)).AssertSimpleStringRepresentation("(2 * x) / (y * z)");
+            builder.Build((x, y) => (x ^ 3) / (y ^ 4)).AssertSimpleStringRepresentation("x ^ 3 / y ^ 4");
+            builder.Build(x => 1 / (x ^ 3)).AssertSimpleStringRepresentation("1 / x ^ 3");
+            builder.Build(x => 2 * x / (3 + x)).AssertSimpleStringRepresentation("(2 * x) / (3 + x)");
+            builder.Build((x, y, z) => x / y / z).AssertSimpleStringRepresentation("(x / y) / z");
+            builder.Build(x => 1 / (3 * x)).AssertSimpleStringRepresentation("1 / (3 * x)");
         }
         [Test]
         public static void ToStringTest2() {
@@ -242,16 +247,16 @@ namespace SharpAlg.Geo.Tests {
         }
     }
     public static class ExprTestExtensions {
-        public static Expr Build(Expression<Func<Expr, Expr>> f) {
-            return ExprExtensions.Build(f, GetParameters(f).Single());
+        public static Expr Build(this Builder builder, Expression<Func<Expr, Expr>> f) {
+            return builder.Build(f, GetParameters(f).Single());
         }
-        public static Expr Build(Expression<Func<Expr, Expr, Expr>> f) {
+        public static Expr Build(this Builder builder, Expression<Func<Expr, Expr, Expr>> f) {
             var parameters = GetParameters(f);
-            return ExprExtensions.Build(f, parameters[0], parameters[1]);
+            return builder.Build(f, parameters[0], parameters[1]);
         }
-        public static Expr Build(Expression<Func<Expr, Expr, Expr, Expr>> f) {
+        public static Expr Build(this Builder builder, Expression<Func<Expr, Expr, Expr, Expr>> f) {
             var parameters = GetParameters(f);
-            return ExprExtensions.Build(f, parameters[0], parameters[1], parameters[2]);
+            return builder.Build(f, parameters[0], parameters[1], parameters[2]);
         }
         static ImmutableArray<Expr> GetParameters(LambdaExpression expression) {
             return expression.Parameters.Select(x => (ParamExpr)x.Name).ToImmutableArray<Expr>();

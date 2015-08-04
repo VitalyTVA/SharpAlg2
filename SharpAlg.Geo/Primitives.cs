@@ -35,7 +35,7 @@ namespace SharpAlg.Geo {
             C = c;
         }
         public override string ToString() {
-            return Build((A, B, C, x, y) => A * x + B * y + C, A, B, C, Param("x"), Param("y")).ToString();
+            return new Builder().Build((A, B, C, x, y) => A * x + B * y + C, A, B, C, Param("x"), Param("y")).ToString();
         }
     }
 
@@ -55,45 +55,45 @@ namespace SharpAlg.Geo {
             R = r;
         }
         public override string ToString() {
-            return Build((X, Y, R, x, y) => ((x - X) ^ 2) + ((y - Y) ^ 2) - R, X, Y, R, Param("x"), Param("y")).ToString();
+            return new Builder().Build((X, Y, R, x, y) => ((x - X) ^ 2) + ((y - Y) ^ 2) - R, X, Y, R, Param("x"), Param("y")).ToString();
         }
     }
     public static class LinesOperations {
-        public static Point Intersect(this Line l1, Line l2) {
-            var x = Build((A1, B1, C1, A2, B2, C2) => (B1 * C2 - B2 * C1) / (A1 * B2 - A2 * B1), l1.A, l1.B, l1.C, l2.A, l2.B, l2.C);
-            var y = Build((A1, B1, C1, A2, B2, C2) => (C1 * A2 - C2 * A1) / (A1 * B2 - A2 * B1), l1.A, l1.B, l1.C, l2.A, l2.B, l2.C);
+        public static Point Intersect(this Builder builder, Line l1, Line l2) {
+            var x = builder.Build((A1, B1, C1, A2, B2, C2) => (B1 * C2 - B2 * C1) / (A1 * B2 - A2 * B1), l1.A, l1.B, l1.C, l2.A, l2.B, l2.C);
+            var y = builder.Build((A1, B1, C1, A2, B2, C2) => (C1 * A2 - C2 * A1) / (A1 * B2 - A2 * B1), l1.A, l1.B, l1.C, l2.A, l2.B, l2.C);
             return new Point(x, y);
         }
-        public static Expr TangentBetween(Line l1, Line l2) {
-            return Build((A1, B1, A2, B2) => (A1 * B2 - A2 * B1) / (A1 * A2 + B1 * B2), l1.A, l1.B, l2.A, l2.B);
+        public static Expr TangentBetween(this Builder builder, Line l1, Line l2) {
+            return builder.Build((A1, B1, A2, B2) => (A1 * B2 - A2 * B1) / (A1 * A2 + B1 * B2), l1.A, l1.B, l2.A, l2.B);
         }
-        public static Expr CotangentBetween(Line l1, Line l2) {
-            return Build((A1, B1, A2, B2) => (A1 * A2 + B1 * B2) / (A1 * B2 - A2 * B1), l1.A, l1.B, l2.A, l2.B);
+        public static Expr CotangentBetween(this Builder builder, Line l1, Line l2) {
+            return builder.Build((A1, B1, A2, B2) => (A1 * A2 + B1 * B2) / (A1 * B2 - A2 * B1), l1.A, l1.B, l2.A, l2.B);
         }
-        public static Expr GetY(Line l, Expr x) {
-            return Build((A, B, C, X) => -(A * X + C) / B, l.A, l.B, l.C, x);
+        public static Expr GetY(this Builder builder, Line l, Expr x) {
+            return builder.Build((A, B, C, X) => -(A * X + C) / B, l.A, l.B, l.C, x);
         }
     }
     public static class LineCircleIntersector {
-        public static Tuple<Point, Point> Intersect(this Line l, Circle c) {
-            var eqXA = Build((A, B) => (B ^ 2) + (A ^ 2), l.A, l.B);
-            var eqXB = Build((A, B, C, X, Y) => 2 * Y * A * B - 2 * X * (B ^ 2) + 2 * C * A, l.A, l.B, l.C, c.X, c.Y);
-            var eqXC = Build((A, B, C, X, Y, R) => 2 * Y * B * C + (Y ^ 2) * (B ^ 2) + (C ^ 2) + (X ^ 2) * (B ^ 2) - R * (B ^ 2), l.A, l.B, l.C, c.X, c.Y, c.R);
-            var xRoots = QuadraticEquationHelper.Solve(eqXA, eqXB, eqXC);
-            var yRoots = xRoots.FMap(root => LinesOperations.GetY(l, root));
+        public static Tuple<Point, Point> Intersect(this Builder builder, Line l, Circle c) {
+            var eqXA = builder.Build((A, B) => (B ^ 2) + (A ^ 2), l.A, l.B);
+            var eqXB = builder.Build((A, B, C, X, Y) => 2 * Y * A * B - 2 * X * (B ^ 2) + 2 * C * A, l.A, l.B, l.C, c.X, c.Y);
+            var eqXC = builder.Build((A, B, C, X, Y, R) => 2 * Y * B * C + (Y ^ 2) * (B ^ 2) + (C ^ 2) + (X ^ 2) * (B ^ 2) - R * (B ^ 2), l.A, l.B, l.C, c.X, c.Y, c.R);
+            var xRoots = builder.SolveQuadraticEquation(eqXA, eqXB, eqXC);
+            var yRoots = xRoots.FMap(root => builder.GetY(l, root));
             return Tuple.Create(new Point(xRoots.Item1, yRoots.Item1), new Point(xRoots.Item2, yRoots.Item2));
         }
     }
     public static class CirclesIntersector {
-        public static Tuple<Point, Point> Intersect(this Circle c1, Circle c2) {
+        public static Tuple<Point, Point> Intersect(this Builder builder, Circle c1, Circle c2) {
             var c = c2.Offset(c1.Center.Invert());
-            var eqA = Build((X0, Y0) => 4 * (X0 ^ 2) + 4 * (Y0 ^ 2), c.X, c.Y);
-            var eqYB = Build((X0, Y0, R1, R2) => -4 * (Y0 ^ 3) - 4 * R1 * Y0 + 4 * Y0 * R2 - 4 * (X0 ^ 2) * Y0, c.X, c.Y, c1.R, c.R);
-            var eqXB = Build((X0, Y0, R1, R2) => -4 * (X0 ^ 3) - 4 * R1 * X0 + 4 * X0 * R2 - 4 * (Y0 ^ 2) * X0, c.X, c.Y, c1.R, c.R);
-            var eqYC = Build((X0, Y0, R1, R2) => (X0 ^ 4) + (R1 ^ 2) - 2 * (Y0 ^ 2) * R2 + 2 * (X0 ^ 2) * (Y0 ^ 2) - 2 * (X0 ^ 2) * R2 + (Y0 ^ 4) + (R2 ^ 2) + 2 * R1 * (Y0 ^ 2) - 2 * R1 * R2 - 2 * R1 * (X0 ^ 2), c.X, c.Y, c1.R, c.R);
-            var eqXC = Build((X0, Y0, R1, R2) => (Y0 ^ 4) + (R1 ^ 2) - 2 * (X0 ^ 2) * R2 + 2 * (Y0 ^ 2) * (X0 ^ 2) - 2 * (Y0 ^ 2) * R2 + (X0 ^ 4) + (R2 ^ 2) + 2 * R1 * (X0 ^ 2) - 2 * R1 * R2 - 2 * R1 * (Y0 ^ 2), c.X, c.Y, c1.R, c.R);
-            var xRoots = QuadraticEquationHelper.Solve(eqA, eqXB, eqXC);
-            var yRoots = QuadraticEquationHelper.Solve(eqA, eqYB, eqYC);
+            var eqA = builder.Build((X0, Y0) => 4 * (X0 ^ 2) + 4 * (Y0 ^ 2), c.X, c.Y);
+            var eqYB = builder.Build((X0, Y0, R1, R2) => -4 * (Y0 ^ 3) - 4 * R1 * Y0 + 4 * Y0 * R2 - 4 * (X0 ^ 2) * Y0, c.X, c.Y, c1.R, c.R);
+            var eqXB = builder.Build((X0, Y0, R1, R2) => -4 * (X0 ^ 3) - 4 * R1 * X0 + 4 * X0 * R2 - 4 * (Y0 ^ 2) * X0, c.X, c.Y, c1.R, c.R);
+            var eqYC = builder.Build((X0, Y0, R1, R2) => (X0 ^ 4) + (R1 ^ 2) - 2 * (Y0 ^ 2) * R2 + 2 * (X0 ^ 2) * (Y0 ^ 2) - 2 * (X0 ^ 2) * R2 + (Y0 ^ 4) + (R2 ^ 2) + 2 * R1 * (Y0 ^ 2) - 2 * R1 * R2 - 2 * R1 * (X0 ^ 2), c.X, c.Y, c1.R, c.R);
+            var eqXC = builder.Build((X0, Y0, R1, R2) => (Y0 ^ 4) + (R1 ^ 2) - 2 * (X0 ^ 2) * R2 + 2 * (Y0 ^ 2) * (X0 ^ 2) - 2 * (Y0 ^ 2) * R2 + (X0 ^ 4) + (R2 ^ 2) + 2 * R1 * (X0 ^ 2) - 2 * R1 * R2 - 2 * R1 * (Y0 ^ 2), c.X, c.Y, c1.R, c.R);
+            var xRoots = builder.SolveQuadraticEquation(eqA, eqXB, eqXC);
+            var yRoots = builder.SolveQuadraticEquation(eqA, eqYB, eqYC);
             return Tuple.Create(
                 new Point(xRoots.Item1, yRoots.Item2),
                 new Point(xRoots.Item2, yRoots.Item1)
@@ -102,10 +102,10 @@ namespace SharpAlg.Geo {
     }
 
     public static class QuadraticEquationHelper {
-        public static Tuple<Expr, Expr> Solve(Expr a, Expr b, Expr c) {
-            var d = Build((A, B, C) => Sqrt((B ^ 2) - 4 * A * C), a, b, c);
-            var x1 = Build((A, B, D) => (-B + D) / (2 * A), a, b, d);
-            var x2 = Build((A, B, D) => (-B - D) / (2 * A), a, b, d);
+        public static Tuple<Expr, Expr> SolveQuadraticEquation(this Builder builder, Expr a, Expr b, Expr c) {
+            var d = builder.Build((A, B, C) => Sqrt((B ^ 2) - 4 * A * C), a, b, c);
+            var x1 = builder.Build((A, B, D) => (-B + D) / (2 * A), a, b, d);
+            var x2 = builder.Build((A, B, D) => (-B - D) / (2 * A), a, b, d);
             return Tuple.Create(x1, x2);
         }
     }
