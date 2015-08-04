@@ -60,15 +60,12 @@ namespace SharpAlg.Geo {
     }
 
     public static class FunctorExtensions {
-        public static Point FMap(this Point x, Func<Expr, Expr> f) {
-            return new Point(f(x.X), f(x.Y));
-        }
         public static Tuple<TResult, TResult> FMap<T, TResult>(this Tuple<T, T> x, Func<T, TResult> f) {
             return Tuple.Create(f(x.Item1), f(x.Item2));
         }
     }
 
-    public static class ExprHelper {
+    internal static class ExprHelper {
         public static Expr Square(this Expr e) {
             return Power(e, 2);
         }
