@@ -5,7 +5,7 @@ namespace SharpAlg.Geo {
         public static readonly ImmutableContext Empty = new ImmutableContext(ImmutableDictionary<string, double>.Empty);
         ImmutableDictionary<string, double> values;
         ImmutableContext(ImmutableDictionary<string, double> names) {
-            this.values = names;
+            values = names;
         }
         public double GetValue(string name) {
             return values[name];

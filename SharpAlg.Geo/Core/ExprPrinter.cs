@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.Serialization;
 using System.Text;
 
 namespace SharpAlg.Geo.Core {
@@ -96,7 +95,7 @@ namespace SharpAlg.Geo.Core {
         static string Multiply(MultExpr multi) {
             if(IsMinusOne(multi.Args.First())) {
                 string exprText = WrapFromAdd(multi.Tail());
-                return String.Format("-{0}", exprText);
+                return string.Format("-{0}", exprText);
             }
             var sb = new StringBuilder();
             sb.Append(WrapFromMultiply(multi.Args.First(), ExpressionOrder.Head));

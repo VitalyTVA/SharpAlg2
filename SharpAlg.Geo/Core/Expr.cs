@@ -176,7 +176,7 @@ namespace SharpAlg.Geo.Core {
         }
         [DebuggerStepThrough]
         public static T MatchDefault<T>(this Expr expr, Func<Expr, T> @default, Func<AddExpr, T> add = null, Func<MultExpr, T> mult = null, Func<DivExpr, T> div = null, Func<PowerExpr, T> power = null, Func<SqrtExpr, T> sqrt = null, Func<ParamExpr, T> param = null, Func<ConstExpr, T> @const = null) {
-            return expr.MatchStrict<T>(
+            return expr.MatchStrict(
                 add ?? @default,
                 mult ?? @default,
                 div ?? @default,

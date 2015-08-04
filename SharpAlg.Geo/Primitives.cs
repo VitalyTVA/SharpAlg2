@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Immutable;
-using System.Linq;
 using RealPoint = System.Windows.Point;
 using static SharpAlg.Geo.Core.ExprExtensions;
 using Numerics;
@@ -15,8 +13,8 @@ namespace SharpAlg.Geo {
         }
         public readonly Expr X, Y;
         public Point(Expr x, Expr y) {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
         }
         public override string ToString() {
             return string.Format("({0}, {1})", X, Y);
@@ -32,9 +30,9 @@ namespace SharpAlg.Geo {
         }
         public readonly Expr A, B, C;
         public Line(Expr a, Expr b, Expr c) {
-            this.A = a;
-            this.B = b;
-            this.C = c;
+            A = a;
+            B = b;
+            C = c;
         }
         public override string ToString() {
             return Build((A, B, C, x, y) => A * x + B * y + C, A, B, C, Param("x"), Param("y")).ToString();
@@ -77,7 +75,7 @@ namespace SharpAlg.Geo {
         }
     }
     public static class LineCircleIntersector {
-        public static System.Tuple<Point, Point> Intersect(this Line l, Circle c) {
+        public static Tuple<Point, Point> Intersect(this Line l, Circle c) {
             var eqXA = Build((A, B) => (B ^ 2) + (A ^ 2), l.A, l.B);
             var eqXB = Build((A, B, C, X, Y) => 2 * Y * A * B - 2 * X * (B ^ 2) + 2 * C * A, l.A, l.B, l.C, c.X, c.Y);
             var eqXC = Build((A, B, C, X, Y, R) => 2 * Y * B * C + (Y ^ 2) * (B ^ 2) + (C ^ 2) + (X ^ 2) * (B ^ 2) - R * (B ^ 2), l.A, l.B, l.C, c.X, c.Y, c.R);
@@ -87,7 +85,7 @@ namespace SharpAlg.Geo {
         }
     }
     public static class CirclesIntersector {
-        public static System.Tuple<Point, Point> Intersect(this Circle c1, Circle c2) {
+        public static Tuple<Point, Point> Intersect(this Circle c1, Circle c2) {
             var c = c2.Offset(c1.Center.Invert());
             var eqA = Build((X0, Y0) => 4 * (X0 ^ 2) + 4 * (Y0 ^ 2), c.X, c.Y);
             var eqYB = Build((X0, Y0, R1, R2) => -4 * (Y0 ^ 3) - 4 * R1 * Y0 + 4 * Y0 * R2 - 4 * (X0 ^ 2) * Y0, c.X, c.Y, c1.R, c.R);
@@ -104,7 +102,7 @@ namespace SharpAlg.Geo {
     }
 
     public static class QuadraticEquationHelper {
-        public static System.Tuple<Expr, Expr> Solve(Expr a, Expr b, Expr c) {
+        public static Tuple<Expr, Expr> Solve(Expr a, Expr b, Expr c) {
             var d = Build((A, B, C) => Sqrt((B ^ 2) - 4 * A * C), a, b, c);
             var x1 = Build((A, B, D) => (-B + D) / (2 * A), a, b, d);
             var x2 = Build((A, B, D) => (-B - D) / (2 * A), a, b, d);
@@ -116,24 +114,24 @@ namespace SharpAlg.Geo {
         public static Point FMap(this Point x, Func<Expr, Expr> f) {
             return new Point(f(x.X), f(x.Y));
         }
-        public static System.Tuple<TResult, TResult> FMap<T, TResult>(this System.Tuple<T, T> x, Func<T, TResult> f) {
+        public static Tuple<TResult, TResult> FMap<T, TResult>(this Tuple<T, T> x, Func<T, TResult> f) {
             return Tuple.Create(f(x.Item1), f(x.Item2));
         }
     }
 
     public static class ExprHelper {
         public static Expr Square(this Expr e) {
-            return Core.ExprExtensions.Power(e, 2);
+            return Power(e, 2);
         }
         public static Expr GetHalf(this Expr e) {
-            return Core.ExprExtensions.Multiply(e, Const(new BigRational(1, 2)));
+            return Multiply(e, Const(new BigRational(1, 2)));
         }
         public static ImmutableContext RegisterPoint(this ImmutableContext context, Point p, double x, double y) {
             return context
-                .RegisterValue((Core.ParamExpr)p.X, x)
-                .RegisterValue((Core.ParamExpr)p.Y, y);
+                .RegisterValue((ParamExpr)p.X, x)
+                .RegisterValue((ParamExpr)p.Y, y);
         }
-        public static ImmutableContext RegisterValue(this ImmutableContext context, Core.ParamExpr parameter, double value) {
+        public static ImmutableContext RegisterValue(this ImmutableContext context, ParamExpr parameter, double value) {
             return context
                 .Register(parameter.Name, value);
         }
