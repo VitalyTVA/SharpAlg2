@@ -150,7 +150,15 @@ namespace SharpAlg.Geo.Core {
             //return new SqrtExpr(value);
         }
         [DebuggerStepThrough]
-        public static T MatchStrict<T>(this Expr expr, Func<ExprList, T> add, Func<MultExpr, T> mult, Func<DivExpr, T> div, Func<PowerExpr, T> power, Func<SqrtExpr, T> sqrt, Func<ParamExpr, T> param, Func<ConstExpr, T> @const) {
+        public static T MatchStrict<T>(this Expr expr, 
+            Func<ExprList, T> add, 
+            Func<ExprList, T> mult, 
+            Func<DivExpr, T> div, 
+            Func<PowerExpr, T> power, 
+            Func<SqrtExpr, T> sqrt, 
+            Func<ParamExpr, T> param, 
+            Func<ConstExpr, T> @const) 
+        {
             return expr.MatchDefault(
                 x => { throw new InvalidOperationException(); },
                 add,
@@ -164,13 +172,21 @@ namespace SharpAlg.Geo.Core {
 
         }
         [DebuggerStepThrough]
-        public static T MatchDefault<T>(this Expr expr, Func<Expr, T> @default, Func<ExprList, T> add = null, Func<MultExpr, T> mult = null, Func<DivExpr, T> div = null, Func<PowerExpr, T> power = null, Func<SqrtExpr, T> sqrt = null, Func<ParamExpr, T> param = null, Func<ConstExpr, T> @const = null) {
+        public static T MatchDefault<T>(this Expr expr, 
+            Func<Expr, T> @default, 
+            Func<ExprList, T> add = null, 
+            Func<ExprList, T> mult = null, 
+            Func<DivExpr, T> div = null, 
+            Func<PowerExpr, T> power = null, 
+            Func<SqrtExpr, T> sqrt = null, 
+            Func<ParamExpr, T> param = null, Func<ConstExpr, T> @const = null) 
+        {
             var addExpr = expr as AddExpr;
             if(addExpr != null)
                 return add != null ? add(addExpr.Args) : @default(expr);
             var multExpr = expr as MultExpr;
             if(multExpr != null)
-                return mult != null ? mult(multExpr) : @default(expr);
+                return mult != null ? mult(multExpr.Args) : @default(expr);
             var divExpr = expr as DivExpr;
             if(divExpr != null)
                 return div != null ? div(divExpr) : @default(expr);
@@ -193,7 +209,7 @@ namespace SharpAlg.Geo.Core {
             Func<Expr, T> doEval = null;
             doEval = e => e.MatchStrict(
                 add: x => x.Select(doEval).Aggregate(add),
-                mult: x => x.Args.Select(doEval).Aggregate(mult),
+                mult: x => x.Select(doEval).Aggregate(mult),
                 div: x => div(doEval(x.Numerator), doEval(x.Denominator)),
                 power: x => power(doEval(x.Value), @const(x.Power)),
                 sqrt: x => sqrt(doEval(x.Value)),

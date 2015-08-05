@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using SharpAlg.Geo.Core;
 using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
 
 namespace SharpAlg.Geo.Core {
@@ -33,16 +34,18 @@ namespace SharpAlg.Geo.Core {
                 Func<ConstExpr, UnaryExpressionInfo> getConstant = x => Constant(BinaryOperation.Add, x);
                 return expr.MatchDefault(
                     getDefault,
-                    mult: multi => {
-                        ConstExpr headConstant = multi.Args.First() as ConstExpr;
+                    mult: args => {
+                        ConstExpr headConstant = args.First() as ConstExpr;
                         if(headConstant.Return(x => x.Value < 0, () => false)) {
                             var exprConstant = ExprExtensions.Const(-headConstant.Value);
+
+                            MultExpr tail = GetTail(args);
                             Expr expr2 = (headConstant.Value == BigInteger.MinusOne) ?
-                                multi.Tail() :
-                                ExprExtensions.Multiply(exprConstant.Yield().Concat(multi.Args.Tail()).ToArray());
+                                tail :
+                                ExprExtensions.Multiply(exprConstant.Yield().Concat(tail.Args).ToArray());
                             return new UnaryExpressionInfo(expr2, BinaryOperationEx.Subtract);
                         }
-                        return getDefault(multi);
+                        return getDefault(ExprExtensions.Multiply(args.ToArray()));
                     },
                     @const: getConstant
                 );
@@ -76,9 +79,11 @@ namespace SharpAlg.Geo.Core {
                 Constant
             );
         }
-
-        static bool IsMinusExpression(MultExpr multi) {
-            return multi.Args.Count() == 2 && IsMinusOne(multi.Args.First());
+        static MultExpr GetTail(ExprList args) {
+            return (MultExpr)ExprExtensions.Multiply(args.Tail().ToArray());
+        }
+        static bool IsMinusExpression(ExprList args) {
+            return args.Count() == 2 && IsMinusOne(args.First());
         }
         static bool IsMinusOne(Expr expr) {
             return (expr as ConstExpr).If(x => x.Value == BigInteger.MinusOne).ReturnSuccess();
@@ -93,14 +98,14 @@ namespace SharpAlg.Geo.Core {
             }
             return sb.ToString();
         }
-        static string Multiply(MultExpr multi) {
-            if(IsMinusOne(multi.Args.First())) {
-                string exprText = WrapFromAdd(multi.Tail());
+        static string Multiply(ExprList args) {
+            if(IsMinusOne(args.First())) {
+                string exprText = WrapFromAdd(GetTail(args));
                 return string.Format("-{0}", exprText);
             }
             var sb = new StringBuilder();
-            sb.Append(WrapFromMultiply(multi.Args.First(), ExpressionOrder.Head));
-            foreach(var expr in multi.Args.Tail()) {
+            sb.Append(WrapFromMultiply(args.First(), ExpressionOrder.Head));
+            foreach(var expr in args.Tail()) {
                 UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractMultiplyUnaryInfo(expr);
                 sb.Append(GetBinaryOperationSymbol(info.Operation));
                 sb.Append(WrapFromMultiply(info.Expr, ExpressionOrder.Default));
