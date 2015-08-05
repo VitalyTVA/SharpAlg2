@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using SharpAlg.Geo.Core;
 using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
 
 namespace SharpAlg.Geo.Core {
@@ -112,8 +111,8 @@ namespace SharpAlg.Geo.Core {
             }
             return sb.ToString();
         }
-        static string Divide(DivExpr div) {
-            return string.Format("{0} / {1}", WrapFromDivide(div.Numerator), WrapFromDivide(div.Denominator));
+        static string Divide(Expr num, Expr den) {
+            return string.Format("{0} / {1}", WrapFromDivide(num), WrapFromDivide(den));
         }
         static string Power(PowerExpr power) {
             return string.Format("{0} ^ {1}", WrapFromPower(power.Value), power.Power);
@@ -175,7 +174,7 @@ namespace SharpAlg.Geo.Core {
             return expr.MatchStrict(
                 add: x => shouldWrap(OperationPriority.Add),
                 mult: x => IsMinusExpression(x) || shouldWrap(OperationPriority.Multiply),
-                div: x => shouldWrap(OperationPriority.Divide),
+                div: (x, y) => shouldWrap(OperationPriority.Divide),
                 power: x => shouldWrap(OperationPriority.Power),
                 sqrt: x => false,
                 param: x => false,

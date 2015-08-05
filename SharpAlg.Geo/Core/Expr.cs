@@ -153,7 +153,7 @@ namespace SharpAlg.Geo.Core {
         public static T MatchStrict<T>(this Expr expr, 
             Func<ExprList, T> add, 
             Func<ExprList, T> mult, 
-            Func<DivExpr, T> div, 
+            Func<Expr, Expr, T> div, 
             Func<PowerExpr, T> power, 
             Func<SqrtExpr, T> sqrt, 
             Func<ParamExpr, T> param, 
@@ -176,7 +176,7 @@ namespace SharpAlg.Geo.Core {
             Func<Expr, T> @default, 
             Func<ExprList, T> add = null, 
             Func<ExprList, T> mult = null, 
-            Func<DivExpr, T> div = null, 
+            Func<Expr, Expr, T> div = null, 
             Func<PowerExpr, T> power = null, 
             Func<SqrtExpr, T> sqrt = null, 
             Func<ParamExpr, T> param = null, Func<ConstExpr, T> @const = null) 
@@ -189,7 +189,7 @@ namespace SharpAlg.Geo.Core {
                 return mult != null ? mult(multExpr.Args) : @default(expr);
             var divExpr = expr as DivExpr;
             if(divExpr != null)
-                return div != null ? div(divExpr) : @default(expr);
+                return div != null ? div(divExpr.Numerator, divExpr.Denominator) : @default(expr);
             var powerExpr = expr as PowerExpr;
             if(powerExpr != null)
                 return power != null ? power(powerExpr) : @default(expr);
@@ -210,7 +210,7 @@ namespace SharpAlg.Geo.Core {
             doEval = e => e.MatchStrict(
                 add: x => x.Select(doEval).Aggregate(add),
                 mult: x => x.Select(doEval).Aggregate(mult),
-                div: x => div(doEval(x.Numerator), doEval(x.Denominator)),
+                div: (x, y) => div(doEval(x), doEval(y)),
                 power: x => power(doEval(x.Value), @const(x.Power)),
                 sqrt: x => sqrt(doEval(x.Value)),
                 param: x => param(x.Name),
