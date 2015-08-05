@@ -74,7 +74,7 @@ namespace SharpAlg.Geo.Core {
                 Divide,
                 Power,
                 Sqrt,
-                Parameter,
+                param => param,
                 Constant
             );
         }
@@ -116,9 +116,6 @@ namespace SharpAlg.Geo.Core {
         }
         static string Power(Expr value, BigInteger power) {
             return string.Format("{0} ^ {1}", WrapFromPower(value), power);
-        }
-        static string Parameter(ParamExpr parameter) {
-            return parameter.Name;
         }
         static string Constant(ConstExpr constant) {
             return constant.Value.IsFraction() ? constant.Value.ToString() : constant.Value.Numerator.ToString();
