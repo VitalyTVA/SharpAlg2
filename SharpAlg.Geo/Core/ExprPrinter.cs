@@ -123,8 +123,8 @@ namespace SharpAlg.Geo.Core {
         static string Constant(ConstExpr constant) {
             return constant.Value.IsFraction() ? constant.Value.ToString() : constant.Value.Numerator.ToString();
         }
-        static string Sqrt(SqrtExpr sqrtExpr) {
-            return string.Format("sqrt({0})", sqrtExpr.Value.Print());
+        static string Sqrt(Expr expr) {
+            return string.Format("sqrt({0})", expr.Print());
         }
         static BinaryOperationEx GetBinaryOperationEx(BinaryOperation operation) {
             switch(operation) {

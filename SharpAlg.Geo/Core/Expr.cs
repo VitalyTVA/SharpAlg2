@@ -155,7 +155,7 @@ namespace SharpAlg.Geo.Core {
             Func<ExprList, T> mult, 
             Func<Expr, Expr, T> div, 
             Func<Expr, BigInteger, T> power, 
-            Func<SqrtExpr, T> sqrt, 
+            Func<Expr, T> sqrt, 
             Func<ParamExpr, T> param, 
             Func<ConstExpr, T> @const) 
         {
@@ -178,7 +178,7 @@ namespace SharpAlg.Geo.Core {
             Func<ExprList, T> mult = null, 
             Func<Expr, Expr, T> div = null, 
             Func<Expr, BigInteger, T> power = null, 
-            Func<SqrtExpr, T> sqrt = null, 
+            Func<Expr, T> sqrt = null, 
             Func<ParamExpr, T> param = null, Func<ConstExpr, T> @const = null) 
         {
             var addExpr = expr as AddExpr;
@@ -195,7 +195,7 @@ namespace SharpAlg.Geo.Core {
                 return power != null ? power(powerExpr.Value, powerExpr.Power) : @default(expr);
             var sqrtExpr = expr as SqrtExpr;
             if(sqrtExpr != null)
-                return sqrt != null ? sqrt(sqrtExpr) : @default(expr);
+                return sqrt != null ? sqrt(sqrtExpr.Value) : @default(expr);
             var paramExpr = expr as ParamExpr;
             if(paramExpr != null)
                 return param != null ? param(paramExpr) : @default(expr);
@@ -212,7 +212,7 @@ namespace SharpAlg.Geo.Core {
                 mult: x => x.Select(doEval).Aggregate(mult),
                 div: (x, y) => div(doEval(x), doEval(y)),
                 power: (x, y) => power(doEval(x), @const(y)),
-                sqrt: x => sqrt(doEval(x.Value)),
+                sqrt: x => sqrt(doEval(x)),
                 param: x => param(x.Name),
                 @const: x => @const(x.Value)
             );
