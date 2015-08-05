@@ -124,23 +124,23 @@ namespace SharpAlg.Geo.Core {
         }
 
         public static int Param(string name) 
-            => Single(ParamSalt, name);
+            => SingleHash(ParamSalt, name);
         public static int Const(BigRational value) 
-            => Single(ConstSalt, value);
+            => SingleHash(ConstSalt, value);
         public static int Power(Expr value, BigInteger power) 
-            => Pair(PowerSalt, value, power);
+            => PairHash(PowerSalt, value, power);
         public static int Div(Expr numerator, Expr denominator) 
-            => Pair(DivSalt, numerator, denominator);
+            => PairHash(DivSalt, numerator, denominator);
         public static int Add(IEnumerable<Expr> args) 
-            => Sequence(AddSalt, args);
+            => SequenceHash(AddSalt, args);
         public static int Mult(IEnumerable<Expr> args) 
-            => Sequence(MultSalt, args);
+            => SequenceHash(MultSalt, args);
         public static int Sqrt(Expr value) 
-            => Single(SqrtSalt, value);
+            => SingleHash(SqrtSalt, value);
 
-        static int Pair<T1, T2>(int salt, T1 value1, T2 value2) => salt ^ value1.GetHashCode() ^ value2.GetHashCode();
-        static int Single<T>(int salt, T value) => salt ^ value.GetHashCode();
-        static int Sequence<T>(int salt, IEnumerable<T> args) => args.Aggregate(salt, (hash, x) => hash ^ x.GetHashCode());
+        static int PairHash<T1, T2>(int salt, T1 value1, T2 value2) => salt ^ value1.GetHashCode() ^ value2.GetHashCode();
+        static int SingleHash<T>(int salt, T value) => salt ^ value.GetHashCode();
+        static int SequenceHash<T>(int salt, IEnumerable<T> args) => args.Aggregate(salt, (hash, x) => hash ^ x.GetHashCode());
     }
 
     public static class ExprExtensions {
