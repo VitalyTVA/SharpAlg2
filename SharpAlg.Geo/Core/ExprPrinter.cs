@@ -35,7 +35,7 @@ namespace SharpAlg.Geo.Core {
                     mult: multi => {
                         ConstExpr headConstant = multi.Args.First() as ConstExpr;
                         if(headConstant.Return(x => x.Value < 0, () => false)) {
-                            ConstExpr exprConstant = ExprExtensions.Const(-headConstant.Value);
+                            var exprConstant = ExprExtensions.Const(-headConstant.Value);
                             Expr expr2 = (headConstant.Value == BigInteger.MinusOne) ?
                                 multi.Tail() :
                                 ExprExtensions.Multiply(exprConstant.Yield().Concat(multi.Args.Tail()).ToArray());

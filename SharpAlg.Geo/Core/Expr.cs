@@ -212,25 +212,25 @@ namespace SharpAlg.Geo.Core {
         }
         public static double ToReal(this Expr expr, ImmutableContext context) => expr.ToReal(context.GetValue);
 
-        public static AddExpr Add(params Expr[] args) {
+        public static Expr Add(params Expr[] args) {
             return new AddExpr(ImmutableArray.Create(args));
         }
-        public static MultExpr Multiply(params Expr[] args) {
+        public static Expr Multiply(params Expr[] args) {
             return new MultExpr(ImmutableArray.Create(args));
         }
-        public static MultExpr Minus(Expr a) {
+        public static Expr Minus(Expr a) {
             return new MultExpr(ImmutableArray.Create(-1, a));
         }
-        public static AddExpr Subtract(Expr a, Expr b) {
+        public static Expr Subtract(Expr a, Expr b) {
             return Add(a, Minus(b));
         }
-        public static DivExpr Divide(Expr a, Expr b) {
+        public static Expr Divide(Expr a, Expr b) {
             return new DivExpr(a, b);
         }
-        public static PowerExpr Power(Expr value, BigInteger power) {
+        public static Expr Power(Expr value, BigInteger power) {
             return new PowerExpr(value, power);
         }
-        public static ConstExpr Const(BigRational value) {
+        public static Expr Const(BigRational value) {
             return new ConstExpr(value);
         }
         public static ParamExpr Param(string name) {

@@ -233,9 +233,9 @@ namespace SharpAlg.Geo.Tests {
             AssertHashCodesAreNotEqual<Expr>((ParamExpr)"b", new SqrtExpr((ParamExpr)"b"));
             AssertHashCodesAreNotEqual<Expr>(2, new SqrtExpr(2));
 
-            AssertHashCodesAreNotEqual<Expr>((ParamExpr)"b", Add((ParamExpr)"b"));
-            AssertHashCodesAreNotEqual<Expr>(Multiply((ParamExpr)"b"), Add((ParamExpr)"b"));
-            AssertHashCodesAreNotEqual<Expr>(Divide((ParamExpr)"b", 2), Add((ParamExpr)"b", 2));
+            AssertHashCodesAreNotEqual((ParamExpr)"b", Add((ParamExpr)"b"));
+            AssertHashCodesAreNotEqual(Multiply((ParamExpr)"b"), Add((ParamExpr)"b"));
+            AssertHashCodesAreNotEqual(Divide((ParamExpr)"b", 2), Add((ParamExpr)"b", 2));
         }
         [DebuggerStepThrough]
         static void AssertHashCodesAreEqual<T>(T a, T b) {
