@@ -157,7 +157,7 @@ namespace SharpAlg.Geo.Core {
             Func<Expr, BigInteger, T> power, 
             Func<Expr, T> sqrt, 
             Func<string, T> param, 
-            Func<ConstExpr, T> @const) 
+            Func<BigRational, T> @const) 
         {
             return expr.MatchDefault(
                 x => { throw new InvalidOperationException(); },
@@ -180,7 +180,7 @@ namespace SharpAlg.Geo.Core {
             Func<Expr, BigInteger, T> power = null, 
             Func<Expr, T> sqrt = null, 
             Func<string, T> param = null, 
-            Func<ConstExpr, T> @const = null) 
+            Func<BigRational, T> @const = null) 
         {
             var addExpr = expr as AddExpr;
             if(addExpr != null)
@@ -202,7 +202,7 @@ namespace SharpAlg.Geo.Core {
                 return param != null ? param(paramExpr.Name) : @default(expr);
             var constExpr = expr as ConstExpr;
             if(constExpr != null)
-                return @const != null ? @const(constExpr) : @default(expr);
+                return @const != null ? @const(constExpr.Value) : @default(expr);
             throw new InvalidOperationException();
         }
         static T Evaluate<T>(this Expr expr, Func<T, T, T> add, Func<T, T, T> mult, Func<T, T, T> div, Func<T, T, T> power, Func<T, T> sqrt, Func<string, T> param, Func<BigRational, T> @const) {
@@ -215,7 +215,7 @@ namespace SharpAlg.Geo.Core {
                 power: (x, y) => power(doEval(x), @const(y)),
                 sqrt: x => sqrt(doEval(x)),
                 param: x => param(x),
-                @const: x => @const(x.Value)
+                @const: x => @const(x)
             );
             return doEval(expr);
         }

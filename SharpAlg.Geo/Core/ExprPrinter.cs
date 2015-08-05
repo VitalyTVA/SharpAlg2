@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Numerics;
+using System;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -22,7 +23,7 @@ namespace SharpAlg.Geo.Core {
         static class UnaryExpressionExtractor {
             public static UnaryExpressionInfo ExtractMultiplyUnaryInfo(Expr expr) {
                 Func<Expr, UnaryExpressionInfo> getDefault = x => GetDefault(BinaryOperation.Multiply, x);
-                Func<ConstExpr, UnaryExpressionInfo> getConstant = x => Constant(BinaryOperation.Multiply, x);
+                Func<BigRational, UnaryExpressionInfo> getConstant = x => Constant(BinaryOperation.Multiply, x);
                 return expr.MatchDefault(
                     getDefault,
                     @const: getConstant
@@ -30,7 +31,7 @@ namespace SharpAlg.Geo.Core {
             }
             public static UnaryExpressionInfo ExtractAddUnaryInfo(Expr expr) {
                 Func<Expr, UnaryExpressionInfo> getDefault = x => GetDefault(BinaryOperation.Add, x);
-                Func<ConstExpr, UnaryExpressionInfo> getConstant = x => Constant(BinaryOperation.Add, x);
+                Func<BigRational, UnaryExpressionInfo> getConstant = x => Constant(BinaryOperation.Add, x);
                 return expr.MatchDefault(
                     getDefault,
                     mult: args => {
@@ -50,10 +51,10 @@ namespace SharpAlg.Geo.Core {
                 );
             }
 
-            static UnaryExpressionInfo Constant(BinaryOperation operation, ConstExpr constant) {
-                return constant.Value >= 0 || operation != BinaryOperation.Add ?
-                    GetDefault(operation, constant) :
-                    new UnaryExpressionInfo(ExprExtensions.Const(0 - constant.Value), BinaryOperationEx.Subtract);
+            static UnaryExpressionInfo Constant(BinaryOperation operation, BigRational value) {
+                return value >= 0 || operation != BinaryOperation.Add ?
+                    GetDefault(operation, ExprExtensions.Const(value)) :
+                    new UnaryExpressionInfo(ExprExtensions.Const(0 - value), BinaryOperationEx.Subtract);
             }
             static UnaryExpressionInfo GetDefault(BinaryOperation operation, Expr expr) {
                 return new UnaryExpressionInfo(expr, GetBinaryOperationEx(operation));
@@ -117,8 +118,8 @@ namespace SharpAlg.Geo.Core {
         static string Power(Expr value, BigInteger power) {
             return string.Format("{0} ^ {1}", WrapFromPower(value), power);
         }
-        static string Constant(ConstExpr constant) {
-            return constant.Value.IsFraction() ? constant.Value.ToString() : constant.Value.Numerator.ToString();
+        static string Constant(BigRational value) {
+            return value.IsFraction() ? value.ToString() : value.Numerator.ToString();
         }
         static string Sqrt(Expr expr) {
             return string.Format("sqrt({0})", expr.Print());
@@ -176,11 +177,11 @@ namespace SharpAlg.Geo.Core {
                 sqrt: x => false,
                 param: x => false,
                 @const: x => {
-                    if(x.Value.IsFraction())
+                    if(x.IsFraction())
                         return shouldWrap(OperationPriority.Power);
                     if(order == ExpressionOrder.Head)
                         return false;
-                    return x.Value < 0;
+                    return x < 0;
                 }
             );
         }
