@@ -48,7 +48,7 @@ namespace SharpAlg.Geo.Core {
     public class AddExpr : Expr {
         public readonly ImmutableArray<Expr> Args;
         public AddExpr(ImmutableArray<Expr> args) 
-            : base(HashCodeProvider.Add(args)) {
+            : base(HashCodeProvider.AddHash(args)) {
             Args = args;
         }
     }
@@ -56,7 +56,7 @@ namespace SharpAlg.Geo.Core {
     public class MultExpr : Expr {
         public readonly ImmutableArray<Expr> Args;
         public MultExpr(ImmutableArray<Expr> args) 
-            : base(HashCodeProvider.Mult(args)) {
+            : base(HashCodeProvider.MultHash(args)) {
             Args = args;
         }
     }
@@ -64,7 +64,7 @@ namespace SharpAlg.Geo.Core {
     public class DivExpr : Expr {
         public readonly Expr Numerator, Denominator;
         public DivExpr(Expr numerator, Expr denominator)
-            : base(HashCodeProvider.Div(numerator, denominator)) {
+            : base(HashCodeProvider.DivHash(numerator, denominator)) {
             Numerator = numerator;
             Denominator = denominator;
         }
@@ -74,7 +74,7 @@ namespace SharpAlg.Geo.Core {
         public readonly Expr Value;
         public readonly BigInteger Power;
         public PowerExpr(Expr value, BigInteger power)
-            : base(HashCodeProvider.Power(value, power)) {
+            : base(HashCodeProvider.PowerHash(value, power)) {
             if(power < 1)
                 throw new PowerShouldBePositiveException();
             Value = value;
@@ -85,7 +85,7 @@ namespace SharpAlg.Geo.Core {
     public class SqrtExpr : Expr {
         public readonly Expr Value;
         public SqrtExpr(Expr value)
-            : base(HashCodeProvider.Sqrt(value)) {
+            : base(HashCodeProvider.SqrtHash(value)) {
             Value = value;
         }
     }
@@ -96,7 +96,7 @@ namespace SharpAlg.Geo.Core {
         }
         public readonly string Name;
         public ParamExpr(string name)
-            : base(HashCodeProvider.Param(name)) {
+            : base(HashCodeProvider.ParamHash(name)) {
             Name = name;
         }
     }
@@ -104,7 +104,7 @@ namespace SharpAlg.Geo.Core {
     public class ConstExpr : Expr {
         public readonly BigRational Value;
         public ConstExpr(BigRational value)
-            : base(HashCodeProvider.Const(value)) {
+            : base(HashCodeProvider.ConstHash(value)) {
             Value = value;
         }
     }
@@ -123,19 +123,19 @@ namespace SharpAlg.Geo.Core {
             MultSalt = getSalt();
         }
 
-        public static int Param(string name) 
+        public static int ParamHash(string name) 
             => SingleHash(ParamSalt, name);
-        public static int Const(BigRational value) 
+        public static int ConstHash(BigRational value) 
             => SingleHash(ConstSalt, value);
-        public static int Power(Expr value, BigInteger power) 
+        public static int PowerHash(Expr value, BigInteger power) 
             => PairHash(PowerSalt, value, power);
-        public static int Div(Expr numerator, Expr denominator) 
+        public static int DivHash(Expr numerator, Expr denominator) 
             => PairHash(DivSalt, numerator, denominator);
-        public static int Add(IEnumerable<Expr> args) 
+        public static int AddHash(IEnumerable<Expr> args) 
             => SequenceHash(AddSalt, args);
-        public static int Mult(IEnumerable<Expr> args) 
+        public static int MultHash(IEnumerable<Expr> args) 
             => SequenceHash(MultSalt, args);
-        public static int Sqrt(Expr value) 
+        public static int SqrtHash(Expr value) 
             => SingleHash(SqrtSalt, value);
 
         static int PairHash<T1, T2>(int salt, T1 value1, T2 value2) => salt ^ value1.GetHashCode() ^ value2.GetHashCode();
