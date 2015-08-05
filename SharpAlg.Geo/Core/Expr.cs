@@ -149,10 +149,10 @@ namespace SharpAlg.Geo.Core {
             //return new SqrtExpr(value);
         }
         [DebuggerStepThrough]
-        public static T MatchStrict<T>(this Expr expr, Func<AddExpr, T> add, Func<MultExpr, T> mult, Func<DivExpr, T> div, Func<PowerExpr, T> power, Func<SqrtExpr, T> sqrt, Func<ParamExpr, T> param, Func<ConstExpr, T> @const) {
+        public static T MatchStrict<T>(this Expr expr, Func<ImmutableArray<Expr>, T> add, Func<MultExpr, T> mult, Func<DivExpr, T> div, Func<PowerExpr, T> power, Func<SqrtExpr, T> sqrt, Func<ParamExpr, T> param, Func<ConstExpr, T> @const) {
             var addExpr = expr as AddExpr;
             if(addExpr != null)
-                return add(addExpr);
+                return add(addExpr.Args);
             var multExpr = expr as MultExpr;
             if(multExpr != null)
                 return mult(multExpr);
@@ -174,22 +174,35 @@ namespace SharpAlg.Geo.Core {
             throw new InvalidOperationException();
         }
         [DebuggerStepThrough]
-        public static T MatchDefault<T>(this Expr expr, Func<Expr, T> @default, Func<AddExpr, T> add = null, Func<MultExpr, T> mult = null, Func<DivExpr, T> div = null, Func<PowerExpr, T> power = null, Func<SqrtExpr, T> sqrt = null, Func<ParamExpr, T> param = null, Func<ConstExpr, T> @const = null) {
-            return expr.MatchStrict(
-                add ?? @default,
-                mult ?? @default,
-                div ?? @default,
-                power ?? @default,
-                sqrt ?? @default,
-                param ?? @default,
-                @const ?? @default
-            );
+        public static T MatchDefault<T>(this Expr expr, Func<Expr, T> @default, Func<ImmutableArray<Expr>, T> add = null, Func<MultExpr, T> mult = null, Func<DivExpr, T> div = null, Func<PowerExpr, T> power = null, Func<SqrtExpr, T> sqrt = null, Func<ParamExpr, T> param = null, Func<ConstExpr, T> @const = null) {
+            var addExpr = expr as AddExpr;
+            if(addExpr != null)
+                return add != null ? add(addExpr.Args) : @default(expr);
+            var multExpr = expr as MultExpr;
+            if(multExpr != null)
+                return mult != null ? mult(multExpr) : @default(expr);
+            var divExpr = expr as DivExpr;
+            if(divExpr != null)
+                return div != null ? div(divExpr) : @default(expr);
+            var powerExpr = expr as PowerExpr;
+            if(powerExpr != null)
+                return power != null ? power(powerExpr) : @default(expr);
+            var sqrtExpr = expr as SqrtExpr;
+            if(sqrtExpr != null)
+                return sqrt != null ? sqrt(sqrtExpr) : @default(expr);
+            var paramExpr = expr as ParamExpr;
+            if(paramExpr != null)
+                return param != null ? param(paramExpr) : @default(expr);
+            var constExpr = expr as ConstExpr;
+            if(constExpr != null)
+                return @const != null ? @const(constExpr) : @default(expr);
+            throw new InvalidOperationException();
         }
         static T Evaluate<T>(this Expr expr, Func<T, T, T> add, Func<T, T, T> mult, Func<T, T, T> div, Func<T, T, T> power, Func<T, T> sqrt, Func<string, T> param, Func<BigRational, T> @const) {
             //Func<Expr, T> eval = x => x.Evaluate(add, mult, div, power, sqrt, param, @const);
             Func<Expr, T> doEval = null;
             doEval = e => e.MatchStrict(
-                add: x => x.Args.Select(doEval).Aggregate(add),
+                add: x => x.Select(doEval).Aggregate(add),
                 mult: x => x.Args.Select(doEval).Aggregate(mult),
                 div: x => div(doEval(x.Numerator), doEval(x.Denominator)),
                 power: x => power(doEval(x.Value), @const(x.Power)),

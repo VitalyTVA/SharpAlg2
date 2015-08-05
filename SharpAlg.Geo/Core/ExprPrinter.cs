@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -82,10 +83,10 @@ namespace SharpAlg.Geo.Core {
         static bool IsMinusOne(Expr expr) {
             return (expr as ConstExpr).If(x => x.Value == BigInteger.MinusOne).ReturnSuccess();
         }
-        static string Add(AddExpr multi) {
+        static string Add(ImmutableArray<Expr> args) {
             var sb = new StringBuilder();
-            sb.Append(multi.Args.First().Print());
-            foreach(var expr in multi.Args.Tail()) {
+            sb.Append(args.First().Print());
+            foreach(var expr in args.Tail()) {
                 UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractAddUnaryInfo(expr);
                 sb.Append(GetBinaryOperationSymbol(info.Operation));
                 sb.Append(WrapFromAdd(info.Expr));
