@@ -150,28 +150,17 @@ namespace SharpAlg.Geo.Core {
         }
         [DebuggerStepThrough]
         public static T MatchStrict<T>(this Expr expr, Func<ImmutableArray<Expr>, T> add, Func<MultExpr, T> mult, Func<DivExpr, T> div, Func<PowerExpr, T> power, Func<SqrtExpr, T> sqrt, Func<ParamExpr, T> param, Func<ConstExpr, T> @const) {
-            var addExpr = expr as AddExpr;
-            if(addExpr != null)
-                return add(addExpr.Args);
-            var multExpr = expr as MultExpr;
-            if(multExpr != null)
-                return mult(multExpr);
-            var divExpr = expr as DivExpr;
-            if(divExpr != null)
-                return div(divExpr);
-            var powerExpr = expr as PowerExpr;
-            if(powerExpr != null)
-                return power(powerExpr);
-            var sqrtExpr = expr as SqrtExpr;
-            if(sqrtExpr != null)
-                return sqrt(sqrtExpr);
-            var paramExpr = expr as ParamExpr;
-            if(paramExpr != null)
-                return param(paramExpr);
-            var constExpr = expr as ConstExpr;
-            if(constExpr != null)
-                return @const(constExpr);
-            throw new InvalidOperationException();
+            return expr.MatchDefault(
+                x => { throw new InvalidOperationException(); },
+                add,
+                mult,
+                div,
+                power,
+                sqrt,
+                param,
+                @const
+            );
+
         }
         [DebuggerStepThrough]
         public static T MatchDefault<T>(this Expr expr, Func<Expr, T> @default, Func<ImmutableArray<Expr>, T> add = null, Func<MultExpr, T> mult = null, Func<DivExpr, T> div = null, Func<PowerExpr, T> power = null, Func<SqrtExpr, T> sqrt = null, Func<ParamExpr, T> param = null, Func<ConstExpr, T> @const = null) {
