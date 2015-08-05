@@ -67,6 +67,7 @@
     <Compile Include="Core\Builder.cs" />
     <Compile Include="Core\Expr.cs" />
     <Compile Include="Core\ExprPrinter.cs" />
+    <Compile Include="Core\HashCodeProvider.cs" />
     <Compile Include="Core\MayBe.cs" />
     <Compile Include="ImmutableContext.cs" />
     <Compile Include="PrimitiveOperations.cs" />
