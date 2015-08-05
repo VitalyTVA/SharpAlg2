@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
 
 namespace SharpAlg.Geo.Core {
     public static class ExprPrinter {
@@ -83,7 +83,7 @@ namespace SharpAlg.Geo.Core {
         static bool IsMinusOne(Expr expr) {
             return (expr as ConstExpr).If(x => x.Value == BigInteger.MinusOne).ReturnSuccess();
         }
-        static string Add(ImmutableArray<Expr> args) {
+        static string Add(ExprList args) {
             var sb = new StringBuilder();
             sb.Append(args.First().Print());
             foreach(var expr in args.Tail()) {

@@ -5,6 +5,7 @@ using Numerics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
+using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
 
 namespace SharpAlg.Geo.Core {
     public abstract class Expr {
@@ -46,16 +47,16 @@ namespace SharpAlg.Geo.Core {
     }
 
     public class AddExpr : Expr {
-        public readonly ImmutableArray<Expr> Args;
-        public AddExpr(ImmutableArray<Expr> args) 
+        public readonly ExprList Args;
+        public AddExpr(ExprList args) 
             : base(HashCodeProvider.AddHash(args)) {
             Args = args;
         }
     }
 
     public class MultExpr : Expr {
-        public readonly ImmutableArray<Expr> Args;
-        public MultExpr(ImmutableArray<Expr> args) 
+        public readonly ExprList Args;
+        public MultExpr(ExprList args) 
             : base(HashCodeProvider.MultHash(args)) {
             Args = args;
         }
@@ -149,7 +150,7 @@ namespace SharpAlg.Geo.Core {
             //return new SqrtExpr(value);
         }
         [DebuggerStepThrough]
-        public static T MatchStrict<T>(this Expr expr, Func<ImmutableArray<Expr>, T> add, Func<MultExpr, T> mult, Func<DivExpr, T> div, Func<PowerExpr, T> power, Func<SqrtExpr, T> sqrt, Func<ParamExpr, T> param, Func<ConstExpr, T> @const) {
+        public static T MatchStrict<T>(this Expr expr, Func<ExprList, T> add, Func<MultExpr, T> mult, Func<DivExpr, T> div, Func<PowerExpr, T> power, Func<SqrtExpr, T> sqrt, Func<ParamExpr, T> param, Func<ConstExpr, T> @const) {
             return expr.MatchDefault(
                 x => { throw new InvalidOperationException(); },
                 add,
@@ -163,7 +164,7 @@ namespace SharpAlg.Geo.Core {
 
         }
         [DebuggerStepThrough]
-        public static T MatchDefault<T>(this Expr expr, Func<Expr, T> @default, Func<ImmutableArray<Expr>, T> add = null, Func<MultExpr, T> mult = null, Func<DivExpr, T> div = null, Func<PowerExpr, T> power = null, Func<SqrtExpr, T> sqrt = null, Func<ParamExpr, T> param = null, Func<ConstExpr, T> @const = null) {
+        public static T MatchDefault<T>(this Expr expr, Func<Expr, T> @default, Func<ExprList, T> add = null, Func<MultExpr, T> mult = null, Func<DivExpr, T> div = null, Func<PowerExpr, T> power = null, Func<SqrtExpr, T> sqrt = null, Func<ParamExpr, T> param = null, Func<ConstExpr, T> @const = null) {
             var addExpr = expr as AddExpr;
             if(addExpr != null)
                 return add != null ? add(addExpr.Args) : @default(expr);

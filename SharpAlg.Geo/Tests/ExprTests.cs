@@ -4,10 +4,11 @@ using Numerics;
 using NUnit.Framework;
 using SharpAlg.Geo.Core;
 using System.Linq.Expressions;
-using System.Collections.Immutable;
 using System.Linq;
 using static SharpAlg.Geo.Core.ExprExtensions;
 using System.Diagnostics;
+using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
+using System.Collections.Immutable;
 
 namespace SharpAlg.Geo.Tests {
     public class ExprTestsBase {
@@ -258,7 +259,7 @@ namespace SharpAlg.Geo.Tests {
             var parameters = GetParameters(f);
             return builder.Build(f, parameters[0], parameters[1], parameters[2]);
         }
-        static ImmutableArray<Expr> GetParameters(LambdaExpression expression) {
+        static ExprList GetParameters(LambdaExpression expression) {
             return expression.Parameters.Select(x => (ParamExpr)x.Name).ToImmutableArray<Expr>();
         }
         public static Expr AssertSimpleStringRepresentation(this Expr expr, string str) {
