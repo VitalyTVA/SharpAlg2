@@ -41,7 +41,7 @@ namespace SharpAlg.Geo.Tests {
             var l1_l2 = builder.IntersectLines(l1, l2);
 
             var expected = builder.Middle(p1, p2);
-            return l1_l2.Offset(expected.Invert());
+            return builder.Offset(l1_l2, builder.Invert(expected));
 
         }
         #endregion

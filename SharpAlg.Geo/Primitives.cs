@@ -62,15 +62,5 @@ namespace SharpAlg.Geo {
         internal static RealPoint ToRealPoint(this Point p, ImmutableContext context) {
             return new RealPoint(p.X.ToReal(context), p.Y.ToReal(context));
         }
-        internal static Point Offset(this Point p, Point offset) {
-            return new Point(Add(p.X, offset.X), Add(p.Y, offset.Y));
-        }
-        internal static Point Invert(this Point p) {
-            return new Point(Minus(p.X), Minus(p.Y));
-        }
-        internal static Circle Offset(this Circle c, Point offset) {
-            var center = c.Center.Offset(offset);
-            return new Circle(center.X, center.Y, c.R);
-        }
     }
 }

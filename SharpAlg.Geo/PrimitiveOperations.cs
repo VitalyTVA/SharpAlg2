@@ -4,6 +4,16 @@ using static SharpAlg.Geo.Core.ExprExtensions;
 
 namespace SharpAlg.Geo {
     internal static class PrimitiveOperations {
+        internal static Point Offset(this Builder builder, Point p, Point offset) {
+            return new Point(Add(p.X, offset.X), Add(p.Y, offset.Y));
+        }
+        internal static Point Invert(this Builder builder, Point p) {
+            return new Point(Minus(p.X), Minus(p.Y));
+        }
+        internal static Circle Offset(this Builder builder, Circle c, Point offset) {
+            var center = builder.Offset(c.Center, offset);
+            return new Circle(center.X, center.Y, c.R);
+        }
         internal static Point Middle(this Builder builder, Point p1, Point p2) {
             return new Point(builder.Mean(p1.X, p2.X), builder.Mean(p1.Y, p2.Y));
         }
@@ -38,7 +48,7 @@ namespace SharpAlg.Geo {
             return Tuple.Create(new Point(xRoots.Item1, yRoots.Item1), new Point(xRoots.Item2, yRoots.Item2));
         }
         internal static Tuple<Point, Point> IntersectCircles(this Builder builder, Circle c1, Circle c2) {
-            var c = c2.Offset(c1.Center.Invert());
+            var c = builder.Offset(c2, builder.Invert(c1.Center));
             var eqA = builder.Build((X0, Y0) => 4 * (X0 ^ 2) + 4 * (Y0 ^ 2), c.X, c.Y);
             var eqYB = builder.Build((X0, Y0, R1, R2) => -4 * (Y0 ^ 3) - 4 * R1 * Y0 + 4 * Y0 * R2 - 4 * (X0 ^ 2) * Y0, c.X, c.Y, c1.R, c.R);
             var eqXB = builder.Build((X0, Y0, R1, R2) => -4 * (X0 ^ 3) - 4 * R1 * X0 + 4 * X0 * R2 - 4 * (Y0 ^ 2) * X0, c.X, c.Y, c1.R, c.R);
@@ -49,7 +59,7 @@ namespace SharpAlg.Geo {
             return Tuple.Create(
                 new Point(xRoots.Item1, yRoots.Item2),
                 new Point(xRoots.Item2, yRoots.Item1)
-            ).FMap(x => x.Offset(c1.Center));
+            ).FMap(x => builder.Offset(x, c1.Center));
         }
         internal static Expr TangentBetweenLines(this Builder builder, Line l1, Line l2) {
             return builder.Build((A1, B1, A2, B2) => (A1 * B2 - A2 * B1) / (A1 * A2 + B1 * B2), l1.A, l1.B, l2.A, l2.B);
