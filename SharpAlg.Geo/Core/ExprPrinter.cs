@@ -114,8 +114,8 @@ namespace SharpAlg.Geo.Core {
         static string Divide(Expr num, Expr den) {
             return string.Format("{0} / {1}", WrapFromDivide(num), WrapFromDivide(den));
         }
-        static string Power(PowerExpr power) {
-            return string.Format("{0} ^ {1}", WrapFromPower(power.Value), power.Power);
+        static string Power(Expr value, BigInteger power) {
+            return string.Format("{0} ^ {1}", WrapFromPower(value), power);
         }
         static string Parameter(ParamExpr parameter) {
             return parameter.Name;
@@ -175,7 +175,7 @@ namespace SharpAlg.Geo.Core {
                 add: x => shouldWrap(OperationPriority.Add),
                 mult: x => IsMinusExpression(x) || shouldWrap(OperationPriority.Multiply),
                 div: (x, y) => shouldWrap(OperationPriority.Divide),
-                power: x => shouldWrap(OperationPriority.Power),
+                power: (x, y) => shouldWrap(OperationPriority.Power),
                 sqrt: x => false,
                 param: x => false,
                 @const: x => {
