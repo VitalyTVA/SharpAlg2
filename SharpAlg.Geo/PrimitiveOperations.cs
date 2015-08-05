@@ -4,6 +4,11 @@ using static SharpAlg.Geo.Core.ExprExtensions;
 
 namespace SharpAlg.Geo {
     public static class PrimitiveOperations {
+        public static Point Middle(this Builder builder, Point p1, Point p2) {
+            return new Point(builder.Mean(p1.X, p2.X), builder.Mean(p1.Y, p2.Y));
+        }
+        static Expr Mean(this Builder builder, Expr a, Expr b) => builder.Build((x, y) => (x + y) / 2, a, b);
+
         public static Circle MakeCircle(this Builder builder, Point p1, Point p2) {
             var r = Add(
                         Subtract(p1.X, p2.X).Square(),

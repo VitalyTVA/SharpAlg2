@@ -51,9 +51,6 @@ namespace SharpAlg.Geo {
         public static Expr Square(this Expr e) {
             return Power(e, 2);
         }
-        public static Expr GetHalf(this Expr e) {
-            return Multiply(e, Const(new BigRational(1, 2)));
-        }
         public static ImmutableContext RegisterPoint(this ImmutableContext context, Point p, double x, double y) {
             return context
                 .RegisterValue((ParamExpr)p.X, x)
@@ -74,9 +71,6 @@ namespace SharpAlg.Geo {
         }
         public static Point Invert(this Point p) {
             return new Point(Minus(p.X), Minus(p.Y));
-        }
-        public static Point Middle(Point p1, Point p2) {
-            return new Point(Add(p1.X, p2.X).GetHalf(), Add(p1.Y, p2.Y).GetHalf());
         }
         public static Circle Offset(this Circle c, Point offset) {
             var center = c.Center.Offset(offset);

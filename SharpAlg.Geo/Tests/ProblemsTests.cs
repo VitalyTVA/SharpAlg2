@@ -40,7 +40,7 @@ namespace SharpAlg.Geo.Tests {
 
             var l1_l2 = builder.IntersectLines(l1, l2);
 
-            var expected = ExprHelper.Middle(p1, p2);
+            var expected = builder.Middle(p1, p2);
             return l1_l2.Offset(expected.Invert());
 
         }
@@ -68,7 +68,7 @@ namespace SharpAlg.Geo.Tests {
             var c = builder.MakeCircle(A, C);
             var c_l2 = builder.IntersectLineAndCircle(l1, c).Item1;
 
-            var middle = ExprHelper.Middle(C, c_l2);//TODO make real
+            var middle = builder.Middle(C, c_l2);//TODO make real
             var bisectrissa = builder.MakeLine(A, middle);
 
             return Add(builder.TangentBetweenLines(l1, bisectrissa), builder.TangentBetweenLines(l2, bisectrissa));
