@@ -6,11 +6,6 @@ using SharpAlg.Geo.Core;
 
 namespace SharpAlg.Geo {
     public class Point {
-        public static Point FromName(char name) {
-            if(!char.IsUpper(name))
-                throw new InvalidOperationException();
-            return new Point(Param(name + "x"), Param(name + "y"));
-        }
         public readonly Expr X, Y;
         public Point(Expr x, Expr y) {
             X = x;
@@ -22,12 +17,6 @@ namespace SharpAlg.Geo {
     }
 
     public class Line {
-        public static Line FromPoints(Point p1, Point p2) {
-            var a = Subtract(p1.Y, p2.Y);
-            var b = Subtract(p2.X, p1.X);
-            var c = Subtract(Multiply(p1.X, p2.Y), Multiply(p2.X, p1.Y));
-            return new Line(a, b, c);
-        }
         public readonly Expr A, B, C;
         public Line(Expr a, Expr b, Expr c) {
             A = a;
@@ -40,13 +29,6 @@ namespace SharpAlg.Geo {
     }
 
     public class Circle {
-        public static Circle FromPoints(Point p1, Point p2) {
-            var r = Add(
-                        Subtract(p1.X, p2.X).Square(),
-                        Subtract(p1.Y, p2.Y).Square()
-                    );
-            return new Circle(p1.X, p1.Y, r);
-        }
         public readonly Expr X, Y, R;
         public Point Center { get { return new Point(X, Y); } }
         public Circle(Expr x, Expr y, Expr r) {

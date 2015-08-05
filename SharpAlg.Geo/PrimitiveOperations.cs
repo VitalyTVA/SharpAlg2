@@ -4,6 +4,24 @@ using static SharpAlg.Geo.Core.ExprExtensions;
 
 namespace SharpAlg.Geo {
     public static class PrimitiveOperations {
+        public static Circle MakeCircle(this Builder builder, Point p1, Point p2) {
+            var r = Add(
+                        Subtract(p1.X, p2.X).Square(),
+                        Subtract(p1.Y, p2.Y).Square()
+                    );
+            return new Circle(p1.X, p1.Y, r);
+        }
+        public static Point MakePoint(this Builder builder, char name) {
+            if(!char.IsUpper(name))
+                throw new InvalidOperationException();
+            return new Point(Param(name + "x"), Param(name + "y"));
+        }
+        public static Line MakeLine(this Builder builder, Point p1, Point p2) {
+            var a = Subtract(p1.Y, p2.Y);
+            var b = Subtract(p2.X, p1.X);
+            var c = Subtract(Multiply(p1.X, p2.Y), Multiply(p2.X, p1.Y));
+            return new Line(a, b, c);
+        }
         public static Point IntersectLines(this Builder builder, Line l1, Line l2) {
             var x = builder.Build((A1, B1, C1, A2, B2, C2) => (B1 * C2 - B2 * C1) / (A1 * B2 - A2 * B1), l1.A, l1.B, l1.C, l2.A, l2.B, l2.C);
             var y = builder.Build((A1, B1, C1, A2, B2, C2) => (C1 * A2 - C2 * A1) / (A1 * B2 - A2 * B1), l1.A, l1.B, l1.C, l2.A, l2.B, l2.C);
