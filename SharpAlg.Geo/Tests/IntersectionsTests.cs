@@ -201,6 +201,30 @@ namespace SharpAlg.Geo.Tests {
                 builder.IntersectLines(l1, l2);
             //Assert.AreEqual("(0, 1/2 * a)", l1_l2.ToString());
         }
+        [Test, Ignore]
+        public void LongIntersectionsSequence() {
+            var a = Param("A");
+            var b = Param("B");
+            var c = Param("C");
+            var x = Param("X");
+            var y = Param("Y");
+            var r = Param("R");
+
+            var center = new Point(x, y);
+            var line = new Line(a, b, c);
+            const int iterations = 40;
+            for(int i = 0; i < iterations; i++) {
+                center = builder.IntersectLineAndCircle(line, new Circle(center.X, center.Y, r)).Item1;
+            }
+            var context = ImmutableContext.Empty
+                .RegisterValue(a, -3.0d / 4.0d)
+                .RegisterValue(b, 1)
+                .RegisterValue(c, -2)
+                .RegisterValue(x, 4)
+                .RegisterValue(y, 5)
+                .RegisterValue(r, 25);
+            Assert.AreEqual(new RealPoint(4 + iterations * 4, 5 + iterations * 3), center.ToRealPoint(context));
+        }
     }
 
     //Rewriter/Convolute tests

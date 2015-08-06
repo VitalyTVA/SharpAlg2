@@ -51,7 +51,17 @@ namespace SharpAlg.Geo.Core {
         public static IEnumerable<T> Tail<T>(this IEnumerable<T> source) {
             return source.Skip(1);
         }
-
+        public static TValue GetOrAdd<TValue, TKey>(this IDictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> getValue) {
+            TValue val;
+            if(dict.TryGetValue(key, out val)) {
+                return val;
+            }
+            return dict[key] = getValue(key);
+        }
+        public static Func<TI, TR> Memoize<TI, TR>(this Func<TI, TR> f) {
+            var dict = new Dictionary<TI, TR>();
+            return x => dict.GetOrAdd(x, f);
+        }
     }
     //public class NoMatchException : ApplicationException { }
 

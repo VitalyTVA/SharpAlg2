@@ -111,6 +111,13 @@ namespace SharpAlg.Geo.Core {
             : base(HashCodeProvider.ParamHash(name)) {
             Name = name;
         }
+        //public override bool Equals(object obj) {
+        //    var other = obj as ParamExpr;
+        //    return other != null && string.Equals(other.Name, Name, StringComparison.Ordinal);
+        //}
+        //public override int GetHashCode() {
+        //    return base.GetHashCode();
+        //}
     }
 
     public class ConstExpr : Expr {
@@ -119,6 +126,13 @@ namespace SharpAlg.Geo.Core {
             : base(HashCodeProvider.ConstHash(value)) {
             Value = value;
         }
+        //public override bool Equals(object obj) {
+        //    var other = obj as ConstExpr;
+        //    return other != null && other.Value == Value;    
+        //}
+        //public override int GetHashCode() {
+        //    return base.GetHashCode();
+        //}
     }
 
     public static class ExprExtensions {
@@ -194,6 +208,7 @@ namespace SharpAlg.Geo.Core {
                 param: x => param(x),
                 @const: x => @const(x)
             );
+            //doEval = doEval.Memoize();
             return doEval(expr);
         }
         public static double ToReal(this Expr expr, Func<string, double> param) {
