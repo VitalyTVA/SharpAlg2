@@ -13,7 +13,7 @@ namespace SharpAlg.Geo.Core {
             return new MultExpr(this, ImmutableArray.Create(args));
         }
         public Expr Minus(Expr a) {
-            return new MultExpr(this, ImmutableArray.Create(-1, a));
+            return Multiply(-1, a);
         }
         public Expr Divide(Expr a, Expr b) {
             return new DivExpr(this, a, b);

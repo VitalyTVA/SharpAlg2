@@ -202,6 +202,7 @@ namespace SharpAlg.Geo.Core {
         public static ParamExpr Param(string name) {
             return new ParamExpr(name);
         }
+
         public static bool IsFraction(this BigRational value) {
             return value.Denominator != BigInteger.One;
         }
