@@ -12,23 +12,23 @@ namespace SharpAlg.Geo.Core {
         Expr Power(Expr value, BigInteger power);
         Expr Sqrt(Expr value);
     }
-    public class CachingBuilder : IBuilder {
-        public Expr Add(params Expr[] args) {
+    public sealed class CachingBuilder : IBuilder {
+        Expr IBuilder.Add(params Expr[] args) {
             return new AddExpr(this, ImmutableArray.Create(args));
         }
-        public Expr Multiply(params Expr[] args) {
+        Expr IBuilder.Multiply(params Expr[] args) {
             return new MultExpr(this, ImmutableArray.Create(args));
         }
-        public Expr Divide(Expr a, Expr b) {
+        Expr IBuilder.Divide(Expr a, Expr b) {
             return new DivExpr(this, a, b);
         }
-        public Expr Power(Expr value, BigInteger power) {
+        Expr IBuilder.Power(Expr value, BigInteger power) {
             return new PowerExpr(this, value, power);
         }
-        public Expr Sqrt(Expr value) {
+        Expr IBuilder.Sqrt(Expr value) {
             return new SqrtExpr(this, value);
         }
-        public void Check(IEnumerable<Expr> args) {
+        void IBuilder.Check(IEnumerable<Expr> args) {
             if(args.OfType<ComplexExpr>().Any(x => x.Builder != this))
                 throw new CannotMixExpressionsFromDifferentBuildersException();
         }
