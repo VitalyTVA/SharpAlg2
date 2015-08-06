@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Immutable;
 using System.Numerics;
 using Numerics;
 using System.Linq;
@@ -55,7 +54,7 @@ namespace SharpAlg.Geo.Core {
 
     public class MultExpr : Expr {
         public readonly ExprList Args;
-        public MultExpr(ExprList args) 
+        public MultExpr(Builder builder, ExprList args) 
             : base(HashCodeProvider.MultHash(args)) {
             Args = args;
         }
@@ -63,7 +62,7 @@ namespace SharpAlg.Geo.Core {
 
     public class DivExpr : Expr {
         public readonly Expr Numerator, Denominator;
-        public DivExpr(Expr numerator, Expr denominator)
+        public DivExpr(Builder builder, Expr numerator, Expr denominator)
             : base(HashCodeProvider.DivHash(numerator, denominator)) {
             Numerator = numerator;
             Denominator = denominator;
@@ -73,7 +72,7 @@ namespace SharpAlg.Geo.Core {
     public class PowerExpr : Expr {
         public readonly Expr Value;
         public readonly BigInteger Power;
-        public PowerExpr(Expr value, BigInteger power)
+        public PowerExpr(Builder builder, Expr value, BigInteger power)
             : base(HashCodeProvider.PowerHash(value, power)) {
             if(power < 1)
                 throw new PowerShouldBePositiveException();
@@ -197,26 +196,11 @@ namespace SharpAlg.Geo.Core {
         }
         public static double ToReal(this Expr expr, ImmutableContext context) => expr.ToReal(context.GetValue);
 
-        public static Expr Multiply(params Expr[] args) {
-            return new MultExpr(ImmutableArray.Create(args));
-        }
-        public static Expr Minus(Expr a) {
-            return new MultExpr(ImmutableArray.Create(-1, a));
-        }
-        public static Expr Divide(Expr a, Expr b) {
-            return new DivExpr(a, b);
-        }
-        public static Expr Power(Expr value, BigInteger power) {
-            return new PowerExpr(value, power);
-        }
         public static Expr Const(BigRational value) {
             return new ConstExpr(value);
         }
         public static ParamExpr Param(string name) {
             return new ParamExpr(name);
-        }
-        public static Expr Tail(this MultExpr multi) {
-            return Multiply(multi.Args.Tail().ToArray());
         }
         public static bool IsFraction(this BigRational value) {
             return value.Denominator != BigInteger.One;

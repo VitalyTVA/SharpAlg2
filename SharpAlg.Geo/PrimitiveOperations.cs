@@ -8,7 +8,7 @@ namespace SharpAlg.Geo {
             return new Point(builder.Add(p.X, offset.X), builder.Add(p.Y, offset.Y));
         }
         internal static Point Invert(this Builder builder, Point p) {
-            return new Point(Minus(p.X), Minus(p.Y));
+            return new Point(builder.Minus(p.X), builder.Minus(p.Y));
         }
         internal static Circle Offset(this Builder builder, Circle c, Point offset) {
             var center = builder.Offset(c.Center, offset);
@@ -31,7 +31,7 @@ namespace SharpAlg.Geo {
         internal static Line MakeLine(this Builder builder, Point p1, Point p2) {
             var a = builder.Subtract(p1.Y, p2.Y);
             var b = builder.Subtract(p2.X, p1.X);
-            var c = builder.Subtract(Multiply(p1.X, p2.Y), Multiply(p2.X, p1.Y));
+            var c = builder.Subtract(builder.Multiply(p1.X, p2.Y), builder.Multiply(p2.X, p1.Y));
             return new Line(a, b, c);
         }
         internal static Point IntersectLines(this Builder builder, Line l1, Line l2) {

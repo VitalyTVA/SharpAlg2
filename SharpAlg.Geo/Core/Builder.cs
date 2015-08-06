@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Numerics;
 using static SharpAlg.Geo.Core.ExprExtensions;
 
 namespace SharpAlg.Geo.Core {
@@ -80,5 +81,18 @@ namespace SharpAlg.Geo.Core {
         public Expr Subtract(Expr a, Expr b) {
             return Add(a, Minus(b));
         }
+        public Expr Multiply(params Expr[] args) {
+            return new MultExpr(this, ImmutableArray.Create(args));
+        }
+        public Expr Minus(Expr a) {
+            return new MultExpr(this, ImmutableArray.Create(-1, a));
+        }
+        public Expr Divide(Expr a, Expr b) {
+            return new DivExpr(this, a, b);
+        }
+        public Expr Power(Expr value, BigInteger power) {
+            return new PowerExpr(this, value, power);
+        }
+
     }
 }
