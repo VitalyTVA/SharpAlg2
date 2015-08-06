@@ -15,6 +15,9 @@ namespace SharpAlg.Geo.Core {
         public Expr Power(Expr value, BigInteger power) {
             return new PowerExpr(this, value, power);
         }
+        public Expr Sqrt(Expr value) {
+            return new SqrtExpr(this, value);
+        }
     }
 
 }

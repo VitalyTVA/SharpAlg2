@@ -83,7 +83,7 @@ namespace SharpAlg.Geo.Core {
 
     public class SqrtExpr : Expr {
         public readonly Expr Value;
-        public SqrtExpr(Expr value)
+        public SqrtExpr(Builder builder, Expr value)
             : base(HashCodeProvider.SqrtHash(value)) {
             Value = value;
         }

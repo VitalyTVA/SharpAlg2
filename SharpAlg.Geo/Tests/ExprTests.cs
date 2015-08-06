@@ -164,15 +164,15 @@ namespace SharpAlg.Geo.Tests {
 
         }
         [Test]
-        public static void SqrtEqualsAndGetHashCode() {
-            var expr = new SqrtExpr((ParamExpr)"a");
-            Assert.AreNotEqual(expr, new SqrtExpr((ParamExpr)"a"));
-            Assert.AreNotEqual(expr, new SqrtExpr((ParamExpr)"a"));
+        public void SqrtEqualsAndGetHashCode() {
+            var expr = builder.Sqrt((ParamExpr)"a");
+            Assert.AreNotEqual(expr, builder.Sqrt((ParamExpr)"a"));
+            Assert.AreNotEqual(expr, builder.Sqrt((ParamExpr)"a"));
             Assert.AreEqual(expr, expr);
 
             AssertHashCodesAreEqual(expr, expr);
-            AssertHashCodesAreEqual(expr, new SqrtExpr((ParamExpr)"a"));
-            AssertHashCodesAreNotEqual(expr, new SqrtExpr((ParamExpr)"b"));
+            AssertHashCodesAreEqual(expr, builder.Sqrt((ParamExpr)"a"));
+            AssertHashCodesAreNotEqual(expr, builder.Sqrt((ParamExpr)"b"));
         }
         [Test]
         public static void ConstEqualsAndGetHashCode() {
@@ -231,8 +231,8 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test]
         public void HashCodeSalt() {
-            AssertHashCodesAreNotEqual<Expr>((ParamExpr)"b", new SqrtExpr((ParamExpr)"b"));
-            AssertHashCodesAreNotEqual<Expr>(2, new SqrtExpr(2));
+            AssertHashCodesAreNotEqual((ParamExpr)"b", builder.Sqrt((ParamExpr)"b"));
+            AssertHashCodesAreNotEqual(2, builder.Sqrt(2));
 
             AssertHashCodesAreNotEqual((ParamExpr)"b", builder.Add((ParamExpr)"b"));
             AssertHashCodesAreNotEqual(builder.Multiply((ParamExpr)"b"), builder.Add((ParamExpr)"b"));
