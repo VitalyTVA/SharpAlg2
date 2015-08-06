@@ -23,7 +23,7 @@ namespace SharpAlg.Geo {
             C = c;
         }
         public override string ToString() {
-            return new Builder().Build((A, B, C, x, y) => A * x + B * y + C, A, B, C, Param("x"), Param("y")).ToString();
+            return SimpleBuilder.Instance.Build((A, B, C, x, y) => A * x + B * y + C, A, B, C, Param("x"), Param("y")).ToString();
         }
     }
 
@@ -36,7 +36,7 @@ namespace SharpAlg.Geo {
             R = r;
         }
         public override string ToString() {
-            return new Builder().Build((X, Y, R, x, y) => ((x - X) ^ 2) + ((y - Y) ^ 2) - R, X, Y, R, Param("x"), Param("y")).ToString();
+            return SimpleBuilder.Instance.Build((X, Y, R, x, y) => ((x - X) ^ 2) + ((y - Y) ^ 2) - R, X, Y, R, Param("x"), Param("y")).ToString();
         }
     }
 

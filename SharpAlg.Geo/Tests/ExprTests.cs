@@ -12,10 +12,10 @@ using System.Collections.Immutable;
 
 namespace SharpAlg.Geo.Tests {
     public class ExprTestsBase {
-        protected Builder builder;
+        protected IBuilder builder;
         [SetUp]
         public void SetUp() {
-            builder = new Builder();
+            builder = new CachingBuilder();
         }
     }
     [TestFixture]
@@ -249,7 +249,7 @@ namespace SharpAlg.Geo.Tests {
 
         [Test]
         public void CannotMixExprsFromDifferentBuilders() {
-            var expr = new Builder().Add(Param("a"), Param("b"));
+            var expr = SimpleBuilder.Instance.Add(Param("a"), Param("b"));
             Action<TestDelegate> assertThrows = x => Assert.Throws<CannotMixExpressionsFromDifferentBuildersException>(x);
             assertThrows(() => builder.Add(1, expr));
             assertThrows(() => builder.Multiply(1, expr));
@@ -260,14 +260,14 @@ namespace SharpAlg.Geo.Tests {
         }
     }
     public static class ExprTestExtensions {
-        public static Expr Build(this Builder builder, Expression<Func<Expr, Expr>> f) {
+        public static Expr Build(this IBuilder builder, Expression<Func<Expr, Expr>> f) {
             return builder.Build(f, GetParameters(f).Single());
         }
-        public static Expr Build(this Builder builder, Expression<Func<Expr, Expr, Expr>> f) {
+        public static Expr Build(this IBuilder builder, Expression<Func<Expr, Expr, Expr>> f) {
             var parameters = GetParameters(f);
             return builder.Build(f, parameters[0], parameters[1]);
         }
-        public static Expr Build(this Builder builder, Expression<Func<Expr, Expr, Expr, Expr>> f) {
+        public static Expr Build(this IBuilder builder, Expression<Func<Expr, Expr, Expr, Expr>> f) {
             var parameters = GetParameters(f);
             return builder.Build(f, parameters[0], parameters[1], parameters[2]);
         }
