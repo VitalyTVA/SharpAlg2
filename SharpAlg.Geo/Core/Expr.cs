@@ -47,7 +47,7 @@ namespace SharpAlg.Geo.Core {
 
     public class AddExpr : Expr {
         public readonly ExprList Args;
-        public AddExpr(ExprList args) 
+        public AddExpr(Builder builder, ExprList args) 
             : base(HashCodeProvider.AddHash(args)) {
             Args = args;
         }
@@ -197,17 +197,11 @@ namespace SharpAlg.Geo.Core {
         }
         public static double ToReal(this Expr expr, ImmutableContext context) => expr.ToReal(context.GetValue);
 
-        public static Expr Add(params Expr[] args) {
-            return new AddExpr(ImmutableArray.Create(args));
-        }
         public static Expr Multiply(params Expr[] args) {
             return new MultExpr(ImmutableArray.Create(args));
         }
         public static Expr Minus(Expr a) {
             return new MultExpr(ImmutableArray.Create(-1, a));
-        }
-        public static Expr Subtract(Expr a, Expr b) {
-            return Add(a, Minus(b));
         }
         public static Expr Divide(Expr a, Expr b) {
             return new DivExpr(a, b);

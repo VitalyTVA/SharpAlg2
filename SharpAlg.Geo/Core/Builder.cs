@@ -73,5 +73,12 @@ namespace SharpAlg.Geo.Core {
             var constant = unary.Operand as ConstantExpression;
             return (int)constant.Value;
         }
+
+        public Expr Add(params Expr[] args) {
+            return new AddExpr(this, ImmutableArray.Create(args));
+        }
+        public Expr Subtract(Expr a, Expr b) {
+            return Add(a, Minus(b));
+        }
     }
 }

@@ -5,7 +5,7 @@ using static SharpAlg.Geo.Core.ExprExtensions;
 namespace SharpAlg.Geo {
     internal static class PrimitiveOperations {
         internal static Point Offset(this Builder builder, Point p, Point offset) {
-            return new Point(Add(p.X, offset.X), Add(p.Y, offset.Y));
+            return new Point(builder.Add(p.X, offset.X), builder.Add(p.Y, offset.Y));
         }
         internal static Point Invert(this Builder builder, Point p) {
             return new Point(Minus(p.X), Minus(p.Y));
@@ -29,9 +29,9 @@ namespace SharpAlg.Geo {
             return new Point(Param(name + "x"), Param(name + "y"));
         }
         internal static Line MakeLine(this Builder builder, Point p1, Point p2) {
-            var a = Subtract(p1.Y, p2.Y);
-            var b = Subtract(p2.X, p1.X);
-            var c = Subtract(Multiply(p1.X, p2.Y), Multiply(p2.X, p1.Y));
+            var a = builder.Subtract(p1.Y, p2.Y);
+            var b = builder.Subtract(p2.X, p1.X);
+            var c = builder.Subtract(Multiply(p1.X, p2.Y), Multiply(p2.X, p1.Y));
             return new Line(a, b, c);
         }
         internal static Point IntersectLines(this Builder builder, Line l1, Line l2) {

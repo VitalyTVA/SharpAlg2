@@ -71,7 +71,7 @@ namespace SharpAlg.Geo.Tests {
             var middle = builder.Middle(C, c_l2);//TODO make real
             var bisectrissa = builder.MakeLine(A, middle);
 
-            return Add(builder.TangentBetweenLines(l1, bisectrissa), builder.TangentBetweenLines(l2, bisectrissa));
+            return builder.Add(builder.TangentBetweenLines(l1, bisectrissa), builder.TangentBetweenLines(l2, bisectrissa));
         }
         #endregion
 
