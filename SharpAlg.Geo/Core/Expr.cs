@@ -4,6 +4,7 @@ using Numerics;
 using System.Linq;
 using System.Diagnostics;
 using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
+using System.Collections.Generic;
 
 namespace SharpAlg.Geo.Core {
     public abstract class Expr {
@@ -45,6 +46,10 @@ namespace SharpAlg.Geo.Core {
     }
 
     public abstract class ComplexExpr : Expr {
+        protected static void CheckBuilder(Builder builder, IEnumerable<Expr> args) {
+            if(args.OfType<ComplexExpr>().Any(x => x.builder != builder))
+                throw new CannotMixExpressionsFromDifferentBuildersException();
+        }
         readonly Builder builder;
         protected ComplexExpr(Builder builder, int hashCode) 
             : base(hashCode) {
@@ -57,6 +62,7 @@ namespace SharpAlg.Geo.Core {
         public readonly ExprList Args;
         public AddExpr(Builder builder, ExprList args) 
             : base(builder, HashCodeProvider.AddHash(args)) {
+            CheckBuilder(builder, args);
             Args = args;
         }
     }
@@ -65,6 +71,7 @@ namespace SharpAlg.Geo.Core {
         public readonly ExprList Args;
         public MultExpr(Builder builder, ExprList args) 
             : base(builder, HashCodeProvider.MultHash(args)) {
+            CheckBuilder(builder, args);
             Args = args;
         }
     }
@@ -73,6 +80,7 @@ namespace SharpAlg.Geo.Core {
         public readonly Expr Numerator, Denominator;
         public DivExpr(Builder builder, Expr numerator, Expr denominator)
             : base(builder, HashCodeProvider.DivHash(numerator, denominator)) {
+            CheckBuilder(builder, new[] { numerator, denominator });
             Numerator = numerator;
             Denominator = denominator;
         }
@@ -83,6 +91,7 @@ namespace SharpAlg.Geo.Core {
         public readonly BigInteger Power;
         public PowerExpr(Builder builder, Expr value, BigInteger power)
             : base(builder, HashCodeProvider.PowerHash(value, power)) {
+            CheckBuilder(builder, value.Yield());
             if(power < 1)
                 throw new PowerShouldBePositiveException();
             Value = value;
@@ -94,6 +103,7 @@ namespace SharpAlg.Geo.Core {
         public readonly Expr Value;
         public SqrtExpr(Builder builder, Expr value)
             : base(builder, HashCodeProvider.SqrtHash(value)) {
+            CheckBuilder(builder, value.Yield());
             Value = value;
         }
     }
@@ -219,4 +229,5 @@ namespace SharpAlg.Geo.Core {
     public class CannotImplicitlyCreateExpressionException : Exception { }
     public class PowerShouldBePositiveException : Exception { }
     public class InvalidExpressionException : Exception { }
+    public class CannotMixExpressionsFromDifferentBuildersException : Exception { }
 }

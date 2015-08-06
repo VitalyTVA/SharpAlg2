@@ -246,6 +246,18 @@ namespace SharpAlg.Geo.Tests {
         static void AssertHashCodesAreNotEqual<T>(T a, T b) {
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
+
+        [Test]
+        public void CannotMixExprsFromDifferentBuilders() {
+            var expr = new Builder().Add(Param("a"), Param("b"));
+            Action<TestDelegate> assertThrows = x => Assert.Throws<CannotMixExpressionsFromDifferentBuildersException>(x);
+            assertThrows(() => builder.Add(1, expr));
+            assertThrows(() => builder.Multiply(1, expr));
+            assertThrows(() => builder.Divide(1, expr));
+            assertThrows(() => builder.Divide(expr, 1));
+            assertThrows(() => builder.Power(expr, 2));
+            assertThrows(() => builder.Sqrt(expr));
+        }
     }
     public static class ExprTestExtensions {
         public static Expr Build(this Builder builder, Expression<Func<Expr, Expr>> f) {
