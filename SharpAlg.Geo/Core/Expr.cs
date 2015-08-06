@@ -44,36 +44,45 @@ namespace SharpAlg.Geo.Core {
         public override int GetHashCode() => hashCode;
     }
 
-    public class AddExpr : Expr {
+    public abstract class ComplexExpr : Expr {
+        readonly Builder builder;
+        protected ComplexExpr(Builder builder, int hashCode) 
+            : base(hashCode) {
+            this.builder = builder;
+            this.builder.GetHashCode();//TODO remove
+        }
+    }
+
+    public class AddExpr : ComplexExpr {
         public readonly ExprList Args;
         public AddExpr(Builder builder, ExprList args) 
-            : base(HashCodeProvider.AddHash(args)) {
+            : base(builder, HashCodeProvider.AddHash(args)) {
             Args = args;
         }
     }
 
-    public class MultExpr : Expr {
+    public class MultExpr : ComplexExpr {
         public readonly ExprList Args;
         public MultExpr(Builder builder, ExprList args) 
-            : base(HashCodeProvider.MultHash(args)) {
+            : base(builder, HashCodeProvider.MultHash(args)) {
             Args = args;
         }
     }
 
-    public class DivExpr : Expr {
+    public class DivExpr : ComplexExpr {
         public readonly Expr Numerator, Denominator;
         public DivExpr(Builder builder, Expr numerator, Expr denominator)
-            : base(HashCodeProvider.DivHash(numerator, denominator)) {
+            : base(builder, HashCodeProvider.DivHash(numerator, denominator)) {
             Numerator = numerator;
             Denominator = denominator;
         }
     }
 
-    public class PowerExpr : Expr {
+    public class PowerExpr : ComplexExpr {
         public readonly Expr Value;
         public readonly BigInteger Power;
         public PowerExpr(Builder builder, Expr value, BigInteger power)
-            : base(HashCodeProvider.PowerHash(value, power)) {
+            : base(builder, HashCodeProvider.PowerHash(value, power)) {
             if(power < 1)
                 throw new PowerShouldBePositiveException();
             Value = value;
@@ -81,10 +90,10 @@ namespace SharpAlg.Geo.Core {
         }
     }
 
-    public class SqrtExpr : Expr {
+    public class SqrtExpr : ComplexExpr {
         public readonly Expr Value;
         public SqrtExpr(Builder builder, Expr value)
-            : base(HashCodeProvider.SqrtHash(value)) {
+            : base(builder, HashCodeProvider.SqrtHash(value)) {
             Value = value;
         }
     }
