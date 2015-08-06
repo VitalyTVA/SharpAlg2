@@ -90,7 +90,7 @@ namespace SharpAlg.Geo.Core {
     }
 
     public class ParamExpr : Expr {
-        public static implicit operator ParamExpr(string name) {
+        public static explicit operator ParamExpr(string name) {
             return new ParamExpr(name);
         }
         public readonly string Name;

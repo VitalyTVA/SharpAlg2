@@ -25,7 +25,7 @@ namespace SharpAlg.Geo.Tests {
             Expr five = 5;
             Assert.AreEqual((BigRational)5, ((ConstExpr)five).Value);
 
-            ParamExpr a = "A";
+            ParamExpr a = (ParamExpr)"A";
             Assert.AreEqual("A", a.Name);
 
             AddExpr a_plus_five = (AddExpr)builder.Build(x => x + 5, a);
@@ -159,8 +159,8 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual(expr, expr);
 
             AssertHashCodesAreEqual(expr, expr);
-            AssertHashCodesAreEqual(expr, "a");
-            AssertHashCodesAreNotEqual(expr, "b");
+            AssertHashCodesAreEqual(expr, (ParamExpr)"a");
+            AssertHashCodesAreNotEqual(expr, (ParamExpr)"b");
 
         }
         [Test]
