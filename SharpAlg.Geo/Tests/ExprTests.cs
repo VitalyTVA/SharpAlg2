@@ -15,7 +15,10 @@ namespace SharpAlg.Geo.Tests {
         protected IBuilder builder;
         [SetUp]
         public void SetUp() {
-            builder = new CachingBuilder();
+            builder = CreateBuilder();
+        }
+        protected static IBuilder CreateBuilder() {
+            return new CachingBuilder();
         }
     }
     [TestFixture]
@@ -167,7 +170,7 @@ namespace SharpAlg.Geo.Tests {
         public void SqrtEqualsAndGetHashCode() {
             var expr = builder.Sqrt((ParamExpr)"a");
             Assert.AreEqual(expr, builder.Sqrt((ParamExpr)"a"));
-            Assert.AreNotEqual(expr, ((IBuilder)new CachingBuilder()).Sqrt((ParamExpr)"a"));
+            Assert.AreNotEqual(expr, CreateBuilder().Sqrt((ParamExpr)"a"));
             Assert.AreNotEqual(expr, builder.Sqrt((ParamExpr)"b"));
             Assert.AreEqual(expr, expr);
 
@@ -190,7 +193,7 @@ namespace SharpAlg.Geo.Tests {
         public void PowerEqualsAndGetHashCode() {
             Expr expr = builder.Power((ParamExpr)"a", 2);
             Assert.AreEqual(expr, builder.Power((ParamExpr)"a", 2));
-            Assert.AreNotEqual(expr, ((IBuilder)new CachingBuilder()).Power((ParamExpr)"a", 2));
+            Assert.AreNotEqual(expr, CreateBuilder().Power((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
 
             AssertHashCodesAreEqual(expr, expr);
@@ -202,7 +205,7 @@ namespace SharpAlg.Geo.Tests {
         public void AddEqualsAndGetHashCode() {
             Expr expr = builder.Add((ParamExpr)"a", 2);
             Assert.AreEqual(expr, builder.Add((ParamExpr)"a", 2));
-            Assert.AreNotEqual(expr, ((IBuilder)new CachingBuilder()).Add((ParamExpr)"a", 2));
+            Assert.AreNotEqual(expr, CreateBuilder().Add((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
 
             AssertHashCodesAreEqual(expr, expr);
@@ -214,7 +217,7 @@ namespace SharpAlg.Geo.Tests {
         public void MultEquals() {
             Expr expr = builder.Multiply((ParamExpr)"a", 2);
             Assert.AreEqual(expr, builder.Multiply((ParamExpr)"a", 2));
-            Assert.AreNotEqual(expr, ((IBuilder)new CachingBuilder()).Multiply((ParamExpr)"a", 2));
+            Assert.AreNotEqual(expr, CreateBuilder().Multiply((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
 
             AssertHashCodesAreEqual(expr, expr);
@@ -226,7 +229,7 @@ namespace SharpAlg.Geo.Tests {
         public void DivEquals() {
             Expr expr = builder.Divide((ParamExpr)"a", 2);
             Assert.AreEqual(expr, builder.Divide((ParamExpr)"a", 2));
-            Assert.AreNotEqual(expr, ((IBuilder)new CachingBuilder()).Divide((ParamExpr)"a", 2));
+            Assert.AreNotEqual(expr, CreateBuilder().Divide((ParamExpr)"a", 2));
             Assert.AreEqual(expr, expr);
 
             AssertHashCodesAreEqual(expr, expr);
@@ -289,7 +292,7 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreSame((e1.Args.First() as SqrtExpr).Value, (e1.Args.Last() as DivExpr).Denominator);
             var e2 = builder.Build(x => x + 1);
             Assert.AreSame((e1.Args.First() as SqrtExpr).Value, e2);
-            Assert.AreNotSame(e2, new CachingBuilder().Build(x => x + 1));
+            Assert.AreNotSame(e2, CreateBuilder().Build(x => x + 1));
             Assert.AreNotSame(e2, builder.Build(x => x + 2));
         }
         [Test]
