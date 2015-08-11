@@ -13,8 +13,28 @@ namespace SharpAlg.Geo.Core {
         Expr Sqrt(Expr value);
     }
     public sealed class CachingBuilder : IBuilder {
+        class ExprEqualityComparer : IEqualityComparer<Expr> {
+            public static readonly IEqualityComparer<Expr> Instance = new ExprEqualityComparer();
+            ExprEqualityComparer() { }
+
+            bool IEqualityComparer<Expr>.Equals(Expr x, Expr y) {
+                if(x.GetType() != y.GetType())
+                    return false;
+                return x.MatchDefault(
+                    e => false,
+                    add: args => Enumerable.SequenceEqual(args, ((AddExpr)y).Args)
+                );
+            }
+
+            int IEqualityComparer<Expr>.GetHashCode(Expr obj) {
+                return obj.GetHashCode();
+            }
+        }
+
+        readonly IDictionary<Expr, Expr> cache = new Dictionary<Expr, Expr>(ExprEqualityComparer.Instance);
         Expr IBuilder.Add(params Expr[] args) {
-            return new AddExpr(this, ImmutableArray.Create(args));
+            var e = new AddExpr(this, ImmutableArray.Create(args));
+            return cache.GetOrAdd(e, e);
         }
         Expr IBuilder.Multiply(params Expr[] args) {
             return new MultExpr(this, ImmutableArray.Create(args));

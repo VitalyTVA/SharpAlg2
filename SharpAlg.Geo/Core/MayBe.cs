@@ -58,6 +58,13 @@ namespace SharpAlg.Geo.Core {
             }
             return dict[key] = getValue(key);
         }
+        public static TValue GetOrAdd<TValue, TKey>(this IDictionary<TKey, TValue> dict, TKey key, TValue value) {
+            TValue val;
+            if(dict.TryGetValue(key, out val)) {
+                return val;
+            }
+            return dict[key] = value;
+        }
         public static Func<TI, TR> Memoize<TI, TR>(this Func<TI, TR> f) {
             var dict = new Dictionary<TI, TR>();
             return x => dict.GetOrAdd(x, f);
