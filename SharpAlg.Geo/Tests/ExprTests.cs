@@ -258,6 +258,26 @@ namespace SharpAlg.Geo.Tests {
             assertThrows(() => builder.Power(expr, 2));
             assertThrows(() => builder.Sqrt(expr));
         }
+
+        [Test]
+        public void EvaluationMemoization() {
+            var getParamCount = 0;
+            Func<string, double> getParam = x => {
+                getParamCount++;
+                if(string.Equals(x, "a", StringComparison.Ordinal)) {
+                    return 4;
+                }
+                if(string.Equals(x, "b", StringComparison.Ordinal)) {
+                    return 3;
+                }
+                throw new InvalidOperationException();
+            };
+            var sqrtExpr = builder.Build(a => Sqrt(a));
+            var addExpr = builder.Build(b => b + 1);
+            var expr = builder.Build((x, y) => x + y + 1 / x + 1 / y, sqrtExpr, addExpr);
+            Assert.AreEqual(6.75, expr.ToReal(getParam));
+            Assert.AreEqual(2, getParamCount);
+        }
     }
     public static class ExprTestExtensions {
         public static Expr Build(this IBuilder builder, Expression<Func<Expr, Expr>> f) {

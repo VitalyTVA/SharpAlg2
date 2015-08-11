@@ -197,7 +197,6 @@ namespace SharpAlg.Geo.Core {
             throw new InvalidOperationException();
         }
         static T Evaluate<T>(this Expr expr, Func<T, T, T> add, Func<T, T, T> mult, Func<T, T, T> div, Func<T, T, T> power, Func<T, T> sqrt, Func<string, T> param, Func<BigRational, T> @const) {
-            //Func<Expr, T> eval = x => x.Evaluate(add, mult, div, power, sqrt, param, @const);
             Func<Expr, T> doEval = null;
             doEval = e => e.MatchStrict(
                 add: x => x.Select(doEval).Aggregate(add),
@@ -208,7 +207,7 @@ namespace SharpAlg.Geo.Core {
                 param: x => param(x),
                 @const: x => @const(x)
             );
-            //doEval = doEval.Memoize();
+            doEval = doEval.Memoize();
             return doEval(expr);
         }
         public static double ToReal(this Expr expr, Func<string, double> param) {

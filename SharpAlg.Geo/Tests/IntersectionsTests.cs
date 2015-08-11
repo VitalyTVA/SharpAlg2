@@ -201,7 +201,7 @@ namespace SharpAlg.Geo.Tests {
                 builder.IntersectLines(l1, l2);
             //Assert.AreEqual("(0, 1/2 * a)", l1_l2.ToString());
         }
-        [Test, Ignore]
+        [Test]
         public void LongIntersectionsSequence() {
             var a = Param("A");
             var b = Param("B");
@@ -212,7 +212,7 @@ namespace SharpAlg.Geo.Tests {
 
             var center = new Point(x, y);
             var line = new Line(a, b, c);
-            const int iterations = 40;
+            const int iterations = 42;
             for(int i = 0; i < iterations; i++) {
                 center = builder.IntersectLineAndCircle(line, new Circle(center.X, center.Y, r)).Item1;
             }
