@@ -4,7 +4,7 @@ using static SharpAlg.Geo.Core.ExprExtensions;
 
 namespace SharpAlg.Geo.Tests {
     [TestFixture]
-    public class IntersectionsTests : ExprTestsBase {
+    public class IntersectionsTests : ExprFunctionalTestsBase {
         [Test]
         public void LinesIntersetions() {
             var A = builder.MakePoint('A');

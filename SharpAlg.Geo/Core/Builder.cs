@@ -37,10 +37,17 @@ namespace SharpAlg.Geo.Core {
                 return getHashCode(obj);
             }
         }
-
         readonly IDictionary<Expr, Expr> cache;
-        public CachingBuilder() {
-            cache = new Dictionary<Expr, Expr>(new ExprEqualityComparer(x => x.GetHashCode()));
+
+        public static IBuilder CreateSimple() {
+            return new CachingBuilder(x => 0);
+        }
+        public static IBuilder CreateRealLife() {
+            return new CachingBuilder(x => x.GetHashCode());
+        }
+
+        CachingBuilder(Func<Expr, int> getHashCode) {
+            cache = new Dictionary<Expr, Expr>(new ExprEqualityComparer(getHashCode));
 
         }
         Expr IBuilder.Add(params Expr[] args) {

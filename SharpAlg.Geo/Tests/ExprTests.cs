@@ -17,8 +17,13 @@ namespace SharpAlg.Geo.Tests {
         public void SetUp() {
             builder = CreateBuilder();
         }
-        protected static IBuilder CreateBuilder() {
-            return new CachingBuilder();
+        protected virtual IBuilder CreateBuilder() {
+            return CachingBuilder.CreateSimple();
+        }
+    }
+    public class ExprFunctionalTestsBase : ExprTestsBase {
+        protected override IBuilder CreateBuilder() {
+            return CachingBuilder.CreateRealLife();
         }
     }
     [TestFixture]
