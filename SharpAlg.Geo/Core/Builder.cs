@@ -22,7 +22,8 @@ namespace SharpAlg.Geo.Core {
                     return false;
                 return x.MatchDefault(
                     e => false,
-                    add: args => Enumerable.SequenceEqual(args, ((AddExpr)y).Args)
+                    add: args => Enumerable.SequenceEqual(args, ((AddExpr)y).Args),
+                    mult: args => Enumerable.SequenceEqual(args, ((MultExpr)y).Args)
                 );
             }
 
@@ -33,11 +34,11 @@ namespace SharpAlg.Geo.Core {
 
         readonly IDictionary<Expr, Expr> cache = new Dictionary<Expr, Expr>(ExprEqualityComparer.Instance);
         Expr IBuilder.Add(params Expr[] args) {
-            var e = new AddExpr(this, ImmutableArray.Create(args));
-            return cache.GetOrAdd(e, e);
+            return GetCachedExpr(new AddExpr(this, ImmutableArray.Create(args)));
         }
+
         Expr IBuilder.Multiply(params Expr[] args) {
-            return new MultExpr(this, ImmutableArray.Create(args));
+            return GetCachedExpr(new MultExpr(this, ImmutableArray.Create(args)));
         }
         Expr IBuilder.Divide(Expr a, Expr b) {
             return new DivExpr(this, a, b);
@@ -51,6 +52,10 @@ namespace SharpAlg.Geo.Core {
         void IBuilder.Check(IEnumerable<Expr> args) {
             if(args.OfType<ComplexExpr>().Any(x => x.Builder != this))
                 throw new CannotMixExpressionsFromDifferentBuildersException();
+        }
+
+        Expr GetCachedExpr(Expr e) {
+            return cache.GetOrAdd(e, e);
         }
     }
     public sealed class SimpleBuilder : IBuilder {
