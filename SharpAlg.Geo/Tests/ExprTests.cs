@@ -154,7 +154,7 @@ namespace SharpAlg.Geo.Tests {
         [Test]
         public static void ParamEqualsAndGetHashCode() {
             var expr = (ParamExpr)"a";
-            Assert.AreNotEqual(expr, (ParamExpr)"a");
+            Assert.AreEqual(expr, (ParamExpr)"a");
             Assert.AreNotEqual(expr, (ParamExpr)"b");
             Assert.AreEqual(expr, expr);
 
@@ -177,7 +177,7 @@ namespace SharpAlg.Geo.Tests {
         [Test]
         public static void ConstEqualsAndGetHashCode() {
             Expr expr = 1;
-            Assert.AreNotEqual(expr, (Expr)1);
+            Assert.AreEqual(expr, (Expr)1);
             Assert.AreNotEqual(expr, (Expr)2);
             Assert.AreEqual(expr, expr);
 

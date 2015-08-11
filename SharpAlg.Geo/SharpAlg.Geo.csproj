@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Core\Builder.cs" />
     <Compile Include="Core\BuilderExtensions.cs" />
+    <Compile Include="Core\EquatableObject.cs" />
     <Compile Include="Core\Expr.cs" />
     <Compile Include="Core\ExprPrinter.cs" />
     <Compile Include="Core\HashCodeProvider.cs" />

@@ -52,7 +52,7 @@ namespace SharpAlg.Geo.Core {
         }
     }
 
-    public class AddExpr : ComplexExpr {
+    public sealed class AddExpr : ComplexExpr {
         public readonly ExprList Args;
         public AddExpr(IBuilder builder, ExprList args) 
             : base(builder, HashCodeProvider.AddHash(args)) {
@@ -61,7 +61,7 @@ namespace SharpAlg.Geo.Core {
         }
     }
 
-    public class MultExpr : ComplexExpr {
+    public sealed class MultExpr : ComplexExpr {
         public readonly ExprList Args;
         public MultExpr(IBuilder builder, ExprList args) 
             : base(builder, HashCodeProvider.MultHash(args)) {
@@ -70,7 +70,7 @@ namespace SharpAlg.Geo.Core {
         }
     }
 
-    public class DivExpr : ComplexExpr {
+    public sealed class DivExpr : ComplexExpr {
         public readonly Expr Numerator, Denominator;
         public DivExpr(IBuilder builder, Expr numerator, Expr denominator)
             : base(builder, HashCodeProvider.DivHash(numerator, denominator)) {
@@ -80,7 +80,7 @@ namespace SharpAlg.Geo.Core {
         }
     }
 
-    public class PowerExpr : ComplexExpr {
+    public sealed class PowerExpr : ComplexExpr {
         public readonly Expr Value;
         public readonly BigInteger Power;
         public PowerExpr(IBuilder builder, Expr value, BigInteger power)
@@ -93,7 +93,7 @@ namespace SharpAlg.Geo.Core {
         }
     }
 
-    public class SqrtExpr : ComplexExpr {
+    public sealed class SqrtExpr : ComplexExpr {
         public readonly Expr Value;
         public SqrtExpr(IBuilder builder, Expr value)
             : base(builder, HashCodeProvider.SqrtHash(value)) {
@@ -102,7 +102,7 @@ namespace SharpAlg.Geo.Core {
         }
     }
 
-    public class ParamExpr : Expr {
+    public sealed class ParamExpr : Expr {
         public static explicit operator ParamExpr(string name) {
             return new ParamExpr(name);
         }
@@ -111,28 +111,28 @@ namespace SharpAlg.Geo.Core {
             : base(HashCodeProvider.ParamHash(name)) {
             Name = name;
         }
-        //public override bool Equals(object obj) {
-        //    var other = obj as ParamExpr;
-        //    return other != null && string.Equals(other.Name, Name, StringComparison.Ordinal);
-        //}
-        //public override int GetHashCode() {
-        //    return base.GetHashCode();
-        //}
+        public override bool Equals(object obj) {
+            var other = obj as ParamExpr;
+            return other != null && string.Equals(other.Name, Name, StringComparison.Ordinal);
+        }
+        public override int GetHashCode() {
+            return base.GetHashCode();
+        }
     }
 
-    public class ConstExpr : Expr {
+    public sealed class ConstExpr : Expr {
         public readonly BigRational Value;
         public ConstExpr(BigRational value)
             : base(HashCodeProvider.ConstHash(value)) {
             Value = value;
         }
-        //public override bool Equals(object obj) {
-        //    var other = obj as ConstExpr;
-        //    return other != null && other.Value == Value;    
-        //}
-        //public override int GetHashCode() {
-        //    return base.GetHashCode();
-        //}
+        public override bool Equals(object obj) {
+            var other = obj as ConstExpr;
+            return other != null && other.Value == Value;
+        }
+        public override int GetHashCode() {
+            return base.GetHashCode();
+        }
     }
 
     public static class ExprExtensions {
