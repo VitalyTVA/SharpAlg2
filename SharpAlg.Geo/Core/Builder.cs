@@ -15,8 +15,10 @@ namespace SharpAlg.Geo.Core {
     }
     public sealed class CachingBuilder : IBuilder {
         class ExprEqualityComparer : IEqualityComparer<Expr> {
-            public static readonly IEqualityComparer<Expr> Instance = new ExprEqualityComparer();
-            ExprEqualityComparer() { }
+            readonly Func<Expr, int> getHashCode;
+            public ExprEqualityComparer(Func<Expr, int> getHashCode) {
+                this.getHashCode = getHashCode;
+            }
 
             bool IEqualityComparer<Expr>.Equals(Expr x, Expr y) {
                 if(x.GetType() != y.GetType())
@@ -32,11 +34,15 @@ namespace SharpAlg.Geo.Core {
             }
 
             int IEqualityComparer<Expr>.GetHashCode(Expr obj) {
-                return obj.GetHashCode();
+                return getHashCode(obj);
             }
         }
 
-        readonly IDictionary<Expr, Expr> cache = new Dictionary<Expr, Expr>(ExprEqualityComparer.Instance);
+        readonly IDictionary<Expr, Expr> cache;
+        public CachingBuilder() {
+            cache = new Dictionary<Expr, Expr>(new ExprEqualityComparer(x => x.GetHashCode()));
+
+        }
         Expr IBuilder.Add(params Expr[] args) {
             return GetCachedExpr(new AddExpr(this, ImmutableArray.Create(args)));
         }
