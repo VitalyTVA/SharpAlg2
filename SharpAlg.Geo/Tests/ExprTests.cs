@@ -166,8 +166,9 @@ namespace SharpAlg.Geo.Tests {
         [Test]
         public void SqrtEqualsAndGetHashCode() {
             var expr = builder.Sqrt((ParamExpr)"a");
-            Assert.AreNotEqual(expr, builder.Sqrt((ParamExpr)"a"));
-            Assert.AreNotEqual(expr, builder.Sqrt((ParamExpr)"a"));
+            Assert.AreEqual(expr, builder.Sqrt((ParamExpr)"a"));
+            Assert.AreNotEqual(expr, ((IBuilder)new CachingBuilder()).Sqrt((ParamExpr)"a"));
+            Assert.AreNotEqual(expr, builder.Sqrt((ParamExpr)"b"));
             Assert.AreEqual(expr, expr);
 
             AssertHashCodesAreEqual(expr, expr);
@@ -293,6 +294,11 @@ namespace SharpAlg.Geo.Tests {
         public void MultExprMemoization() {
             var e = (AddExpr)builder.Build(x => Sqrt(2 * x) + 1 / (2 * x));
             Assert.AreSame((e.Args.First() as SqrtExpr).Value, (e.Args.Last() as DivExpr).Denominator);
+        }
+        [Test]
+        public void SqrtExprMemoization() {
+            var e = (AddExpr)builder.Build(x => Sqrt(2 * x) + 1 / Sqrt(2 * x));
+            Assert.AreSame(e.Args.First(), (e.Args.Last() as DivExpr).Denominator);
         }
     }
     public static class ExprTestExtensions {

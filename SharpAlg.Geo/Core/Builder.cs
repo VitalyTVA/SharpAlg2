@@ -23,7 +23,8 @@ namespace SharpAlg.Geo.Core {
                 return x.MatchDefault(
                     e => false,
                     add: args => Enumerable.SequenceEqual(args, ((AddExpr)y).Args),
-                    mult: args => Enumerable.SequenceEqual(args, ((MultExpr)y).Args)
+                    mult: args => Enumerable.SequenceEqual(args, ((MultExpr)y).Args),
+                    sqrt: val => Equals(val, ((SqrtExpr)y).Value)
                 );
             }
 
@@ -47,7 +48,7 @@ namespace SharpAlg.Geo.Core {
             return new PowerExpr(this, value, power);
         }
         Expr IBuilder.Sqrt(Expr value) {
-            return new SqrtExpr(this, value);
+            return GetCachedExpr(new SqrtExpr(this, value));
         }
         void IBuilder.Check(IEnumerable<Expr> args) {
             if(args.OfType<ComplexExpr>().Any(x => x.Builder != this))
