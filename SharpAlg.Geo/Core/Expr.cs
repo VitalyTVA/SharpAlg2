@@ -233,6 +233,10 @@ namespace SharpAlg.Geo.Core {
         public static bool IsFraction(this BigRational value) {
             return value.Denominator != BigInteger.One;
         }
+
+        public static ExprList ToAdd(this Expr expr) {
+            return ((AddExpr)expr).Args;
+        }
     }
     public class CannotImplicitlyCreateExpressionException : Exception { }
     public class PowerShouldBePositiveException : Exception { }

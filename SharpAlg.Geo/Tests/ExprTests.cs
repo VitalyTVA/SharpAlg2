@@ -293,33 +293,33 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test]
         public void AddExprMemoization() {
-            var e1 = (AddExpr)builder.Build(x => Sqrt(x + 1) + 1 / (x + 1));
-            Assert.AreSame((e1.Args.First() as SqrtExpr).Value, (e1.Args.Last() as DivExpr).Denominator);
+            var addArgs = builder.Build(x => Sqrt(x + 1) + 1 / (x + 1)).ToAdd();
+            Assert.AreSame((addArgs.First() as SqrtExpr).Value, (addArgs.Last() as DivExpr).Denominator);
             var e2 = builder.Build(x => x + 1);
-            Assert.AreSame((e1.Args.First() as SqrtExpr).Value, e2);
+            Assert.AreSame((addArgs.First() as SqrtExpr).Value, e2);
             Assert.AreNotSame(e2, CreateBuilder().Build(x => x + 1));
             Assert.AreNotSame(e2, builder.Build(x => x + 2));
         }
         [Test]
         public void MultExprMemoization() {
-            var e = (AddExpr)builder.Build(x => Sqrt(2 * x) + 1 / (2 * x));
-            Assert.AreSame((e.Args.First() as SqrtExpr).Value, (e.Args.Last() as DivExpr).Denominator);
+            var addArgs = builder.Build(x => Sqrt(2 * x) + 1 / (2 * x)).ToAdd();
+            Assert.AreSame((addArgs.First() as SqrtExpr).Value, (addArgs.Last() as DivExpr).Denominator);
         }
         [Test]
         public void SqrtExprMemoization() {
-            var e = (AddExpr)builder.Build(x => Sqrt(2 * x) + 1 / Sqrt(2 * x));
-            Assert.AreSame(e.Args.First(), (e.Args.Last() as DivExpr).Denominator);
+            var addArgs = builder.Build(x => Sqrt(2 * x) + 1 / Sqrt(2 * x)).ToAdd();
+            Assert.AreSame(addArgs.First(), (addArgs.Last() as DivExpr).Denominator);
         }
         [Test]
         public void PowerExprMemoization() {
-            var e = (AddExpr)builder.Build(x => (x ^ 2) + 1 /(x ^ 2));
-            Assert.AreSame(e.Args.First(), (e.Args.Last() as DivExpr).Denominator);
-            Assert.AreNotSame(e.Args.First(), builder.Build(x => x ^ 3));
+            var addArgs = builder.Build(x => (x ^ 2) + 1 /(x ^ 2)).ToAdd();
+            Assert.AreSame(addArgs.First(), (addArgs.Last() as DivExpr).Denominator);
+            Assert.AreNotSame(addArgs.First(), builder.Build(x => x ^ 3));
         }
         [Test]
         public void DivExprMemoization() {
-            var e = (AddExpr)builder.Build(x => (x / 3) + ((x / 3) ^ 2));
-            Assert.AreSame(e.Args.First(), (e.Args.Last() as PowerExpr).Value);
+            var addArgs = builder.Build(x => (x / 3) + ((x / 3) ^ 2)).ToAdd();
+            Assert.AreSame(addArgs.First(), (addArgs.Last() as PowerExpr).Value);
             //Assert.AreNotSame(e.Args.First(), builder.Build(x => x ^ 3));
         }
     }
