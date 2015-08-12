@@ -69,4 +69,38 @@ namespace SharpAlg.Geo.Core {
         }
     }
 }
+namespace SharpAlg.Geo.Core {
+    public struct ParamPowerInfo {
+        public static bool operator !=(ParamPowerInfo left, ParamPowerInfo right) {
+            return !(left == right);
+        }
+
+        public static bool operator ==(ParamPowerInfo left, ParamPowerInfo right) {
+            return 
+                left.Param == right.Param &&
+                left.Power == right.Power;
+        }
+
+        public readonly string Param;
+        public readonly BigInteger Power;
+
+        public ParamPowerInfo(string _Param, BigInteger _Power) {
+            Param = _Param;
+            Power = _Power;
+        }
+
+        public override bool Equals(object obj) {
+            if (!(obj is ParamPowerInfo))
+                return false;
+            return this == (ParamPowerInfo)obj;
+        }
+
+        public override int GetHashCode() {
+            return 
+                Param.GetHashCode() ^
+                Power.GetHashCode();
+
+        }
+    }
+}
 

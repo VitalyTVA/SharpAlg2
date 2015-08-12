@@ -15,8 +15,11 @@ namespace SharpAlg.Geo.Core {
         }
         static bool IsNormalProduct(ExprList args) {
             var noConstArgs = args[0].IsConst() ? args.Tail() : args;
-            return noConstArgs.All(x => x.IsParam()) && 
-                noConstArgs.Select(x => x.ToParam()).IsOrdered(Comparer<string>.Default);
+            var paramOrPowerArgs = noConstArgs.Select(x => x.AsParamPowerInfo());
+            return paramOrPowerArgs.All(x => x != null) &&
+                paramOrPowerArgs
+                    .Select(x => x.Value)
+                    .IsOrdered(new DelegateComparer<ParamPowerInfo>((x, y) => Comparer<string>.Default.Compare(x.Param, y.Param)));
         }
     }
 }

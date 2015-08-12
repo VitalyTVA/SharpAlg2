@@ -152,9 +152,13 @@ namespace SharpAlg.Geo.Core {
         public static bool IsConst(this Expr expr)
             => expr.AsConst() != null;
 
-        public static PowerInfo? ParamOrPowerAsPowerInfo(this Expr expr) {
-            return expr.AsPower() ?? expr.AsParam().With(x => new PowerInfo(expr, 1));
+        public static ParamPowerInfo? AsParamPowerInfo(this Expr expr) {
+            return expr.AsPower().If(x => x.Value.IsParam()).With(x => (ParamPowerInfo?)new ParamPowerInfo(x.Value.ToParam(), x.Power))
+                ?? expr.AsParam().With(x => new ParamPowerInfo(x, 1));
         }
+        //public static bool IsParamOrPower(this Expr expr) {
+        //    return expr.ParamOrPowerAsPowerInfo() != null;
+        //}
     }
     public class CannotImplicitlyCreateExpressionException : Exception { }
     public class PowerShouldBePositiveException : Exception { }

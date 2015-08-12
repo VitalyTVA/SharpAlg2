@@ -11,6 +11,8 @@ using System.Numerics;
     new Field("Num", "Expr"), new Field("Den", "Expr"));#>
 <#GenStructure("SharpAlg.Geo.Core", "PowerInfo", 
     new Field("Value", "Expr"), new Field("Power", "BigInteger"));#>
+<#GenStructure("SharpAlg.Geo.Core", "ParamPowerInfo", 
+    new Field("Param", "string"), new Field("Power", "BigInteger"));#>
 
 <#+
 class Field {

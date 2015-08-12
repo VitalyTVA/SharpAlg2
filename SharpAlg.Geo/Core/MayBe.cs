@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace SharpAlg.Geo.Core {
     [DebuggerNonUserCode]
@@ -12,6 +13,12 @@ namespace SharpAlg.Geo.Core {
             if(input == null)
                 return default(TR);
             return evaluator(input);
+        }
+        public static TR With<TI, TR>(this TI? input, Func<TI, TR> evaluator)
+            where TI : struct {
+            if(input == null)
+                return default(TR);
+            return evaluator(input.Value);
         }
         public static TR Return<TI, TR>(this TI? input, Func<TI?, TR> evaluator, Func<TR> fallback) where TI : struct {
             if(!input.HasValue)
@@ -154,6 +161,9 @@ namespace SharpAlg.Geo.Core {
     public static class Utility {
         public static Func<T1, TR> Func<T1, TR>(Func<T1, TR> f) {
             return f;
+        }
+        public static Expression<Func<T1, TR>> Expr<T1, TR>(Expression<Func<T1, TR>> e) {
+            return e;
         }
         //public static Func<T, T> Id<T>() {
         //    return x => x;
