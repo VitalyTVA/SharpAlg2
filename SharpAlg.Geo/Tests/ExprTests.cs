@@ -60,8 +60,8 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreSame(a, a_power_five.Value);
             Assert.AreEqual((BigInteger)5, a_power_five.Power);
 
-            DivExpr a_div_five = (DivExpr)builder.Build((x, y) => x / y, a, five);
-            Assert.AreSame(a, a_div_five.Numerator);
+            var a_div_five = builder.Build((x, y) => x / y, a, five).ToDiv();
+            Assert.AreSame(a, a_div_five.Num);
             //if(a_div_five == a_div_five) { }
 
             var minus_a = builder.Build(x => -x, a).ToMult();
@@ -294,7 +294,7 @@ namespace SharpAlg.Geo.Tests {
         [Test]
         public void AddExprMemoization() {
             var addArgs = builder.Build(x => Sqrt(x + 1) + 1 / (x + 1)).ToAdd();
-            Assert.AreSame(addArgs.First().ToSqrt(), (addArgs.Last() as DivExpr).Denominator);
+            Assert.AreSame(addArgs.First().ToSqrt(), addArgs.Last().ToDiv().Den);
             var e2 = builder.Build(x => x + 1);
             Assert.AreSame(addArgs.First().ToSqrt(), e2);
             Assert.AreNotSame(e2, CreateBuilder().Build(x => x + 1));
@@ -303,17 +303,17 @@ namespace SharpAlg.Geo.Tests {
         [Test]
         public void MultExprMemoization() {
             var addArgs = builder.Build(x => Sqrt(2 * x) + 1 / (2 * x)).ToAdd();
-            Assert.AreSame(addArgs.First().ToSqrt(), (addArgs.Last() as DivExpr).Denominator);
+            Assert.AreSame(addArgs.First().ToSqrt(), addArgs.Last().ToDiv().Den);
         }
         [Test]
         public void SqrtExprMemoization() {
             var addArgs = builder.Build(x => Sqrt(2 * x) + 1 / Sqrt(2 * x)).ToAdd();
-            Assert.AreSame(addArgs.First(), (addArgs.Last() as DivExpr).Denominator);
+            Assert.AreSame(addArgs.First(), addArgs.Last().ToDiv().Den);
         }
         [Test]
         public void PowerExprMemoization() {
             var addArgs = builder.Build(x => (x ^ 2) + 1 /(x ^ 2)).ToAdd();
-            Assert.AreSame(addArgs.First(), (addArgs.Last() as DivExpr).Denominator);
+            Assert.AreSame(addArgs.First(), addArgs.Last().ToDiv().Den);
             Assert.AreNotSame(addArgs.First(), builder.Build(x => x ^ 3));
         }
         [Test]

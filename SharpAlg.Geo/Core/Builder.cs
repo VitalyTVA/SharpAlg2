@@ -35,6 +35,15 @@ namespace SharpAlg.Geo.Core {
                 Value = value;
             }
         }
+        sealed class DivExpr : ComplexExpr {
+            public readonly Expr Numerator, Denominator;
+            public DivExpr(Builder builder, Expr numerator, Expr denominator)
+                : base(builder, HashCodeProvider.DivHash(numerator, denominator)) {
+                builder.Check(new[] { numerator, denominator });
+                Numerator = numerator;
+                Denominator = denominator;
+            }
+        }
 
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static T MatchDefault<T>(Expr expr,
@@ -79,6 +88,11 @@ namespace SharpAlg.Geo.Core {
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static Expr ToSqrt(Expr expr)
             => ((SqrtExpr)expr).Value;
+        [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
+        internal static DivInfo ToDiv(Expr expr) {
+            var divExpr = (DivExpr)expr;
+            return new DivInfo(divExpr.Numerator, divExpr.Denominator);
+        }
 
         public static readonly Builder Simple = new Builder(x => x, x => x, x => x, x => x, x => x, (builder, args) => { });
         public static Builder CreateSimple() {

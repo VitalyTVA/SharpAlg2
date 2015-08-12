@@ -52,29 +52,6 @@ namespace SharpAlg.Geo.Core {
         }
     }
 
-    //public struct DivInfo {
-    //    public static Expr operator +(Expr a, Expr b) {
-    //        throw new CannotImplicitlyCreateExpressionException();
-    //    }
-    //    public readonly Expr Num, Den;
-    //    public DivInfo(Expr num, Expr den) {
-    //        Num = num;
-    //        Den = den;
-    //    }
-    //    public override bool Equals(object obj) {
-    //        return base.Equals(obj);
-    //    }
-    //}
-    public sealed class DivExpr : ComplexExpr {
-        public readonly Expr Numerator, Denominator;
-        public DivExpr(Builder builder, Expr numerator, Expr denominator)
-            : base(builder, HashCodeProvider.DivHash(numerator, denominator)) {
-            builder.Check(new[] { numerator, denominator });
-            Numerator = numerator;
-            Denominator = denominator;
-        }
-    }
-
     public sealed class PowerExpr : ComplexExpr {
         public readonly Expr Value;
         public readonly BigInteger Power;
@@ -203,6 +180,8 @@ namespace SharpAlg.Geo.Core {
             => Builder.ToMult(expr);
         public static Expr ToSqrt(this Expr expr)
             => Builder.ToSqrt(expr);
+        public static DivInfo ToDiv(this Expr expr)
+            => Builder.ToDiv(expr);
     }
     public class CannotImplicitlyCreateExpressionException : Exception { }
     public class PowerShouldBePositiveException : Exception { }
