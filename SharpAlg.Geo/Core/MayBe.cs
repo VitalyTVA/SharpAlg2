@@ -8,10 +8,9 @@ namespace SharpAlg.Geo.Core {
     [DebuggerNonUserCode]
     public static class MayBe {
         public static TR With<TI, TR>(this TI input, Func<TI, TR> evaluator)
-            where TI : class
-            where TR : class {
+            where TI : class {
             if(input == null)
-                return null;
+                return default(TR);
             return evaluator(input);
         }
         public static TR Return<TI, TR>(this TI? input, Func<TI?, TR> evaluator, Func<TR> fallback) where TI : struct {
