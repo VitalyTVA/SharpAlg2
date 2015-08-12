@@ -15,36 +15,15 @@ namespace SharpAlg.Geo.Core {
         Expr Sqrt(Expr value);
     }
     public sealed class CachingBuilder : IBuilder {
-        class ExprEqualityComparer : IEqualityComparer<Expr> {
-            readonly Func<Expr, int> getHashCode;
-            public ExprEqualityComparer(Func<Expr, int> getHashCode) {
-                this.getHashCode = getHashCode;
-            }
+        readonly Func<AddExpr, AddExpr> add;
+        readonly Func<MultExpr, MultExpr> mult;
+        readonly Func<SqrtExpr, SqrtExpr> sqrt;
+        readonly Func<PowerExpr, PowerExpr> power;
+        readonly Func<DivExpr, DivExpr> div;
 
-            bool IEqualityComparer<Expr>.Equals(Expr x, Expr y) {
-                if(x.GetType() != y.GetType())
-                    return false;
-                return x.MatchDefault(
-                    e => { throw new InvalidOperationException(); },
-                    add: args => Enumerable.SequenceEqual(args, ((AddExpr)y).Args),
-                    mult: args => Enumerable.SequenceEqual(args, ((MultExpr)y).Args),
-                    //sqrt: val => Equals(val, ((SqrtExpr)y).Value),
-                    power: (val, power) => Equals(val, ((PowerExpr)y).Value) && Equals(power, ((PowerExpr)y).Power),
-                    div: (num, den) => Equals(num, ((DivExpr)y).Numerator) && Equals(den, ((DivExpr)y).Denominator)
-                );
-            }
-
-            int IEqualityComparer<Expr>.GetHashCode(Expr obj) {
-                return getHashCode(obj);
-            }
-        }
-        readonly IDictionary<Expr, Expr> cache;
-        readonly Func<SqrtExpr, SqrtExpr> sqrt = Memoize<SqrtExpr>((x, y) => Equals(x.Value, y.Value));
-
-        static Func<T, T> Memoize<T>(Func<T, T, bool> equals) {
+        static Func<T, T> Memoize<T>(Func<T, T, bool> equals, Func<T, int> getHashCode) {
             return Func((T x) => x).Memoize(new DelegateEqualityComparer<T>(equals, x => x.GetHashCode()));
         }
-
 
         public static IBuilder CreateSimple() {
             return new CachingBuilder(x => 0);
@@ -54,32 +33,31 @@ namespace SharpAlg.Geo.Core {
         }
 
         CachingBuilder(Func<Expr, int> getHashCode) {
-            cache = new Dictionary<Expr, Expr>(new ExprEqualityComparer(getHashCode));
+            add = Memoize<AddExpr>((x, y) => Enumerable.SequenceEqual(x.Args, y.Args), getHashCode);
+            mult = Memoize<MultExpr>((x, y) => Enumerable.SequenceEqual(x.Args, y.Args), getHashCode);
+            sqrt = Memoize<SqrtExpr>((x, y) => Equals(x.Value, y.Value), getHashCode);
+            power = Memoize<PowerExpr>((x, y) => Equals(x.Value, y.Value) && Equals(x.Power, y.Power), getHashCode);
+            div = Memoize<DivExpr>((x, y) => Equals(x.Numerator, y.Numerator) && Equals(x.Denominator, y.Denominator), getHashCode);
         }
         Expr IBuilder.Add(params Expr[] args) {
-            return GetCachedExpr(new AddExpr(this, ImmutableArray.Create(args)));
+            return add(new AddExpr(this, ImmutableArray.Create(args)));
         }
 
         Expr IBuilder.Multiply(params Expr[] args) {
-            return GetCachedExpr(new MultExpr(this, ImmutableArray.Create(args)));
+            return mult(new MultExpr(this, ImmutableArray.Create(args)));
         }
         Expr IBuilder.Divide(Expr a, Expr b) {
-            return GetCachedExpr(new DivExpr(this, a, b));
+            return div(new DivExpr(this, a, b));
         }
-        Expr IBuilder.Power(Expr value, BigInteger power) {
-            return GetCachedExpr(new PowerExpr(this, value, power));
+        Expr IBuilder.Power(Expr value, BigInteger pow) {
+            return power(new PowerExpr(this, value, pow));
         }
         Expr IBuilder.Sqrt(Expr value) {
             return sqrt(new SqrtExpr(this, value));
-            //return sqrtCache.GetOrAdd(value, x => new SqrtExpr(this, value));
         }
         void IBuilder.Check(IEnumerable<Expr> args) {
             if(args.OfType<ComplexExpr>().Any(x => x.Builder != this))
                 throw new CannotMixExpressionsFromDifferentBuildersException();
-        }
-
-        Expr GetCachedExpr(Expr e) {
-            return cache.GetOrAdd(e, e);
         }
     }
     public sealed class SimpleBuilder : IBuilder {
