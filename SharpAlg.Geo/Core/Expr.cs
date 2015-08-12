@@ -52,15 +52,6 @@ namespace SharpAlg.Geo.Core {
         }
     }
 
-    public sealed class AddExpr : ComplexExpr {
-        public readonly ExprList Args;
-        public AddExpr(Builder builder, ExprList args) 
-            : base(builder, HashCodeProvider.AddHash(args)) {
-            builder.Check(args);
-            Args = args;
-        }
-    }
-
     public sealed class MultExpr : ComplexExpr {
         public readonly ExprList Args;
         public MultExpr(Builder builder, ExprList args) 
@@ -163,39 +154,17 @@ namespace SharpAlg.Geo.Core {
 
         }
         [DebuggerStepThrough]
-        public static T MatchDefault<T>(this Expr expr, 
-            Func<Expr, T> @default, 
-            Func<ExprList, T> add = null, 
-            Func<ExprList, T> mult = null, 
-            Func<Expr, Expr, T> div = null, 
-            Func<Expr, BigInteger, T> power = null, 
-            Func<Expr, T> sqrt = null, 
-            Func<string, T> param = null, 
-            Func<BigRational, T> @const = null) 
-        {
-            var addExpr = expr as AddExpr;
-            if(addExpr != null)
-                return add != null ? add(addExpr.Args) : @default(expr);
-            var multExpr = expr as MultExpr;
-            if(multExpr != null)
-                return mult != null ? mult(multExpr.Args) : @default(expr);
-            var divExpr = expr as DivExpr;
-            if(divExpr != null)
-                return div != null ? div(divExpr.Numerator, divExpr.Denominator) : @default(expr);
-            var powerExpr = expr as PowerExpr;
-            if(powerExpr != null)
-                return power != null ? power(powerExpr.Value, powerExpr.Power) : @default(expr);
-            var sqrtExpr = expr as SqrtExpr;
-            if(sqrtExpr != null)
-                return sqrt != null ? sqrt(sqrtExpr.Value) : @default(expr);
-            var paramExpr = expr as ParamExpr;
-            if(paramExpr != null)
-                return param != null ? param(paramExpr.Name) : @default(expr);
-            var constExpr = expr as ConstExpr;
-            if(constExpr != null)
-                return @const != null ? @const(constExpr.Value) : @default(expr);
-            throw new InvalidOperationException();
-        }
+        public static T MatchDefault<T>(this Expr expr,
+            Func<Expr, T> @default,
+            Func<ExprList, T> add = null,
+            Func<ExprList, T> mult = null,
+            Func<Expr, Expr, T> div = null,
+            Func<Expr, BigInteger, T> power = null,
+            Func<Expr, T> sqrt = null,
+            Func<string, T> param = null,
+            Func<BigRational, T> @const = null)
+            => Builder.MatchDefault(expr, @default, add, mult, div, power, sqrt, param, @const);
+
         static T Evaluate<T>(this Expr expr, Func<T, T, T> add, Func<T, T, T> mult, Func<T, T, T> div, Func<T, T, T> power, Func<T, T> sqrt, Func<string, T> param, Func<BigRational, T> @const) {
             Func<Expr, T> doEval = null;
             doEval = e => e.MatchStrict(
@@ -226,17 +195,15 @@ namespace SharpAlg.Geo.Core {
         public static Expr Const(BigRational value) {
             return new ConstExpr(value);
         }
-        public static ParamExpr Param(string name) {
-            return new ParamExpr(name);
-        }
 
-        public static bool IsFraction(this BigRational value) {
-            return value.Denominator != BigInteger.One;
-        }
+        public static ParamExpr Param(string name) 
+            => new ParamExpr(name);
 
-        public static ExprList ToAdd(this Expr expr) {
-            return ((AddExpr)expr).Args;
-        }
+        public static bool IsFraction(this BigRational value) 
+            => value.Denominator != BigInteger.One;
+
+        public static ExprList ToAdd(this Expr expr) 
+            => Builder.ToAdd(expr);
     }
     public class CannotImplicitlyCreateExpressionException : Exception { }
     public class PowerShouldBePositiveException : Exception { }
