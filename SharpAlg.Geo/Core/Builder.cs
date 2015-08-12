@@ -11,6 +11,20 @@ using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.E
 
 namespace SharpAlg.Geo.Core {
     public sealed class Builder {
+        sealed class ParamExpr : Expr {
+            public readonly string Name;
+            public ParamExpr(string name)
+                : base(HashCodeProvider.ParamHash(name)) {
+                Name = name;
+            }
+            public override bool Equals(object obj) {
+                var other = obj as ParamExpr;
+                return other != null && string.Equals(other.Name, Name, StringComparison.Ordinal);
+            }
+            public override int GetHashCode() {
+                return base.GetHashCode();
+            }
+        }
         abstract class ComplexExpr : Expr {
             public readonly Builder Builder;
             protected ComplexExpr(Builder builder, int hashCode)
@@ -120,6 +134,9 @@ namespace SharpAlg.Geo.Core {
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static string ToParam(Expr expr)
             => ((ParamExpr)expr).Name;
+        [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
+        internal static Expr Param(string name)
+            => new ParamExpr(name);
 
         public static readonly Builder Simple = new Builder(x => x, x => x, x => x, x => x, x => x, (builder, args) => { });
         public static Builder CreateSimple() {

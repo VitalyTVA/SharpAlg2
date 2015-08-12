@@ -44,24 +44,6 @@ namespace SharpAlg.Geo.Core {
         public override int GetHashCode() => hashCode;
     }
 
-    public sealed class ParamExpr : Expr {
-        //public static explicit operator ParamExpr(string name) {
-        //    return new ParamExpr(name);
-        //}
-        public readonly string Name;
-        public ParamExpr(string name)
-            : base(HashCodeProvider.ParamHash(name)) {
-            Name = name;
-        }
-        public override bool Equals(object obj) {
-            var other = obj as ParamExpr;
-            return other != null && string.Equals(other.Name, Name, StringComparison.Ordinal);
-        }
-        public override int GetHashCode() {
-            return base.GetHashCode();
-        }
-    }
-
     public sealed class ConstExpr : Expr {
         public readonly BigRational Value;
         public ConstExpr(BigRational value)
@@ -146,7 +128,7 @@ namespace SharpAlg.Geo.Core {
         public static Expr Const(BigRational value)
             => new ConstExpr(value);
         public static Expr Param(string name) 
-            => new ParamExpr(name);
+            => Builder.Param(name);
 
         public static bool IsFraction(this BigRational value) 
             => value.Denominator != BigInteger.One;
