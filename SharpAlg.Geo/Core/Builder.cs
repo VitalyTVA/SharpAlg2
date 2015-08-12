@@ -15,6 +15,8 @@ namespace SharpAlg.Geo.Core {
             public readonly string Name;
             public ParamExpr(string name)
                 : base(HashCodeProvider.ParamHash(name)) {
+                if(string.IsNullOrEmpty(name))
+                    throw new ArgumentNullException("name");
                 Name = name;
             }
             public override bool Equals(object obj) {
