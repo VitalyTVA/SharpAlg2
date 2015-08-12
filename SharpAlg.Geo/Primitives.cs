@@ -49,15 +49,12 @@ namespace SharpAlg.Geo {
     internal static class ExprHelper {
         internal static ImmutableContext RegisterPoint(this ImmutableContext context, Point p, double x, double y) {
             return context
-                .RegisterValue((ParamExpr)p.X, x)
-                .RegisterValue((ParamExpr)p.Y, y);
+                .RegisterValue(p.X, x)
+                .RegisterValue(p.Y, y);
         }
-        internal static ImmutableContext RegisterValue(this ImmutableContext context, ParamExpr parameter, double value) {
+        internal static ImmutableContext RegisterValue(this ImmutableContext context, Expr parameter, double value) {
             return context
-                .Register(parameter.Name, value);
-        }
-        internal static ImmutableContext RegisterValue(this ImmutableContext context, string name, double value) {
-            return context.RegisterValue(Param(name), value);
+                .Register(parameter.ToParam(), value);
         }
         internal static RealPoint ToRealPoint(this Point p, ImmutableContext context) {
             return new RealPoint(p.X.ToReal(context), p.Y.ToReal(context));

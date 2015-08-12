@@ -143,11 +143,9 @@ namespace SharpAlg.Geo.Core {
         }
         public static double ToReal(this Expr expr, ImmutableContext context) => expr.ToReal(context.GetValue);
 
-        public static Expr Const(BigRational value) {
-            return new ConstExpr(value);
-        }
-
-        public static ParamExpr Param(string name) 
+        public static Expr Const(BigRational value)
+            => new ConstExpr(value);
+        public static Expr Param(string name) 
             => new ParamExpr(name);
 
         public static bool IsFraction(this BigRational value) 
@@ -163,6 +161,8 @@ namespace SharpAlg.Geo.Core {
             => Builder.ToDiv(expr);
         public static PowerInfo ToPower(this Expr expr)
             => Builder.ToPower(expr);
+        public static string ToParam(this Expr expr)
+            => Builder.ToParam(expr);
     }
     public class CannotImplicitlyCreateExpressionException : Exception { }
     public class PowerShouldBePositiveException : Exception { }

@@ -139,24 +139,24 @@ namespace SharpAlg.Geo.Tests {
 
             var roots =  builder.SolveQuadraticEquation((Core.ParamExpr)"A", (Core.ParamExpr)"B", (Core.ParamExpr)"C");
             var context = ImmutableContext.Empty
-                .RegisterValue("A", 1)
-                .RegisterValue("B", -2)
-                .RegisterValue("C", -3);
+                .Register("A", 1)
+                .Register("B", -2)
+                .Register("C", -3);
             Assert.AreEqual(3, roots.Item1.ToReal(context));
             Assert.AreEqual(-1, roots.Item2.ToReal(context));
 
             context = ImmutableContext.Empty
-                .RegisterValue("A", 2)
-                .RegisterValue("B", -4)
-                .RegisterValue("C", -6);
+                .Register("A", 2)
+                .Register("B", -4)
+                .Register("C", -6);
             Assert.AreEqual(3, roots.Item1.ToReal(context));
             Assert.AreEqual(-1, roots.Item2.ToReal(context));
 
             roots = builder.SolveQuadraticEquation(builder.Build(X => X + 1), builder.Build(Y => Y -2), builder.Build(Z => Z / 2));
             context = ImmutableContext.Empty
-                .RegisterValue("X", 0)
-                .RegisterValue("Y", 0)
-                .RegisterValue("Z", -6);
+                .Register("X", 0)
+                .Register("Y", 0)
+                .Register("Z", -6);
             Assert.AreEqual(3, roots.Item1.ToReal(context));
             Assert.AreEqual(-1, roots.Item2.ToReal(context));
         }

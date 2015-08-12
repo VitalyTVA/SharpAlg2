@@ -18,7 +18,6 @@ namespace SharpAlg.Geo.Core {
                 Builder = builder;
             }
         }
-
         sealed class AddExpr : ComplexExpr {
             public readonly ExprList Args;
             public AddExpr(Builder builder, ExprList args)
@@ -118,6 +117,9 @@ namespace SharpAlg.Geo.Core {
             var powerExpr = (PowerExpr)expr;
             return new PowerInfo(powerExpr.Value, powerExpr.Power);
         }
+        [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
+        internal static string ToParam(Expr expr)
+            => ((ParamExpr)expr).Name;
 
         public static readonly Builder Simple = new Builder(x => x, x => x, x => x, x => x, x => x, (builder, args) => { });
         public static Builder CreateSimple() {

@@ -33,8 +33,8 @@ namespace SharpAlg.Geo.Tests {
             Expr five = 5;
             Assert.AreEqual((BigRational)5, ((ConstExpr)five).Value);
 
-            ParamExpr a = (ParamExpr)"A";
-            Assert.AreEqual("A", a.Name);
+            var a = Param("A");
+            Assert.AreEqual("A", a.ToParam());
 
             var a_plus_five = builder.Build(x => x + 5, a).ToAdd();
             Assert.AreEqual(2, a_plus_five.Length);
@@ -131,9 +131,9 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test]
         public void ToStringTest2() {
-            var x = new ParamExpr("x");
-            var y = new ParamExpr("y");
-            var z = new ParamExpr("z");
+            var x = Param("x");
+            var y = Param("y");
+            var z = Param("z");
             builder.Multiply(-1, x, y).AssertSimpleStringRepresentation("-x * y");
             builder.Multiply(-2, x, y).AssertSimpleStringRepresentation("-2 * x * y");
             builder.Multiply(Const(new BigRational(2, 3)), x, y).AssertSimpleStringRepresentation("2/3 * x * y");
@@ -149,9 +149,9 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test]
         public void ToStringTest2_Div() {
-            var x = new ParamExpr("x");
-            var y = new ParamExpr("y");
-            var z = new ParamExpr("z");
+            var x = Param("x");
+            var y = Param("y");
+            var z = Param("z");
 
             builder.Divide(2, 9).AssertSimpleStringRepresentation("2 / 9");
             builder.Power(builder.Divide(2, 3), 4).AssertSimpleStringRepresentation("(2 / 3) ^ 4");
@@ -161,14 +161,14 @@ namespace SharpAlg.Geo.Tests {
 
         [Test]
         public static void ParamEqualsAndGetHashCode() {
-            var expr = (ParamExpr)"a";
-            Assert.AreEqual(expr, (ParamExpr)"a");
-            Assert.AreNotEqual(expr, (ParamExpr)"b");
+            var expr = Param("a");
+            Assert.AreEqual(expr, Param("a"));
+            Assert.AreNotEqual(expr, Param("b"));
             Assert.AreEqual(expr, expr);
 
             AssertHashCodesAreEqual(expr, expr);
-            AssertHashCodesAreEqual(expr, (ParamExpr)"a");
-            AssertHashCodesAreNotEqual(expr, (ParamExpr)"b");
+            AssertHashCodesAreEqual(expr, Param("a"));
+            AssertHashCodesAreNotEqual(expr, Param("b"));
 
         }
         [Test]
