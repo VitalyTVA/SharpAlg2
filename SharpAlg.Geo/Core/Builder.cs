@@ -140,6 +140,9 @@ namespace SharpAlg.Geo.Core {
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static Expr Const(BigRational value)
             => new ConstExpr(value);
+        [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
+        internal static BigRational ToConst(Expr expr)
+            => ((ConstExpr)expr).Value;
 
         public static readonly Builder Simple = new Builder(x => x, x => x, x => x, x => x, x => x, (builder, args) => { });
         public static Builder CreateSimple() {

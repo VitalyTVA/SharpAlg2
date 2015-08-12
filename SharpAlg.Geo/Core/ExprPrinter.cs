@@ -35,7 +35,7 @@ namespace SharpAlg.Geo.Core {
                 return expr.MatchDefault(
                     getDefault,
                     mult: args => {
-                        ConstExpr headConstant = args.First() as ConstExpr;
+                        var headConstant = args.First() as ConstExpr;
                         if(headConstant.Return(x => x.Value < 0, () => false)) {
                             var exprConstant = ExprExtensions.Const(-headConstant.Value);
 

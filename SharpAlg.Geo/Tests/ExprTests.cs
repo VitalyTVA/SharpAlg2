@@ -31,7 +31,7 @@ namespace SharpAlg.Geo.Tests {
         [Test]
         public void BasicStuffTest() {
             Expr five = 5;
-            Assert.AreEqual((BigRational)5, ((ConstExpr)five).Value);
+            Assert.AreEqual((BigRational)5, five.ToConst());
 
             var a = Param("A");
             Assert.AreEqual("A", a.ToParam());
@@ -39,18 +39,18 @@ namespace SharpAlg.Geo.Tests {
             var a_plus_five = builder.Build(x => x + 5, a).ToAdd();
             Assert.AreEqual(2, a_plus_five.Length);
             Assert.AreSame(a, a_plus_five[0]);
-            Assert.AreEqual((BigRational)5, ((ConstExpr)a_plus_five[1]).Value);
+            Assert.AreEqual((BigRational)5, a_plus_five[1].ToConst());
 
             var five_minus_a = builder.Build(x => 5 - x, a).ToAdd();
             Assert.AreEqual(2, five_minus_a.Length);
-            Assert.AreEqual((BigRational)5, ((ConstExpr)five_minus_a[0]).Value);
-            Assert.AreEqual((BigRational)(-1), ((ConstExpr)five_minus_a[1].ToMult()[0]).Value);
+            Assert.AreEqual((BigRational)5, five_minus_a[0].ToConst());
+            Assert.AreEqual((BigRational)(-1), five_minus_a[1].ToMult()[0].ToConst());
             Assert.AreSame(a, five_minus_a[1].ToMult()[1]);
 
 
             var five_mult_a = builder.Build(x => 5 * x, a).ToMult();
             Assert.AreEqual(2, five_mult_a.Length);
-            Assert.AreEqual((BigRational)5, ((ConstExpr)five_mult_a[0]).Value);
+            Assert.AreEqual((BigRational)5, five_mult_a[0].ToConst());
             Assert.AreSame(a, five_mult_a[1]);
 
             var sqrt_a = builder.Build(x => Sqrt(x), a).ToSqrt();
@@ -66,7 +66,7 @@ namespace SharpAlg.Geo.Tests {
 
             var minus_a = builder.Build(x => -x, a).ToMult();
             Assert.AreEqual(2, minus_a.Length);
-            Assert.AreEqual((BigRational)(-1), ((ConstExpr)minus_a[0]).Value);
+            Assert.AreEqual((BigRational)(-1), minus_a[0].ToConst());
             Assert.AreSame(a, minus_a[1]);
 
             Assert.Throws<PowerShouldBePositiveException>(() => { builder.Build(x => x ^ 0, a); });

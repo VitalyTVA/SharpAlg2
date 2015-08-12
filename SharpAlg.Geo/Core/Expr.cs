@@ -145,6 +145,8 @@ namespace SharpAlg.Geo.Core {
             => Builder.ToPower(expr);
         public static string ToParam(this Expr expr)
             => Builder.ToParam(expr);
+        public static BigRational ToConst(this Expr expr)
+            => Builder.ToConst(expr);
     }
     public class CannotImplicitlyCreateExpressionException : Exception { }
     public class PowerShouldBePositiveException : Exception { }
