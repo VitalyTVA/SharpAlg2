@@ -135,9 +135,15 @@ namespace SharpAlg.Geo.Core {
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static ExprList ToAdd(Expr expr)
             => ((AddExpr)expr).Args;
+
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static ExprList ToMult(Expr expr)
             => ((MultExpr)expr).Args;
+        [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
+        internal static ExprList? AsMult(Expr expr)
+            => (expr as MultExpr)?.Args;
+
+
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static Expr ToSqrt(Expr expr)
             => ((SqrtExpr)expr).Value;
@@ -151,9 +157,14 @@ namespace SharpAlg.Geo.Core {
             var powerExpr = (PowerExpr)expr;
             return new PowerInfo(powerExpr.Value, powerExpr.Power);
         }
+
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static string ToParam(Expr expr)
             => ((ParamExpr)expr).Name;
+        [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
+        internal static string AsParam(Expr expr)
+            => (expr as ParamExpr)?.Name;
+
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static Expr Param(string name)
             => new ParamExpr(name);
@@ -165,7 +176,7 @@ namespace SharpAlg.Geo.Core {
             => ((ConstExpr)expr).Value;
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static BigRational? AsConst(Expr expr)
-            => (expr as ConstExpr).With(x => (BigRational?)x.Value);
+            => (expr as ConstExpr)?.Value;
         #endregion
 
         public static readonly Builder Simple = new Builder(x => x, x => x, x => x, x => x, x => x, (builder, args) => { });

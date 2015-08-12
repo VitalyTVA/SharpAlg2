@@ -120,20 +120,34 @@ namespace SharpAlg.Geo.Core {
 
         public static ExprList ToAdd(this Expr expr) 
             => Builder.ToAdd(expr);
+
         public static ExprList ToMult(this Expr expr)
             => Builder.ToMult(expr);
+        public static ExprList? AsMult(this Expr expr)
+            => Builder.AsMult(expr);
+        public static bool IsMult(this Expr expr)
+            => expr.AsMult() != null;
+
         public static Expr ToSqrt(this Expr expr)
             => Builder.ToSqrt(expr);
         public static DivInfo ToDiv(this Expr expr)
             => Builder.ToDiv(expr);
         public static PowerInfo ToPower(this Expr expr)
             => Builder.ToPower(expr);
+
         public static string ToParam(this Expr expr)
             => Builder.ToParam(expr);
+        public static string AsParam(this Expr expr)
+            => Builder.AsParam(expr);
+        public static bool IsParam(this Expr expr)
+            => expr.AsParam() != null;
+
         public static BigRational ToConst(this Expr expr)
             => Builder.ToConst(expr);
         public static BigRational? AsConst(this Expr expr)
             => Builder.AsConst(expr);
+        public static bool IsConst(this Expr expr)
+            => expr.AsConst() != null;
     }
     public class CannotImplicitlyCreateExpressionException : Exception { }
     public class PowerShouldBePositiveException : Exception { }
