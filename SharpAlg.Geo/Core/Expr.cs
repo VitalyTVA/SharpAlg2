@@ -132,8 +132,11 @@ namespace SharpAlg.Geo.Core {
             => Builder.ToSqrt(expr);
         public static DivInfo ToDiv(this Expr expr)
             => Builder.ToDiv(expr);
+
         public static PowerInfo ToPower(this Expr expr)
             => Builder.ToPower(expr);
+        public static PowerInfo? AsPower(this Expr expr)
+            => Builder.AsPower(expr);
 
         public static string ToParam(this Expr expr)
             => Builder.ToParam(expr);
@@ -148,6 +151,10 @@ namespace SharpAlg.Geo.Core {
             => Builder.AsConst(expr);
         public static bool IsConst(this Expr expr)
             => expr.AsConst() != null;
+
+        public static PowerInfo? ParamOrPowerAsPowerInfo(this Expr expr) {
+            return expr.AsPower() ?? expr.AsParam().With(x => new PowerInfo(expr, 1));
+        }
     }
     public class CannotImplicitlyCreateExpressionException : Exception { }
     public class PowerShouldBePositiveException : Exception { }

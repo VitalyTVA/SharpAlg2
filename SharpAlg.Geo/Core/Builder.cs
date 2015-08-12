@@ -152,10 +152,16 @@ namespace SharpAlg.Geo.Core {
             var divExpr = (DivExpr)expr;
             return new DivInfo(divExpr.Numerator, divExpr.Denominator);
         }
+
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static PowerInfo ToPower(Expr expr) {
             var powerExpr = (PowerExpr)expr;
             return new PowerInfo(powerExpr.Value, powerExpr.Power);
+        }
+        [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
+        internal static PowerInfo? AsPower(Expr expr) {
+            var powerExpr = expr as PowerExpr;
+            return powerExpr.With(x => new PowerInfo(powerExpr.Value, powerExpr.Power));
         }
 
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
