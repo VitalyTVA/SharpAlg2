@@ -76,6 +76,15 @@ namespace SharpAlg.Geo.Core {
             var dict = new Dictionary<TI, TR>(comparer);
             return x => dict.GetOrAdd(x, f);
         }
+        public static bool IsOrdered<T>(this IEnumerable<T> source, IComparer<T> comparer) {
+            var current = source.First();
+            foreach(var next in source.Tail()) {
+                if(comparer.Compare(current, next) >= 0)
+                    return false;
+                current = next;
+            }
+            return true;
+        }
     }
     //public class NoMatchException : ApplicationException { }
 

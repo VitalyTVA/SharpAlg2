@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
 
@@ -14,7 +15,8 @@ namespace SharpAlg.Geo.Core {
         }
         static bool IsNormalProduct(ExprList args) {
             var noConstArgs = args[0].IsConst() ? args.Tail() : args;
-            return noConstArgs.All(x => x.IsParam());
+            return noConstArgs.All(x => x.IsParam()) && 
+                noConstArgs.Select(x => x.ToParam()).IsOrdered(Comparer<string>.Default);
         }
     }
 }

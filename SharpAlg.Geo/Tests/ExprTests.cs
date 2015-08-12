@@ -325,19 +325,22 @@ namespace SharpAlg.Geo.Tests {
         }
     }
     public static class ExprTestExtensions {
+        [DebuggerStepThrough]
         public static void AssertIsNormal(this Builder builder, bool isNormal, Expression<Func<Expr, Expr>> f) {
             AssertIsNormal(isNormal, builder.Build(f));
         }
+        [DebuggerStepThrough]
         public static void AssertIsNormal(this Builder builder, bool isNormal, Expression<Func<Expr, Expr, Expr>> f) {
             AssertIsNormal(isNormal, builder.Build(f));
         }
+        [DebuggerStepThrough]
         public static void AssertIsNormal(this Builder builder, bool isNormal, Expression<Func<Expr, Expr, Expr, Expr>> f) {
             AssertIsNormal(isNormal, builder.Build(f));
         }
         //public static void AssertIsNormal(this Builder builder, bool isNormal, Expression<Func<Expr, Expr, Expr, Expr, Expr>> f) {
         //    AssertIsNormal(isNormal, builder.Build(f));
         //}
-
+        [DebuggerStepThrough]
         static void AssertIsNormal(bool isNormal, Expr expr) {
             Assert.AreEqual(isNormal, expr.IsNormal());
         }
