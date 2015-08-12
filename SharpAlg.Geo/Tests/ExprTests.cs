@@ -36,16 +36,16 @@ namespace SharpAlg.Geo.Tests {
             ParamExpr a = (ParamExpr)"A";
             Assert.AreEqual("A", a.Name);
 
-            AddExpr a_plus_five = (AddExpr)builder.Build(x => x + 5, a);
-            Assert.AreEqual(2, a_plus_five.Args.Length);
-            Assert.AreSame(a, a_plus_five.Args[0]);
-            Assert.AreEqual((BigRational)5, ((ConstExpr)a_plus_five.Args[1]).Value);
+            var a_plus_five = builder.Build(x => x + 5, a).ToAdd();
+            Assert.AreEqual(2, a_plus_five.Length);
+            Assert.AreSame(a, a_plus_five[0]);
+            Assert.AreEqual((BigRational)5, ((ConstExpr)a_plus_five[1]).Value);
 
-            AddExpr five_minus_a = (AddExpr)builder.Build(x => 5 - x, a);
-            Assert.AreEqual(2, five_minus_a.Args.Length);
-            Assert.AreEqual((BigRational)5, ((ConstExpr)five_minus_a.Args[0]).Value);
-            Assert.AreEqual((BigRational)(-1), ((ConstExpr)(five_minus_a.Args[1] as MultExpr).Args[0]).Value);
-            Assert.AreSame(a, (five_minus_a.Args[1] as MultExpr).Args[1]);
+            var five_minus_a = builder.Build(x => 5 - x, a).ToAdd();
+            Assert.AreEqual(2, five_minus_a.Length);
+            Assert.AreEqual((BigRational)5, ((ConstExpr)five_minus_a[0]).Value);
+            Assert.AreEqual((BigRational)(-1), ((ConstExpr)(five_minus_a[1] as MultExpr).Args[0]).Value);
+            Assert.AreSame(a, (five_minus_a[1] as MultExpr).Args[1]);
 
 
             MultExpr five_mult_a = (MultExpr)builder.Build(x => 5 * x, a);
