@@ -8,7 +8,7 @@ using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.E
 namespace SharpAlg.Geo.Core {
     public abstract class Expr {
         public static implicit operator Expr(int val) {
-            return new ConstExpr(val);
+            return Builder.Const(val);
         }
 
         public static Expr operator +(Expr a, Expr b) {
@@ -126,7 +126,7 @@ namespace SharpAlg.Geo.Core {
         public static double ToReal(this Expr expr, ImmutableContext context) => expr.ToReal(context.GetValue);
 
         public static Expr Const(BigRational value)
-            => new ConstExpr(value);
+            => Builder.Const(value);
         public static Expr Param(string name) 
             => Builder.Param(name);
 
