@@ -44,14 +44,6 @@ namespace SharpAlg.Geo.Core {
         public override int GetHashCode() => hashCode;
     }
 
-    public abstract class ComplexExpr : Expr {
-        public readonly Builder Builder;
-        protected ComplexExpr(Builder builder, int hashCode) 
-            : base(hashCode) {
-            Builder = builder;
-        }
-    }
-
     public sealed class ParamExpr : Expr {
         public static explicit operator ParamExpr(string name) {
             return new ParamExpr(name);

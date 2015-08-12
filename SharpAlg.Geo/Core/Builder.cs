@@ -11,6 +11,14 @@ using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.E
 
 namespace SharpAlg.Geo.Core {
     public sealed class Builder {
+        abstract class ComplexExpr : Expr {
+            public readonly Builder Builder;
+            protected ComplexExpr(Builder builder, int hashCode)
+                : base(hashCode) {
+                Builder = builder;
+            }
+        }
+
         sealed class AddExpr : ComplexExpr {
             public readonly ExprList Args;
             public AddExpr(Builder builder, ExprList args)
