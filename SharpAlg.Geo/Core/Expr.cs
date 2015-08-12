@@ -154,7 +154,7 @@ namespace SharpAlg.Geo.Core {
 
         public static ParamPowerInfo? AsParamPowerInfo(this Expr expr) {
             return expr.AsPower().If(x => x.Value.IsParam()).With(x => (ParamPowerInfo?)new ParamPowerInfo(x.Value.ToParam(), x.Power))
-                ?? expr.AsParam().With(x => new ParamPowerInfo(x, 1));
+                ?? expr.AsParam().With(x => (ParamPowerInfo?)new ParamPowerInfo(x, 1));
         }
         //public static bool IsParamOrPower(this Expr expr) {
         //    return expr.ParamOrPowerAsPowerInfo() != null;
