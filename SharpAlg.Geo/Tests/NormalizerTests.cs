@@ -10,9 +10,6 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test]
         public void IsNormal_Product() {
-            builder.AssertIsNormal(true, x => 1);
-            builder.AssertIsNormal(true, x => x);
-
             builder.AssertIsNormal(true, x => 2 * x);
             builder.AssertIsNormal(false, x => x * 2);
             builder.AssertIsNormal(true, (x, y) => x * y);
