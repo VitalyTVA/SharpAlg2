@@ -27,6 +27,15 @@ namespace SharpAlg.Geo.Core {
                 Args = args;
             }
         }
+        sealed class SqrtExpr : ComplexExpr {
+            public readonly Expr Value;
+            public SqrtExpr(Builder builder, Expr value)
+                : base(builder, HashCodeProvider.SqrtHash(value)) {
+                builder.Check(value.Yield());
+                Value = value;
+            }
+        }
+
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static T MatchDefault<T>(Expr expr,
             Func<Expr, T> @default,
@@ -67,6 +76,9 @@ namespace SharpAlg.Geo.Core {
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static ExprList ToMult(Expr expr)
             => ((MultExpr)expr).Args;
+        [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
+        internal static Expr ToSqrt(Expr expr)
+            => ((SqrtExpr)expr).Value;
 
         public static readonly Builder Simple = new Builder(x => x, x => x, x => x, x => x, x => x, (builder, args) => { });
         public static Builder CreateSimple() {

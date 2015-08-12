@@ -75,15 +75,6 @@ namespace SharpAlg.Geo.Core {
         }
     }
 
-    public sealed class SqrtExpr : ComplexExpr {
-        public readonly Expr Value;
-        public SqrtExpr(Builder builder, Expr value)
-            : base(builder, HashCodeProvider.SqrtHash(value)) {
-            builder.Check(value.Yield());
-            Value = value;
-        }
-    }
-
     public sealed class ParamExpr : Expr {
         public static explicit operator ParamExpr(string name) {
             return new ParamExpr(name);
@@ -118,7 +109,7 @@ namespace SharpAlg.Geo.Core {
     }
 
     public static class ExprExtensions {
-        public static SqrtExpr Sqrt(Expr value) {
+        public static Expr Sqrt(Expr value) {
             throw new CannotImplicitlyCreateExpressionException();
             //return new SqrtExpr(value);
         }
@@ -197,6 +188,8 @@ namespace SharpAlg.Geo.Core {
             => Builder.ToAdd(expr);
         public static ExprList ToMult(this Expr expr)
             => Builder.ToMult(expr);
+        public static Expr ToSqrt(this Expr expr)
+            => Builder.ToSqrt(expr);
     }
     public class CannotImplicitlyCreateExpressionException : Exception { }
     public class PowerShouldBePositiveException : Exception { }

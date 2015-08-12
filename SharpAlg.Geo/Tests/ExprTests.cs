@@ -53,8 +53,8 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual((BigRational)5, ((ConstExpr)five_mult_a[0]).Value);
             Assert.AreSame(a, five_mult_a[1]);
 
-            SqrtExpr sqrt_a = (SqrtExpr)builder.Build(x => Sqrt(x), a);
-            Assert.AreSame(a, sqrt_a.Value);
+            var sqrt_a = builder.Build(x => Sqrt(x), a).ToSqrt();
+            Assert.AreSame(a, sqrt_a);
 
             PowerExpr a_power_five = (PowerExpr)builder.Build(x => x ^ 5, a);
             Assert.AreSame(a, a_power_five.Value);
@@ -294,16 +294,16 @@ namespace SharpAlg.Geo.Tests {
         [Test]
         public void AddExprMemoization() {
             var addArgs = builder.Build(x => Sqrt(x + 1) + 1 / (x + 1)).ToAdd();
-            Assert.AreSame((addArgs.First() as SqrtExpr).Value, (addArgs.Last() as DivExpr).Denominator);
+            Assert.AreSame(addArgs.First().ToSqrt(), (addArgs.Last() as DivExpr).Denominator);
             var e2 = builder.Build(x => x + 1);
-            Assert.AreSame((addArgs.First() as SqrtExpr).Value, e2);
+            Assert.AreSame(addArgs.First().ToSqrt(), e2);
             Assert.AreNotSame(e2, CreateBuilder().Build(x => x + 1));
             Assert.AreNotSame(e2, builder.Build(x => x + 2));
         }
         [Test]
         public void MultExprMemoization() {
             var addArgs = builder.Build(x => Sqrt(2 * x) + 1 / (2 * x)).ToAdd();
-            Assert.AreSame((addArgs.First() as SqrtExpr).Value, (addArgs.Last() as DivExpr).Denominator);
+            Assert.AreSame(addArgs.First().ToSqrt(), (addArgs.Last() as DivExpr).Denominator);
         }
         [Test]
         public void SqrtExprMemoization() {
