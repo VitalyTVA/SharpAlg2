@@ -44,21 +44,6 @@ namespace SharpAlg.Geo.Core {
         public override int GetHashCode() => hashCode;
     }
 
-    public sealed class ConstExpr : Expr {
-        public readonly BigRational Value;
-        public ConstExpr(BigRational value)
-            : base(HashCodeProvider.ConstHash(value)) {
-            Value = value;
-        }
-        public override bool Equals(object obj) {
-            var other = obj as ConstExpr;
-            return other != null && other.Value == Value;
-        }
-        public override int GetHashCode() {
-            return base.GetHashCode();
-        }
-    }
-
     public static class ExprExtensions {
         public static Expr Sqrt(Expr value) {
             throw new CannotImplicitlyCreateExpressionException();

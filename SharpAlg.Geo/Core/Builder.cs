@@ -27,6 +27,20 @@ namespace SharpAlg.Geo.Core {
                 return base.GetHashCode();
             }
         }
+        sealed class ConstExpr : Expr {
+            public readonly BigRational Value;
+            public ConstExpr(BigRational value)
+                : base(HashCodeProvider.ConstHash(value)) {
+                Value = value;
+            }
+            public override bool Equals(object obj) {
+                var other = obj as ConstExpr;
+                return other != null && other.Value == Value;
+            }
+            public override int GetHashCode() {
+                return base.GetHashCode();
+            }
+        }
         abstract class ComplexExpr : Expr {
             public readonly Builder Builder;
             protected ComplexExpr(Builder builder, int hashCode)
