@@ -44,6 +44,18 @@ namespace SharpAlg.Geo.Core {
                 Denominator = denominator;
             }
         }
+        sealed class PowerExpr : ComplexExpr {
+            public readonly Expr Value;
+            public readonly BigInteger Power;
+            public PowerExpr(Builder builder, Expr value, BigInteger power)
+                : base(builder, HashCodeProvider.PowerHash(value, power)) {
+                builder.Check(value.Yield());
+                if(power < 1)
+                    throw new PowerShouldBePositiveException();
+                Value = value;
+                Power = power;
+            }
+        }
 
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static T MatchDefault<T>(Expr expr,
@@ -92,6 +104,11 @@ namespace SharpAlg.Geo.Core {
         internal static DivInfo ToDiv(Expr expr) {
             var divExpr = (DivExpr)expr;
             return new DivInfo(divExpr.Numerator, divExpr.Denominator);
+        }
+        [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
+        internal static PowerInfo ToPower(Expr expr) {
+            var powerExpr = (PowerExpr)expr;
+            return new PowerInfo(powerExpr.Value, powerExpr.Power);
         }
 
         public static readonly Builder Simple = new Builder(x => x, x => x, x => x, x => x, x => x, (builder, args) => { });

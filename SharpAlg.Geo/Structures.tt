@@ -5,8 +5,12 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
 
+using System.Numerics;
+
 <#GenStructure("SharpAlg.Geo.Core", "DivInfo", 
     new Field("Num", "Expr"), new Field("Den", "Expr"));#>
+<#GenStructure("SharpAlg.Geo.Core", "PowerInfo", 
+    new Field("Value", "Expr"), new Field("Power", "BigInteger"));#>
 
 <#+
 class Field {

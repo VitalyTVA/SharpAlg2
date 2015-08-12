@@ -1,4 +1,6 @@
 ﻿
+using System.Numerics;
+
 namespace SharpAlg.Geo.Core {
     public struct DivInfo {
         public static bool operator !=(DivInfo left, DivInfo right) {
@@ -29,6 +31,40 @@ namespace SharpAlg.Geo.Core {
             return 
                 Num.GetHashCode() ^
                 Den.GetHashCode();
+
+        }
+    }
+}
+namespace SharpAlg.Geo.Core {
+    public struct PowerInfo {
+        public static bool operator !=(PowerInfo left, PowerInfo right) {
+            return !(left == right);
+        }
+
+        public static bool operator ==(PowerInfo left, PowerInfo right) {
+            return 
+                left.Value == right.Value &&
+                left.Power == right.Power;
+        }
+
+        public readonly Expr Value;
+        public readonly BigInteger Power;
+
+        public PowerInfo(Expr _Value, BigInteger _Power) {
+            Value = _Value;
+            Power = _Power;
+        }
+
+        public override bool Equals(object obj) {
+            if (!(obj is PowerInfo))
+                return false;
+            return this == (PowerInfo)obj;
+        }
+
+        public override int GetHashCode() {
+            return 
+                Value.GetHashCode() ^
+                Power.GetHashCode();
 
         }
     }

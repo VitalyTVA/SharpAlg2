@@ -52,19 +52,6 @@ namespace SharpAlg.Geo.Core {
         }
     }
 
-    public sealed class PowerExpr : ComplexExpr {
-        public readonly Expr Value;
-        public readonly BigInteger Power;
-        public PowerExpr(Builder builder, Expr value, BigInteger power)
-            : base(builder, HashCodeProvider.PowerHash(value, power)) {
-            builder.Check(value.Yield());
-            if(power < 1)
-                throw new PowerShouldBePositiveException();
-            Value = value;
-            Power = power;
-        }
-    }
-
     public sealed class ParamExpr : Expr {
         public static explicit operator ParamExpr(string name) {
             return new ParamExpr(name);
@@ -182,6 +169,8 @@ namespace SharpAlg.Geo.Core {
             => Builder.ToSqrt(expr);
         public static DivInfo ToDiv(this Expr expr)
             => Builder.ToDiv(expr);
+        public static PowerInfo ToPower(this Expr expr)
+            => Builder.ToPower(expr);
     }
     public class CannotImplicitlyCreateExpressionException : Exception { }
     public class PowerShouldBePositiveException : Exception { }

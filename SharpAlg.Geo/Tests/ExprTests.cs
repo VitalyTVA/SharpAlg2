@@ -56,7 +56,7 @@ namespace SharpAlg.Geo.Tests {
             var sqrt_a = builder.Build(x => Sqrt(x), a).ToSqrt();
             Assert.AreSame(a, sqrt_a);
 
-            PowerExpr a_power_five = (PowerExpr)builder.Build(x => x ^ 5, a);
+            var a_power_five = builder.Build(x => x ^ 5, a).ToPower();
             Assert.AreSame(a, a_power_five.Value);
             Assert.AreEqual((BigInteger)5, a_power_five.Power);
 
@@ -319,7 +319,7 @@ namespace SharpAlg.Geo.Tests {
         [Test]
         public void DivExprMemoization() {
             var addArgs = builder.Build(x => (x / 3) + ((x / 3) ^ 2)).ToAdd();
-            Assert.AreSame(addArgs.First(), (addArgs.Last() as PowerExpr).Value);
+            Assert.AreSame(addArgs.First(), addArgs.Last().ToPower().Value);
             //Assert.AreNotSame(e.Args.First(), builder.Build(x => x ^ 3));
         }
     }
