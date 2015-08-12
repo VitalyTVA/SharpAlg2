@@ -1,0 +1,63 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+
+<#GenStructure("SharpAlg.Geo.Core", "DivInfo", 
+    new Field("Num", "Expr"), new Field("Den", "Expr"));#>
+
+<#+
+class Field {
+    public readonly string Name, Type;
+    public Field(string name, string type) {
+        this.Name = name;
+        this.Type = type;
+    }
+}
+void GenStructure(string nameSpace, string name, params Field[] fields) {
+#>
+namespace <#=nameSpace#> {
+    public struct <#=name#> {
+        public static bool operator !=(<#=name#> left, <#=name#> right) {
+            return !(left == right);
+        }
+
+        public static bool operator ==(<#=name#> left, <#=name#> right) {
+            return 
+<#+foreach(var field in fields.Take(fields.Length - 1)) {#>
+                left.<#=field.Name#> == right.<#=field.Name#> &&
+<#+}#>
+                left.<#=fields.Last().Name#> == right.<#=fields.Last().Name#>;
+        }
+
+<#+foreach(var field in fields) {#>
+        public readonly <#=field.Type#> <#=field.Name#>;
+<#+}#>
+
+        public <#=name#>(<#+foreach(var field in fields.Take(fields.Length - 1)) {#><#=field.Type#> _<#=field.Name#>, <#+}#><#=fields.Last().Type#> _<#=fields.Last().Name#>) {
+<#+foreach(var field in fields) {#>
+            <#=field.Name#> = _<#=field.Name#>;
+<#+}#>
+        }
+
+        public override bool Equals(object obj) {
+            if (!(obj is <#=name#>))
+                return false;
+            return this == (<#=name#>)obj;
+        }
+
+        public override int GetHashCode() {
+            return 
+<#+foreach(var field in fields.Take(fields.Length - 1)) {#>
+                <#=field.Name#>.GetHashCode() ^
+<#+}#>
+                <#=fields.Last().Name#>.GetHashCode();
+
+        }
+    }
+}
+<#+
+}
+#>

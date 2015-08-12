@@ -52,6 +52,19 @@ namespace SharpAlg.Geo.Core {
         }
     }
 
+    //public struct DivInfo {
+    //    public static Expr operator +(Expr a, Expr b) {
+    //        throw new CannotImplicitlyCreateExpressionException();
+    //    }
+    //    public readonly Expr Num, Den;
+    //    public DivInfo(Expr num, Expr den) {
+    //        Num = num;
+    //        Den = den;
+    //    }
+    //    public override bool Equals(object obj) {
+    //        return base.Equals(obj);
+    //    }
+    //}
     public sealed class DivExpr : ComplexExpr {
         public readonly Expr Numerator, Denominator;
         public DivExpr(Builder builder, Expr numerator, Expr denominator)
