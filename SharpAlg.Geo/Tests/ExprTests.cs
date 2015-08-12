@@ -44,14 +44,14 @@ namespace SharpAlg.Geo.Tests {
             var five_minus_a = builder.Build(x => 5 - x, a).ToAdd();
             Assert.AreEqual(2, five_minus_a.Length);
             Assert.AreEqual((BigRational)5, ((ConstExpr)five_minus_a[0]).Value);
-            Assert.AreEqual((BigRational)(-1), ((ConstExpr)(five_minus_a[1] as MultExpr).Args[0]).Value);
-            Assert.AreSame(a, (five_minus_a[1] as MultExpr).Args[1]);
+            Assert.AreEqual((BigRational)(-1), ((ConstExpr)five_minus_a[1].ToMult()[0]).Value);
+            Assert.AreSame(a, five_minus_a[1].ToMult()[1]);
 
 
-            MultExpr five_mult_a = (MultExpr)builder.Build(x => 5 * x, a);
-            Assert.AreEqual(2, five_mult_a.Args.Length);
-            Assert.AreEqual((BigRational)5, ((ConstExpr)five_mult_a.Args[0]).Value);
-            Assert.AreSame(a, five_mult_a.Args[1]);
+            var five_mult_a = builder.Build(x => 5 * x, a).ToMult();
+            Assert.AreEqual(2, five_mult_a.Length);
+            Assert.AreEqual((BigRational)5, ((ConstExpr)five_mult_a[0]).Value);
+            Assert.AreSame(a, five_mult_a[1]);
 
             SqrtExpr sqrt_a = (SqrtExpr)builder.Build(x => Sqrt(x), a);
             Assert.AreSame(a, sqrt_a.Value);
@@ -64,10 +64,10 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreSame(a, a_div_five.Numerator);
             //if(a_div_five == a_div_five) { }
 
-            MultExpr minus_a = (MultExpr)builder.Build(x => -x, a);
-            Assert.AreEqual(2, minus_a.Args.Length);
-            Assert.AreEqual((BigRational)(-1), ((ConstExpr)minus_a.Args[0]).Value);
-            Assert.AreSame(a, minus_a.Args[1]);
+            var minus_a = builder.Build(x => -x, a).ToMult();
+            Assert.AreEqual(2, minus_a.Length);
+            Assert.AreEqual((BigRational)(-1), ((ConstExpr)minus_a[0]).Value);
+            Assert.AreSame(a, minus_a[1]);
 
             Assert.Throws<PowerShouldBePositiveException>(() => { builder.Build(x => x ^ 0, a); });
             Assert.Throws<PowerShouldBePositiveException>(() => { builder.Build(x => x ^ -1, a); });

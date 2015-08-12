@@ -19,6 +19,14 @@ namespace SharpAlg.Geo.Core {
                 Args = args;
             }
         }
+        sealed class MultExpr : ComplexExpr {
+            public readonly ExprList Args;
+            public MultExpr(Builder builder, ExprList args)
+                : base(builder, HashCodeProvider.MultHash(args)) {
+                builder.Check(args);
+                Args = args;
+            }
+        }
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static T MatchDefault<T>(Expr expr,
             Func<Expr, T> @default,

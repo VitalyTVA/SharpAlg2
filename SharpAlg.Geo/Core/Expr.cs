@@ -52,15 +52,6 @@ namespace SharpAlg.Geo.Core {
         }
     }
 
-    public sealed class MultExpr : ComplexExpr {
-        public readonly ExprList Args;
-        public MultExpr(Builder builder, ExprList args) 
-            : base(builder, HashCodeProvider.MultHash(args)) {
-            builder.Check(args);
-            Args = args;
-        }
-    }
-
     public sealed class DivExpr : ComplexExpr {
         public readonly Expr Numerator, Denominator;
         public DivExpr(Builder builder, Expr numerator, Expr denominator)
