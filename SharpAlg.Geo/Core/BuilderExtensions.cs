@@ -6,22 +6,22 @@ using static SharpAlg.Geo.Core.ExprExtensions;
 
 namespace SharpAlg.Geo.Core {
     public static class BuilderExtensions {
-        public static Expr Build(this IBuilder builder, Expression<Func<Expr>> f)
+        public static Expr Build(this Builder builder, Expression<Func<Expr>> f)
             => builder.BuildExpr(f);
-        public static Expr Build(this IBuilder builder, Expression<Func<Expr, Expr>> f, Expr x1)
+        public static Expr Build(this Builder builder, Expression<Func<Expr, Expr>> f, Expr x1)
             => builder.BuildExpr(f, x1);
-        public static Expr Build(this IBuilder builder, Expression<Func<Expr, Expr, Expr>> f, Expr x1, Expr x2)
+        public static Expr Build(this Builder builder, Expression<Func<Expr, Expr, Expr>> f, Expr x1, Expr x2)
             => builder.BuildExpr(f, x1, x2);
-        public static Expr Build(this IBuilder builder, Expression<Func<Expr, Expr, Expr, Expr>> f, Expr x1, Expr x2, Expr x3)
+        public static Expr Build(this Builder builder, Expression<Func<Expr, Expr, Expr, Expr>> f, Expr x1, Expr x2, Expr x3)
             => builder.BuildExpr(f, x1, x2, x3);
-        public static Expr Build(this IBuilder builder, Expression<Func<Expr, Expr, Expr, Expr, Expr>> f, Expr x1, Expr x2, Expr x3, Expr x4)
+        public static Expr Build(this Builder builder, Expression<Func<Expr, Expr, Expr, Expr, Expr>> f, Expr x1, Expr x2, Expr x3, Expr x4)
             => builder.BuildExpr(f, x1, x2, x3, x4);
-        public static Expr Build(this IBuilder builder, Expression<Func<Expr, Expr, Expr, Expr, Expr, Expr>> f, Expr x1, Expr x2, Expr x3, Expr x4, Expr x5)
+        public static Expr Build(this Builder builder, Expression<Func<Expr, Expr, Expr, Expr, Expr, Expr>> f, Expr x1, Expr x2, Expr x3, Expr x4, Expr x5)
             => builder.BuildExpr(f, x1, x2, x3, x4, x5);
-        public static Expr Build(this IBuilder builder, Expression<Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr>> f, Expr x1, Expr x2, Expr x3, Expr x4, Expr x5, Expr x6)
+        public static Expr Build(this Builder builder, Expression<Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr>> f, Expr x1, Expr x2, Expr x3, Expr x4, Expr x5, Expr x6)
             => builder.BuildExpr(f, x1, x2, x3, x4, x5, x6);
 
-        static Expr BuildExpr(this IBuilder builder, LambdaExpression expression, params Expr[] args) {
+        static Expr BuildExpr(this Builder builder, LambdaExpression expression, params Expr[] args) {
             if(expression.Parameters.Count != args.Length) {
                 throw new InvalidOperationException();
             }
@@ -31,7 +31,7 @@ namespace SharpAlg.Geo.Core {
         static readonly Expression<Func<Expr, Expr>> SqrtExpr = x => Sqrt(x);
 
 
-        static Expr BuildCore(this IBuilder builder, Expression expression, Func<ParameterExpression, Expr> getArgs) {
+        static Expr BuildCore(this Builder builder, Expression expression, Func<ParameterExpression, Expr> getArgs) {
             if(expression.NodeType == ExpressionType.Parameter) {
                 return getArgs((ParameterExpression)expression);
             }
@@ -72,10 +72,10 @@ namespace SharpAlg.Geo.Core {
             return (int)constant.Value;
         }
 
-        public static Expr Subtract(this IBuilder builder, Expr a, Expr b) {
+        public static Expr Subtract(this Builder builder, Expr a, Expr b) {
             return builder.Add(a, builder.Minus(b));
         }
-        public static Expr Minus(this IBuilder builder, Expr a) {
+        public static Expr Minus(this Builder builder, Expr a) {
             return builder.Multiply(-1, a);
         }
 

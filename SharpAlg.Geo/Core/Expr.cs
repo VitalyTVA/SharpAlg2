@@ -45,8 +45,8 @@ namespace SharpAlg.Geo.Core {
     }
 
     public abstract class ComplexExpr : Expr {
-        public readonly IBuilder Builder;
-        protected ComplexExpr(IBuilder builder, int hashCode) 
+        public readonly Builder Builder;
+        protected ComplexExpr(Builder builder, int hashCode) 
             : base(hashCode) {
             Builder = builder;
         }
@@ -54,7 +54,7 @@ namespace SharpAlg.Geo.Core {
 
     public sealed class AddExpr : ComplexExpr {
         public readonly ExprList Args;
-        public AddExpr(IBuilder builder, ExprList args) 
+        public AddExpr(Builder builder, ExprList args) 
             : base(builder, HashCodeProvider.AddHash(args)) {
             builder.Check(args);
             Args = args;
@@ -63,7 +63,7 @@ namespace SharpAlg.Geo.Core {
 
     public sealed class MultExpr : ComplexExpr {
         public readonly ExprList Args;
-        public MultExpr(IBuilder builder, ExprList args) 
+        public MultExpr(Builder builder, ExprList args) 
             : base(builder, HashCodeProvider.MultHash(args)) {
             builder.Check(args);
             Args = args;
@@ -72,7 +72,7 @@ namespace SharpAlg.Geo.Core {
 
     public sealed class DivExpr : ComplexExpr {
         public readonly Expr Numerator, Denominator;
-        public DivExpr(IBuilder builder, Expr numerator, Expr denominator)
+        public DivExpr(Builder builder, Expr numerator, Expr denominator)
             : base(builder, HashCodeProvider.DivHash(numerator, denominator)) {
             builder.Check(new[] { numerator, denominator });
             Numerator = numerator;
@@ -83,7 +83,7 @@ namespace SharpAlg.Geo.Core {
     public sealed class PowerExpr : ComplexExpr {
         public readonly Expr Value;
         public readonly BigInteger Power;
-        public PowerExpr(IBuilder builder, Expr value, BigInteger power)
+        public PowerExpr(Builder builder, Expr value, BigInteger power)
             : base(builder, HashCodeProvider.PowerHash(value, power)) {
             builder.Check(value.Yield());
             if(power < 1)
@@ -95,7 +95,7 @@ namespace SharpAlg.Geo.Core {
 
     public sealed class SqrtExpr : ComplexExpr {
         public readonly Expr Value;
-        public SqrtExpr(IBuilder builder, Expr value)
+        public SqrtExpr(Builder builder, Expr value)
             : base(builder, HashCodeProvider.SqrtHash(value)) {
             builder.Check(value.Yield());
             Value = value;

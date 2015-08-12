@@ -12,18 +12,18 @@ using System.Collections.Immutable;
 
 namespace SharpAlg.Geo.Tests {
     public class ExprTestsBase {
-        protected IBuilder builder;
+        protected Builder builder;
         [SetUp]
         public void SetUp() {
             builder = CreateBuilder();
         }
-        protected virtual IBuilder CreateBuilder() {
-            return CachingBuilder.CreateSimple();
+        protected virtual Builder CreateBuilder() {
+            return Builder.CreateSimple();
         }
     }
     public class ExprFunctionalTestsBase : ExprTestsBase {
-        protected override IBuilder CreateBuilder() {
-            return CachingBuilder.CreateRealLife();
+        protected override Builder CreateBuilder() {
+            return Builder.CreateRealLife();
         }
     }
     [TestFixture]
@@ -262,7 +262,7 @@ namespace SharpAlg.Geo.Tests {
 
         [Test]
         public void CannotMixExprsFromDifferentBuilders() {
-            var expr = CachingBuilder.Simple.Add(Param("a"), Param("b"));
+            var expr = Builder.Simple.Add(Param("a"), Param("b"));
             Action<TestDelegate> assertThrows = x => Assert.Throws<CannotMixExpressionsFromDifferentBuildersException>(x);
             assertThrows(() => builder.Add(1, expr));
             assertThrows(() => builder.Multiply(1, expr));
@@ -324,14 +324,14 @@ namespace SharpAlg.Geo.Tests {
         }
     }
     public static class ExprTestExtensions {
-        public static Expr Build(this IBuilder builder, Expression<Func<Expr, Expr>> f) {
+        public static Expr Build(this Builder builder, Expression<Func<Expr, Expr>> f) {
             return builder.Build(f, GetParameters(f).Single());
         }
-        public static Expr Build(this IBuilder builder, Expression<Func<Expr, Expr, Expr>> f) {
+        public static Expr Build(this Builder builder, Expression<Func<Expr, Expr, Expr>> f) {
             var parameters = GetParameters(f);
             return builder.Build(f, parameters[0], parameters[1]);
         }
-        public static Expr Build(this IBuilder builder, Expression<Func<Expr, Expr, Expr, Expr>> f) {
+        public static Expr Build(this Builder builder, Expression<Func<Expr, Expr, Expr, Expr>> f) {
             var parameters = GetParameters(f);
             return builder.Build(f, parameters[0], parameters[1], parameters[2]);
         }

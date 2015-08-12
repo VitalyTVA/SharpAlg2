@@ -6,28 +6,17 @@ using System.Numerics;
 using static SharpAlg.Geo.Core.Utility;
 
 namespace SharpAlg.Geo.Core {
-    public interface IBuilder {
-        Expr Add(params Expr[] args);
-        void Check(IEnumerable<Expr> args);
-        Expr Divide(Expr a, Expr b);
-        Expr Multiply(params Expr[] args);
-        Expr Power(Expr value, BigInteger power);
-        Expr Sqrt(Expr value);
-    }
-    public sealed class CachingBuilder : IBuilder {
-        static Func<T, T> Memoize<T>(Func<T, T, bool> equals, Func<T, int> getHashCode) {
-            return Func((T x) => x).Memoize(new DelegateEqualityComparer<T>(equals, x => x.GetHashCode()));
-        }
-        public static readonly IBuilder Simple = new CachingBuilder(Id<AddExpr>(), Id<MultExpr>(), Id<SqrtExpr>(), Id<PowerExpr>(), Id<DivExpr>(), (builder, args) => { });
-        public static IBuilder CreateSimple() {
+    public sealed class Builder {
+        public static readonly Builder Simple = new Builder(x => x, x => x, x => x, x => x, x => x, (builder, args) => { });
+        public static Builder CreateSimple() {
             return CreateCaching(x => 0);
         }
-        public static IBuilder CreateRealLife() {
+        public static Builder CreateRealLife() {
             return CreateCaching(x => x.GetHashCode());
         }
 
-        static IBuilder CreateCaching(Func<Expr, int> getHashCode) {
-            return new CachingBuilder(
+        static Builder CreateCaching(Func<Expr, int> getHashCode) {
+            return new Builder(
                 add: Memoize<AddExpr>((x, y) => Enumerable.SequenceEqual(x.Args, y.Args), getHashCode),
                 mult: Memoize<MultExpr>((x, y) => Enumerable.SequenceEqual(x.Args, y.Args), getHashCode),
                 sqrt: Memoize<SqrtExpr>((x, y) => Equals(x.Value, y.Value), getHashCode),
@@ -39,15 +28,18 @@ namespace SharpAlg.Geo.Core {
                 }
             );
         }
+        static Func<T, T> Memoize<T>(Func<T, T, bool> equals, Func<T, int> getHashCode) {
+            return Func((T x) => x).Memoize(new DelegateEqualityComparer<T>(equals, x => x.GetHashCode()));
+        }
 
         readonly Func<AddExpr, AddExpr> add;
         readonly Func<MultExpr, MultExpr> mult;
         readonly Func<SqrtExpr, SqrtExpr> sqrt;
         readonly Func<PowerExpr, PowerExpr> power;
         readonly Func<DivExpr, DivExpr> div;
-        readonly Action<IBuilder, IEnumerable<Expr>> check;
+        readonly Action<Builder, IEnumerable<Expr>> check;
 
-        CachingBuilder(Func<AddExpr, AddExpr> add, Func<MultExpr, MultExpr> mult, Func<SqrtExpr, SqrtExpr> sqrt, Func<PowerExpr, PowerExpr> power, Func<DivExpr, DivExpr> div, Action<IBuilder, IEnumerable<Expr>> check) {
+        Builder(Func<AddExpr, AddExpr> add, Func<MultExpr, MultExpr> mult, Func<SqrtExpr, SqrtExpr> sqrt, Func<PowerExpr, PowerExpr> power, Func<DivExpr, DivExpr> div, Action<Builder, IEnumerable<Expr>> check) {
             this.add = add;
             this.mult = mult;
             this.sqrt = sqrt;
@@ -56,23 +48,23 @@ namespace SharpAlg.Geo.Core {
             this.check = check;
         }
 
-        Expr IBuilder.Add(params Expr[] args) {
+        public Expr Add(params Expr[] args) {
             return add(new AddExpr(this, ImmutableArray.Create(args)));
         }
 
-        Expr IBuilder.Multiply(params Expr[] args) {
+        public Expr Multiply(params Expr[] args) {
             return mult(new MultExpr(this, ImmutableArray.Create(args)));
         }
-        Expr IBuilder.Divide(Expr a, Expr b) {
+        public Expr Divide(Expr a, Expr b) {
             return div(new DivExpr(this, a, b));
         }
-        Expr IBuilder.Power(Expr value, BigInteger pow) {
+        public Expr Power(Expr value, BigInteger pow) {
             return power(new PowerExpr(this, value, pow));
         }
-        Expr IBuilder.Sqrt(Expr value) {
+        public Expr Sqrt(Expr value) {
             return sqrt(new SqrtExpr(this, value));
         }
-        void IBuilder.Check(IEnumerable<Expr> args) {
+        public void Check(IEnumerable<Expr> args) {
             check(this, args);
         }
     }
