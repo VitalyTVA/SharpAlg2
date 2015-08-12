@@ -10,7 +10,8 @@ namespace SharpAlg.Geo.Core {
                 x => { throw new NotImplementedException(); },
                 mult: IsNormalProduct,
                 param: x => true,
-                @const: x => true
+                @const: x => true,
+                power: (val, pow) => val.IsParam()
             );
         }
         static bool IsNormalProduct(ExprList args) {
