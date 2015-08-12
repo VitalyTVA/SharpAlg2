@@ -139,5 +139,11 @@ namespace SharpAlg.Geo.Core {
         public static Func<T1, TR> Func<T1, TR>(Func<T1, TR> f) {
             return f;
         }
+        public static Func<T, T> Id<T>() {
+            return x => x;
+        }
+        public static Action<T> Nop<T>() {
+            return x => { };
+        }
     }
 }
