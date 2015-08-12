@@ -11,6 +11,7 @@ using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.E
 
 namespace SharpAlg.Geo.Core {
     public sealed class Builder {
+        #region classes
         sealed class ParamExpr : Expr {
             public readonly string Name;
             public ParamExpr(string name)
@@ -93,7 +94,9 @@ namespace SharpAlg.Geo.Core {
                 Power = power;
             }
         }
+        #endregion
 
+        #region access methods
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static T MatchDefault<T>(Expr expr,
             Func<Expr, T> @default,
@@ -103,7 +106,8 @@ namespace SharpAlg.Geo.Core {
             Func<Expr, BigInteger, T> power = null,
             Func<Expr, T> sqrt = null,
             Func<string, T> param = null,
-            Func<BigRational, T> @const = null) {
+            Func<BigRational, T> @const = null) 
+        {
             var addExpr = expr as AddExpr;
             if(addExpr != null)
                 return add != null ? add(addExpr.Args) : @default(expr);
@@ -129,7 +133,7 @@ namespace SharpAlg.Geo.Core {
         }
 
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
-        internal static ExprList ToAdd(Expr expr) 
+        internal static ExprList ToAdd(Expr expr)
             => ((AddExpr)expr).Args;
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static ExprList ToMult(Expr expr)
@@ -162,6 +166,7 @@ namespace SharpAlg.Geo.Core {
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static BigRational? AsConst(Expr expr)
             => (expr as ConstExpr).With(x => (BigRational?)x.Value);
+        #endregion
 
         public static readonly Builder Simple = new Builder(x => x, x => x, x => x, x => x, x => x, (builder, args) => { });
         public static Builder CreateSimple() {
