@@ -86,7 +86,7 @@ namespace SharpAlg.Geo.Core {
             return args.Count() == 2 && IsMinusOne(args.First());
         }
         static bool IsMinusOne(Expr expr) {
-            return (expr as ConstExpr).If(x => x.Value == BigInteger.MinusOne).ReturnSuccess();
+            return expr.AsConst().If<BigRational>(x => x == BigInteger.MinusOne).ReturnSuccess();
         }
         static string Add(ExprList args) {
             var sb = new StringBuilder();

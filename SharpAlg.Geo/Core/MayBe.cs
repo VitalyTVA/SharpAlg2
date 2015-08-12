@@ -26,10 +26,18 @@ namespace SharpAlg.Geo.Core {
         public static bool ReturnSuccess<TI>(this TI input) where TI : class {
             return input != null;
         }
+        public static bool ReturnSuccess<TI>(this TI? input) where TI : struct {
+            return input != null;
+        }
         public static TI If<TI>(this TI input, Func<TI, bool> evaluator) where TI : class {
             if(input == null)
                 return null;
             return evaluator(input) ? input : null;
+        }
+        public static TI? If<TI>(this TI? input, Func<TI, bool> evaluator) where TI : struct {
+            if(input == null)
+                return null;
+            return evaluator(input.Value) ? input : null;
         }
         public static TI Do<TI>(this TI input, Action<TI> action) where TI : class {
             if(input == null)
