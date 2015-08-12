@@ -173,15 +173,15 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test]
         public void SqrtEqualsAndGetHashCode() {
-            var expr = builder.Sqrt((ParamExpr)"a");
-            Assert.AreEqual(expr, builder.Sqrt((ParamExpr)"a"));
-            Assert.AreNotEqual(expr, CreateBuilder().Sqrt((ParamExpr)"a"));
-            Assert.AreNotEqual(expr, builder.Sqrt((ParamExpr)"b"));
+            var expr = builder.Sqrt(Param("a"));
+            Assert.AreEqual(expr, builder.Sqrt(Param("a")));
+            Assert.AreNotEqual(expr, CreateBuilder().Sqrt(Param("a")));
+            Assert.AreNotEqual(expr, builder.Sqrt(Param("b")));
             Assert.AreEqual(expr, expr);
 
             AssertHashCodesAreEqual(expr, expr);
-            AssertHashCodesAreEqual(expr, builder.Sqrt((ParamExpr)"a"));
-            AssertHashCodesAreNotEqual(expr, builder.Sqrt((ParamExpr)"b"));
+            AssertHashCodesAreEqual(expr, builder.Sqrt(Param("a")));
+            AssertHashCodesAreNotEqual(expr, builder.Sqrt(Param("b")));
         }
         [Test]
         public static void ConstEqualsAndGetHashCode() {
@@ -196,60 +196,60 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test]
         public void PowerEqualsAndGetHashCode() {
-            Expr expr = builder.Power((ParamExpr)"a", 2);
-            Assert.AreEqual(expr, builder.Power((ParamExpr)"a", 2));
-            Assert.AreNotEqual(expr, CreateBuilder().Power((ParamExpr)"a", 2));
+            Expr expr = builder.Power(Param("a"), 2);
+            Assert.AreEqual(expr, builder.Power(Param("a"), 2));
+            Assert.AreNotEqual(expr, CreateBuilder().Power(Param("a"), 2));
             Assert.AreEqual(expr, expr);
 
             AssertHashCodesAreEqual(expr, expr);
-            AssertHashCodesAreEqual(expr, builder.Power((ParamExpr)"a", 2));
-            AssertHashCodesAreNotEqual(expr, builder.Power((ParamExpr)"b", 2));
-            AssertHashCodesAreNotEqual(expr, builder.Power((ParamExpr)"a", 3));
+            AssertHashCodesAreEqual(expr, builder.Power(Param("a"), 2));
+            AssertHashCodesAreNotEqual(expr, builder.Power(Param("b"), 2));
+            AssertHashCodesAreNotEqual(expr, builder.Power(Param("a"), 3));
         }
         [Test]
         public void AddEqualsAndGetHashCode() {
-            Expr expr = builder.Add((ParamExpr)"a", 2);
-            Assert.AreEqual(expr, builder.Add((ParamExpr)"a", 2));
-            Assert.AreNotEqual(expr, CreateBuilder().Add((ParamExpr)"a", 2));
+            Expr expr = builder.Add(Param("a"), 2);
+            Assert.AreEqual(expr, builder.Add(Param("a"), 2));
+            Assert.AreNotEqual(expr, CreateBuilder().Add(Param("a"), 2));
             Assert.AreEqual(expr, expr);
 
             AssertHashCodesAreEqual(expr, expr);
-            AssertHashCodesAreEqual(expr, builder.Add((ParamExpr)"a", 2));
-            AssertHashCodesAreNotEqual(expr, builder.Add((ParamExpr)"b", 2));
-            AssertHashCodesAreNotEqual(expr, builder.Add((ParamExpr)"a", 3));
+            AssertHashCodesAreEqual(expr, builder.Add(Param("a"), 2));
+            AssertHashCodesAreNotEqual(expr, builder.Add(Param("b"), 2));
+            AssertHashCodesAreNotEqual(expr, builder.Add(Param("a"), 3));
         }
         [Test]
         public void MultEquals() {
-            Expr expr = builder.Multiply((ParamExpr)"a", 2);
-            Assert.AreEqual(expr, builder.Multiply((ParamExpr)"a", 2));
-            Assert.AreNotEqual(expr, CreateBuilder().Multiply((ParamExpr)"a", 2));
+            Expr expr = builder.Multiply(Param("a"), 2);
+            Assert.AreEqual(expr, builder.Multiply(Param("a"), 2));
+            Assert.AreNotEqual(expr, CreateBuilder().Multiply(Param("a"), 2));
             Assert.AreEqual(expr, expr);
 
             AssertHashCodesAreEqual(expr, expr);
-            AssertHashCodesAreEqual(expr, builder.Multiply((ParamExpr)"a", 2));
-            AssertHashCodesAreNotEqual(expr, builder.Multiply((ParamExpr)"b", 2));
-            AssertHashCodesAreNotEqual(expr, builder.Multiply((ParamExpr)"a", 3));
+            AssertHashCodesAreEqual(expr, builder.Multiply(Param("a"), 2));
+            AssertHashCodesAreNotEqual(expr, builder.Multiply(Param("b"), 2));
+            AssertHashCodesAreNotEqual(expr, builder.Multiply(Param("a"), 3));
         }
         [Test]
         public void DivEquals() {
-            Expr expr = builder.Divide((ParamExpr)"a", 2);
-            Assert.AreEqual(expr, builder.Divide((ParamExpr)"a", 2));
-            Assert.AreNotEqual(expr, CreateBuilder().Divide((ParamExpr)"a", 2));
+            Expr expr = builder.Divide(Param("a"), 2);
+            Assert.AreEqual(expr, builder.Divide(Param("a"), 2));
+            Assert.AreNotEqual(expr, CreateBuilder().Divide(Param("a"), 2));
             Assert.AreEqual(expr, expr);
 
             AssertHashCodesAreEqual(expr, expr);
-            AssertHashCodesAreEqual(expr, builder.Divide((ParamExpr)"a", 2));
-            AssertHashCodesAreNotEqual(expr, builder.Divide((ParamExpr)"b", 2));
-            AssertHashCodesAreNotEqual(expr, builder.Divide((ParamExpr)"a", 3));
+            AssertHashCodesAreEqual(expr, builder.Divide(Param("a"), 2));
+            AssertHashCodesAreNotEqual(expr, builder.Divide(Param("b"), 2));
+            AssertHashCodesAreNotEqual(expr, builder.Divide(Param("a"), 3));
         }
         [Test]
         public void HashCodeSalt() {
-            AssertHashCodesAreNotEqual((ParamExpr)"b", builder.Sqrt((ParamExpr)"b"));
+            AssertHashCodesAreNotEqual(Param("b"), builder.Sqrt(Param("b")));
             AssertHashCodesAreNotEqual(2, builder.Sqrt(2));
 
-            AssertHashCodesAreNotEqual((ParamExpr)"b", builder.Add((ParamExpr)"b"));
-            AssertHashCodesAreNotEqual(builder.Multiply((ParamExpr)"b"), builder.Add((ParamExpr)"b"));
-            AssertHashCodesAreNotEqual(builder.Divide((ParamExpr)"b", 2), builder.Add((ParamExpr)"b", 2));
+            AssertHashCodesAreNotEqual(Param("b"), builder.Add(Param("b")));
+            AssertHashCodesAreNotEqual(builder.Multiply(Param("b")), builder.Add(Param("b")));
+            AssertHashCodesAreNotEqual(builder.Divide(Param("b"), 2), builder.Add(Param("b"), 2));
         }
         [DebuggerStepThrough]
         static void AssertHashCodesAreEqual<T>(T a, T b) {
@@ -336,7 +336,7 @@ namespace SharpAlg.Geo.Tests {
             return builder.Build(f, parameters[0], parameters[1], parameters[2]);
         }
         static ExprList GetParameters(LambdaExpression expression) {
-            return expression.Parameters.Select(x => (ParamExpr)x.Name).ToImmutableArray<Expr>();
+            return expression.Parameters.Select(x => Param(x.Name)).ToImmutableArray();
         }
         public static Expr AssertSimpleStringRepresentation(this Expr expr, string str) {
             Assert.AreEqual(str, expr.ToString());

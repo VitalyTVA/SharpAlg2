@@ -137,7 +137,7 @@ namespace SharpAlg.Geo.Tests {
         [Test]
         public void QuadraticEquation() {
 
-            var roots =  builder.SolveQuadraticEquation((Core.ParamExpr)"A", (Core.ParamExpr)"B", (Core.ParamExpr)"C");
+            var roots =  builder.SolveQuadraticEquation(Param("A"), Param("B"), Param("C"));
             var context = ImmutableContext.Empty
                 .Register("A", 1)
                 .Register("B", -2)

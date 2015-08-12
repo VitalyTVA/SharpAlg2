@@ -45,9 +45,9 @@ namespace SharpAlg.Geo.Core {
     }
 
     public sealed class ParamExpr : Expr {
-        public static explicit operator ParamExpr(string name) {
-            return new ParamExpr(name);
-        }
+        //public static explicit operator ParamExpr(string name) {
+        //    return new ParamExpr(name);
+        //}
         public readonly string Name;
         public ParamExpr(string name)
             : base(HashCodeProvider.ParamHash(name)) {
