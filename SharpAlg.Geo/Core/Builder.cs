@@ -52,8 +52,13 @@ namespace SharpAlg.Geo.Core {
                 return @const != null ? @const(constExpr.Value) : @default(expr);
             throw new InvalidOperationException();
         }
+
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
-        internal static ExprList ToAdd(Expr expr) => ((AddExpr)expr).Args;
+        internal static ExprList ToAdd(Expr expr) 
+            => ((AddExpr)expr).Args;
+        [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
+        internal static ExprList ToMult(Expr expr)
+            => ((MultExpr)expr).Args;
 
         public static readonly Builder Simple = new Builder(x => x, x => x, x => x, x => x, x => x, (builder, args) => { });
         public static Builder CreateSimple() {
