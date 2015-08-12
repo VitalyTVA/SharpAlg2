@@ -11,27 +11,27 @@ namespace SharpAlg.Geo.Core {
             return new ConstExpr(val);
         }
 
-        public static AddExpr operator +(Expr a, Expr b) {
+        public static Expr operator +(Expr a, Expr b) {
             throw new CannotImplicitlyCreateExpressionException();
         }
 
-        public static MultExpr operator *(Expr a, Expr b) {
+        public static Expr operator *(Expr a, Expr b) {
             throw new CannotImplicitlyCreateExpressionException();
         }
 
-        public static MultExpr operator -(Expr a) {
+        public static Expr operator -(Expr a) {
             throw new CannotImplicitlyCreateExpressionException();
         }
 
-        public static AddExpr operator -(Expr a, Expr b) {
+        public static Expr operator -(Expr a, Expr b) {
             throw new CannotImplicitlyCreateExpressionException();
         }
 
-        public static DivExpr operator /(Expr a, Expr b) {
+        public static Expr operator /(Expr a, Expr b) {
             throw new CannotImplicitlyCreateExpressionException();
         }
 
-        public static PowerExpr operator ^(Expr value,  BigInteger power) {
+        public static Expr operator ^(Expr value,  BigInteger power) {
             throw new CannotImplicitlyCreateExpressionException();
             //return new PowerExpr(value, power);
         }
