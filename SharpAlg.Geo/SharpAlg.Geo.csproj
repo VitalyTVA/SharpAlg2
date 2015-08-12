@@ -72,6 +72,7 @@
     <Compile Include="Core\HashCodeProvider.cs" />
     <Compile Include="Core\MayBe.cs" />
     <Compile Include="ImmutableContext.cs" />
+    <Compile Include="Core\Normalizer.cs" />
     <Compile Include="PrimitiveOperations.cs" />
     <Compile Include="Primitives.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -82,6 +83,7 @@
     </Compile>
     <Compile Include="Tests\ExprTests.cs" />
     <Compile Include="Tests\IntersectionsTests.cs" />
+    <Compile Include="Tests\NormalizerTests.cs" />
     <Compile Include="Tests\ProblemsTests.cs" />
   </ItemGroup>
   <ItemGroup>
