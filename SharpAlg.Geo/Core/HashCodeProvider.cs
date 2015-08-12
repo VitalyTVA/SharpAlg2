@@ -38,4 +38,18 @@ namespace SharpAlg.Geo.Core {
         static int SingleHash<T>(int salt, T value) => salt ^ value.GetHashCode();
         static int SequenceHash<T>(int salt, IEnumerable<T> args) => args.Aggregate(salt, (hash, x) => hash ^ x.GetHashCode());
     }
+    public class DelegateEqualityComparer<T> : IEqualityComparer<T> {
+        readonly Func<T, int> getHashCode;
+        readonly Func<T, T, bool> equals;
+        public DelegateEqualityComparer(Func<T, T, bool> equals, Func<T, int> getHashCode) {
+            this.getHashCode = getHashCode;
+            this.equals = equals;
+        }
+        bool IEqualityComparer<T>.Equals(T x, T y) {
+            return equals(x, y);
+        }
+        int IEqualityComparer<T>.GetHashCode(T obj) {
+            return getHashCode(obj);
+        }
+    } 
 }

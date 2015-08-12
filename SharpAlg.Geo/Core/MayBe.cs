@@ -65,8 +65,8 @@ namespace SharpAlg.Geo.Core {
             }
             return dict[key] = value;
         }
-        public static Func<TI, TR> Memoize<TI, TR>(this Func<TI, TR> f) {
-            var dict = new Dictionary<TI, TR>();
+        public static Func<TI, TR> Memoize<TI, TR>(this Func<TI, TR> f, IEqualityComparer<TI> comparer = null) {
+            var dict = new Dictionary<TI, TR>(comparer);
             return x => dict.GetOrAdd(x, f);
         }
     }
@@ -135,4 +135,9 @@ namespace SharpAlg.Geo.Core {
     //        return new Matcher<T, TResult>(value).Case(predicate, result);
     //    }
     //}
+    public static class Utility {
+        public static Func<T1, TR> Func<T1, TR>(Func<T1, TR> f) {
+            return f;
+        }
+    }
 }
