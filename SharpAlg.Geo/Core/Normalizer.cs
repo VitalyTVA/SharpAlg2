@@ -7,8 +7,14 @@ namespace SharpAlg.Geo.Core {
     public static class Normalizer {
         public static bool IsNormal(this Expr expr) {
             return expr.MatchDefault(
+                x => x.IsNormalNoDiv(),
+                div: (n, d) => n.IsNormalNoDiv() && d.IsNormalNoDiv()
+            );
+        }
+        static bool IsNormalNoDiv(this Expr expr) {
+            return expr.MatchDefault(
                 x => { throw new NotImplementedException(); },
-                div: (n, d) => true,
+                div: (n, d) => false,
                 add: IsNormalSum,
                 mult: IsNormalProduct,
                 param: x => true,
