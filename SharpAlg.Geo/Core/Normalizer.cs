@@ -8,6 +8,7 @@ namespace SharpAlg.Geo.Core {
         public static bool IsNormal(this Expr expr) {
             return expr.MatchDefault(
                 x => { throw new NotImplementedException(); },
+                div: (n, d) => true,
                 add: IsNormalSum,
                 mult: IsNormalProduct,
                 param: x => true,

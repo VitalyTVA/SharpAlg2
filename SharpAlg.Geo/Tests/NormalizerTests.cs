@@ -27,7 +27,8 @@ namespace SharpAlg.Geo.Tests {
                 yield return MakeIsNormalTestCase(false, x => x * 2);
 
                 yield return MakeIsNormalTestCase(true, (x, y) => x * y);
-                yield return MakeIsNormalTestCase(false, (x, y) => x * (y + 1));
+                yield return MakeIsNormalTestCase(false, (x, y, z) => x * (y / z));
+                                yield return MakeIsNormalTestCase(false, (x, y) => x * (y + 1));
                 yield return MakeIsNormalTestCase(false, (x, y) => y * x);
                 yield return MakeIsNormalTestCase(false, (x, y) => x * x);
 
@@ -54,6 +55,9 @@ namespace SharpAlg.Geo.Tests {
                 yield return MakeIsNormalTestCase(false, (x, y, z) => x + y * 5 + z);
                 yield return MakeIsNormalTestCase(true, (x, y, z) => x * y + 5 * z);
                 yield return MakeIsNormalTestCase(false, (x, y, z) => x * y + z * 5);
+                yield return MakeIsNormalTestCase(false, (x, y, z) => x  +  (y / z));
+
+                yield return MakeIsNormalTestCase(true, (x, y) => x / y);
             }
         }
         static TestCaseData MakeIsNormalTestCase(bool isNormal, Expression<Func<Expr, Expr>> expr) {
