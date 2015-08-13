@@ -4,6 +4,7 @@ using Numerics;
 using System.Linq;
 using System.Diagnostics;
 using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
+using System.Collections.Immutable;
 
 namespace SharpAlg.Geo.Core {
     public abstract class Expr {
@@ -156,9 +157,12 @@ namespace SharpAlg.Geo.Core {
         public static bool IsConst(this Expr expr)
             => expr.AsConst() != null;
 
-        public static ParamPowerInfo? AsParamPowerInfo(this Expr expr) {
+        public static ParamPowerInfo? ParamOrParamPowerAsPowerInfo(this Expr expr) {
             return expr.AsPower().If(x => x.Value.IsParam()).With(x => (ParamPowerInfo?)new ParamPowerInfo(x.Value.ToParam(), x.Power))
                 ?? expr.AsParam().With(x => (ParamPowerInfo?)new ParamPowerInfo(x, 1));
+        }
+        public static ExprList ExprOrMultToMult(this Expr expr) {
+            return expr.AsMult() ?? ImmutableArray.Create(expr);
         }
         //public static bool IsParamOrPower(this Expr expr) {
         //    return expr.ParamOrPowerAsPowerInfo() != null;

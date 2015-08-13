@@ -16,11 +16,11 @@ namespace SharpAlg.Geo.Core {
             );
         }
         static bool IsNormalSum(ExprList args) {
-            return args.All(x => IsNormalProduct(x.ToMult()));
+            return args.Select(x => x.ExprOrMultToMult()).All(x => IsNormalProduct(x));
         }
         static bool IsNormalProduct(ExprList args) {
             var noConstArgs = args[0].IsConst() ? args.Tail() : args;
-            var paramOrPowerArgs = noConstArgs.Select(x => x.AsParamPowerInfo());
+            var paramOrPowerArgs = noConstArgs.Select(x => x.ParamOrParamPowerAsPowerInfo());
             return paramOrPowerArgs.All(x => x != null) &&
                 paramOrPowerArgs
                     .Select(x => x.Value)
