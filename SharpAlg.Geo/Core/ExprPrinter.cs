@@ -173,7 +173,7 @@ namespace SharpAlg.Geo.Core {
                 add: x => shouldWrap(OperationPriority.Add),
                 mult: x => IsMinusExpression(x) || shouldWrap(OperationPriority.Multiply),
                 div: (x, y) => shouldWrap(OperationPriority.Divide),
-                power: (x, y) => shouldWrap(OperationPriority.Power),
+                power: (x, y) => true, //shouldWrap(OperationPriority.Power),
                 sqrt: x => false,
                 param: x => false,
                 @const: x => {

@@ -92,7 +92,7 @@ namespace SharpAlg.Geo.Tests {
             builder.Build((x, y, z) => (x + y) * z).AssertSimpleStringRepresentation("(x + y) * z");
             builder.Build((x, y, z) => z * (x + y)).AssertSimpleStringRepresentation("z * (x + y)");
             builder.Build(x => x ^ 4).AssertSimpleStringRepresentation("x ^ 4");
-            builder.Build((x, y) => x * (y ^ 3)).AssertSimpleStringRepresentation("x * y ^ 3");
+            builder.Build((x, y) => x * (y ^ 3)).AssertSimpleStringRepresentation("x * (y ^ 3)");
             builder.Build((x, y) => x * y ^ 3).AssertSimpleStringRepresentation("(x * y) ^ 3");
             builder.Build(x => x ^ 2 ^ 3).AssertSimpleStringRepresentation("(x ^ 2) ^ 3");
             builder.Build((x, y, z) => x + y + z).AssertSimpleStringRepresentation("x + y + z");
@@ -126,8 +126,8 @@ namespace SharpAlg.Geo.Tests {
             builder.Build(x => (2 + x) / (3 + x)).AssertSimpleStringRepresentation("(2 + x) / (3 + x)");
             builder.Build(x => 2 * x / (3 + x)).AssertSimpleStringRepresentation("(2 * x) / (3 + x)");
             builder.Build((x, y, z) => 2 * x / (y * z)).AssertSimpleStringRepresentation("(2 * x) / (y * z)");
-            builder.Build((x, y) => (x ^ 3) / (y ^ 4)).AssertSimpleStringRepresentation("x ^ 3 / y ^ 4");
-            builder.Build(x => 1 / (x ^ 3)).AssertSimpleStringRepresentation("1 / x ^ 3");
+            builder.Build((x, y) => (x ^ 3) / (y ^ 4)).AssertSimpleStringRepresentation("(x ^ 3) / (y ^ 4)");
+            builder.Build(x => 1 / (x ^ 3)).AssertSimpleStringRepresentation("1 / (x ^ 3)");
             builder.Build(x => 2 * x / (3 + x)).AssertSimpleStringRepresentation("(2 * x) / (3 + x)");
             builder.Build((x, y, z) => x / y / z).AssertSimpleStringRepresentation("(x / y) / z");
             builder.Build(x => 1 / (3 * x)).AssertSimpleStringRepresentation("1 / (3 * x)");
