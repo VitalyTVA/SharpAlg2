@@ -57,10 +57,9 @@ namespace SharpAlg.Geo.Core {
                     .IsOrdered(new DelegateComparer<ParamPowerInfo>((x, y) => Comparer<string>.Default.Compare(x.Param, y.Param)));
         }
 
-        private static IEnumerable<ParamPowerInfo?> GetParamOrPowerArgs(IEnumerable<Expr> args) {
+        static IEnumerable<ParamPowerInfo?> GetParamOrPowerArgs(IEnumerable<Expr> args) {
             var noConstArgs = args.First().IsConst() ? args.Tail() : args;
-            var paramOrPowerArgs = noConstArgs.Select(x => x.ParamOrParamPowerAsPowerInfo());
-            return paramOrPowerArgs;
+            return noConstArgs.Select(x => x.ParamOrParamPowerAsPowerInfo());
         }
     }
 }
