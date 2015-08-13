@@ -40,7 +40,8 @@ namespace SharpAlg.Geo.Core {
                 return powerComparison;
             //if(!x.Any() || !y.Any())
             //return Comparer<int>.Default.Compare(y.Count(), x.Count());
-            return Comparer<string>.Default.Compare(x.First().Param, y.First().Param);
+            return x.Zip(y, (a, b) => Comparer<string>.Default.Compare(a.Param, b.Param)).FirstOrDefault(a => a != 0);
+            //return Comparer<string>.Default.Compare(x.First().Param, y.First().Param);
         }
 
         private static BigInteger GetTotalPower(IEnumerable<ParamPowerInfo> paramPowerInfo) {

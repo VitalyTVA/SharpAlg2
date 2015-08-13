@@ -71,8 +71,9 @@ namespace SharpAlg.Geo.Tests {
                 yield return MakeIsNormalTestCase(false, (x, y) => x + 5 + y);
                 yield return MakeIsNormalTestCase(false, (x, y) => y + x + 5);
                 yield return MakeIsNormalTestCase(false, (x, y) => (Expr)5 + 6);
-
                 yield return MakeIsNormalTestCase(false, (x, y) => y + x);
+                yield return MakeIsNormalTestCase(true, (x, y, z) => x * y + x * z);
+                yield return MakeIsNormalTestCase(false, (x, y, z) => x * z + x * y);
                 #endregion
 
                 #region div
