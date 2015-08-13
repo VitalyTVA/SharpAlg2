@@ -37,9 +37,9 @@ namespace SharpAlg.Geo.Tests {
                 yield return MakeIsNormalTestCase(true, x => x ^ 2);
                 yield return MakeIsNormalTestCase(false, x => (x + 1) ^ 2);
 
-                //yield return MakeIsNormalTestCase(false, (x, y) => x * y * x);
+                yield return MakeIsNormalTestCase(false, (x, y) => x * y * x);
                 //yield return MakeIsNormalTestCase(false, (x, y) => x * y * (x ^ 2));
-                //yield return MakeIsNormalTestCase(true, (x, y, z) => x * y * z);
+                yield return MakeIsNormalTestCase(true, (x, y, z) => x * y * z);
                 //yield return MakeIsNormalTestCase(true, (x, y, z) => 5 * x * y * z);
                 //yield return MakeIsNormalTestCase(false, (x, y, z) => x * 5 * y * z);
                 //yield return MakeIsNormalTestCase(false, (x, y) => 5 * 6 * y * z);
@@ -52,9 +52,9 @@ namespace SharpAlg.Geo.Tests {
         static TestCaseData MakeIsNormalTestCase(bool isNormal, Expression<Func<Expr, Expr, Expr>> expr) {
             return MakeIsNormalTestCaseCore(isNormal, b => b.Build(expr), expr);
         }
-        //static TestCaseData MakeIsNormalTestCase(bool isNormal, Expression<Func<Expr, Expr, Expr, Expr>> expr) {
-        //    return MakeIsNormalTestCaseCore(isNormal, b => b.Build(expr));
-        //}
+        static TestCaseData MakeIsNormalTestCase(bool isNormal, Expression<Func<Expr, Expr, Expr, Expr>> expr) {
+            return MakeIsNormalTestCaseCore(isNormal, b => b.Build(expr), expr);
+        }
         static TestCaseData MakeIsNormalTestCaseCore(bool isNormal, Func<Builder, Expr> getExpr, LambdaExpression expr) {
             return new TestCaseData(getExpr)
                 .Returns(isNormal)
