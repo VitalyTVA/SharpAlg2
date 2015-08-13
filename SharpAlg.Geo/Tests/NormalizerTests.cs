@@ -11,8 +11,8 @@ namespace SharpAlg.Geo.Tests {
     [TestFixture]
     public static class IsNormalTests {
         [Test, TestCaseSource("TestCases")]
-        public static bool IsNormal(Func<Builder, Expr> getExpr) {
-            return getExpr(Builder.CreateSimple()).IsNormal();
+        public static bool IsNormal(Expr expr) {
+            return expr.IsNormal();
         }
 
         public static IEnumerable TestCases {
@@ -43,23 +43,24 @@ namespace SharpAlg.Geo.Tests {
                 yield return MakeIsNormalTestCase(true, (x, y, z) => (x ^ 2) * y * z);
                 yield return MakeIsNormalTestCase(true, (x, y, z) => 5 * x * y * z);
                 yield return MakeIsNormalTestCase(false, (x, y, z) => x * 5 * y * z);
-                //yield return MakeIsNormalTestCase(false, (x, y) => 5 * 6 * x * y);
+                yield return MakeIsNormalTestCase(false, (x, y) => (Expr)5 * 6 * x * y);
                 yield return MakeIsNormalTestCase(true, (x, y, z) => x * (y ^ 2) * (z ^ 3));
             }
         }
         static TestCaseData MakeIsNormalTestCase(bool isNormal, Expression<Func<Expr, Expr>> expr) {
-            return MakeIsNormalTestCaseCore(isNormal, b => b.Build(expr), expr);
+            return MakeIsNormalTestCaseCore(isNormal, b => b.Build(expr));
         }
         static TestCaseData MakeIsNormalTestCase(bool isNormal, Expression<Func<Expr, Expr, Expr>> expr) {
-            return MakeIsNormalTestCaseCore(isNormal, b => b.Build(expr), expr);
+            return MakeIsNormalTestCaseCore(isNormal, b => b.Build(expr));
         }
         static TestCaseData MakeIsNormalTestCase(bool isNormal, Expression<Func<Expr, Expr, Expr, Expr>> expr) {
-            return MakeIsNormalTestCaseCore(isNormal, b => b.Build(expr), expr);
+            return MakeIsNormalTestCaseCore(isNormal, b => b.Build(expr));
         }
-        static TestCaseData MakeIsNormalTestCaseCore(bool isNormal, Func<Builder, Expr> getExpr, LambdaExpression expr) {
-            return new TestCaseData(getExpr)
+        static TestCaseData MakeIsNormalTestCaseCore(bool isNormal, Func<Builder, Expr> getExpr) {
+            var expr = getExpr(Builder.CreateSimple());
+            return new TestCaseData(expr)
                 .Returns(isNormal)
-                .SetName(expr.ToString());
+                .SetName(" Expression >>> " + expr.ToString() + " <<< is " + (isNormal ? "NORMAL" : "NOT NORMAL"));
         }
     }
 }
