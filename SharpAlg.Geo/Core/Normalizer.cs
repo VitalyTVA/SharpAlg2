@@ -31,14 +31,9 @@ namespace SharpAlg.Geo.Core {
                     .IsOrdered(new DelegateComparer<IEnumerable<ParamPowerInfo>>(CompareMult));
         }
         static int CompareMult(IEnumerable<ParamPowerInfo> x, IEnumerable<ParamPowerInfo> y) {
-            var xTotalPower = GetTotalPower(x);
-            var yTotalPower = GetTotalPower(y);
-            var powerComparison = Comparer<BigInteger>.Default.Compare(yTotalPower, xTotalPower);
+            var powerComparison = Comparer<BigInteger>.Default.Compare(GetTotalPower(y), GetTotalPower(x));
             if(powerComparison != 0)
                 return powerComparison;
-            var lengthComparison = Comparer<int>.Default.Compare(x.Count(), y.Count());
-            if(lengthComparison != 0)
-                return lengthComparison;
             return x.Zip(y, (a, b) => {
                 var paramComparison = Comparer<string>.Default.Compare(a.Param, b.Param);
                 if(paramComparison != 0)
