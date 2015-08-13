@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
 
 namespace SharpAlg.Geo.Core {
@@ -30,10 +31,20 @@ namespace SharpAlg.Geo.Core {
                     .IsOrdered(new DelegateComparer<IEnumerable<ParamPowerInfo>>(CompareMult));
         }
         static int CompareMult(IEnumerable<ParamPowerInfo> x, IEnumerable<ParamPowerInfo> y) {
-            if(!x.Any() || !y.Any())
-                return Comparer<int>.Default.Compare(y.Count(), x.Count());
+            var xTotalPower = GetTotalPower(x);
+            var yTotalPower = GetTotalPower(y);
+            var powerComparison = Comparer<BigInteger>.Default.Compare(yTotalPower, xTotalPower);
+            if(powerComparison != 0)
+                return powerComparison;
+            //if(!x.Any() || !y.Any())
+            //return Comparer<int>.Default.Compare(y.Count(), x.Count());
             return Comparer<string>.Default.Compare(x.First().Param, y.First().Param);
         }
+
+        private static BigInteger GetTotalPower(IEnumerable<ParamPowerInfo> paramPowerInfo) {
+            return paramPowerInfo.Aggregate<ParamPowerInfo, BigInteger>(0, (sum, a) => sum + a.Power);
+        }
+
         static bool IsNormalProduct(ExprList args) {
             var paramOrPowerArgs = GetParamOrPowerArgs(args);
             return paramOrPowerArgs.All(x => x != null) &&
