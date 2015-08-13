@@ -33,8 +33,6 @@ namespace SharpAlg.Geo.Core {
         static int CompareMult(IEnumerable<ParamPowerInfo> x, IEnumerable<ParamPowerInfo> y) {
             var xTotalPower = GetTotalPower(x);
             var yTotalPower = GetTotalPower(y);
-            if(xTotalPower == 0 && yTotalPower == 0)
-                return 0;
             var powerComparison = Comparer<BigInteger>.Default.Compare(yTotalPower, xTotalPower);
             if(powerComparison != 0)
                 return powerComparison;
