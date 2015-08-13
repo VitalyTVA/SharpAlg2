@@ -8,11 +8,15 @@ namespace SharpAlg.Geo.Core {
         public static bool IsNormal(this Expr expr) {
             return expr.MatchDefault(
                 x => { throw new NotImplementedException(); },
+                add: IsNormalSum,
                 mult: IsNormalProduct,
                 param: x => true,
                 @const: x => true,
                 power: (val, pow) => val.IsParam()
             );
+        }
+        static bool IsNormalSum(ExprList args) {
+            return args.All(x => IsNormalProduct(x.ToMult()));
         }
         static bool IsNormalProduct(ExprList args) {
             var noConstArgs = args[0].IsConst() ? args.Tail() : args;
