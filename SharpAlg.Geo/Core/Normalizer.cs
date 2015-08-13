@@ -42,7 +42,7 @@ namespace SharpAlg.Geo.Core {
             }).FirstOrDefault(a => a != 0);
         }
 
-        private static BigInteger GetTotalPower(IEnumerable<ParamPowerInfo> paramPowerInfo) {
+        static BigInteger GetTotalPower(IEnumerable<ParamPowerInfo> paramPowerInfo) {
             return paramPowerInfo.Aggregate<ParamPowerInfo, BigInteger>(0, (sum, a) => sum + a.Power);
         }
 
