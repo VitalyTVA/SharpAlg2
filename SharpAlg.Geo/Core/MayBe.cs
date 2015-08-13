@@ -84,6 +84,8 @@ namespace SharpAlg.Geo.Core {
             return x => dict.GetOrAdd(x, f);
         }
         public static bool IsOrdered<T>(this IEnumerable<T> source, IComparer<T> comparer) {
+            if(!source.Any())
+                return true;
             var current = source.First();
             foreach(var next in source.Tail()) {
                 if(comparer.Compare(current, next) >= 0)

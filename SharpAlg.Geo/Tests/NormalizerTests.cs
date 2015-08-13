@@ -12,7 +12,7 @@ namespace SharpAlg.Geo.Tests {
     public static class IsNormalTests {
         [Test, Explicit]
         public static void Explicit() {
-            Builder.CreateSimple().Build((x, y, z) => x + y + 5);
+            Builder.CreateSimple().Build((x, y, z) => x + y + 5).IsNormal();
         }
         [Test, TestCaseSource("TestCases")]
         public static bool IsNormal(Expr expr) {
