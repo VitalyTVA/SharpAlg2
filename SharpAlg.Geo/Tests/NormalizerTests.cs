@@ -60,7 +60,7 @@ namespace SharpAlg.Geo.Tests {
             var expr = getExpr(Builder.CreateSimple());
             return new TestCaseData(expr)
                 .Returns(isNormal)
-                .SetName(" Expression >>> " + expr.ToString() + " <<< is " + (isNormal ? "NORMAL" : "NOT NORMAL"));
+                .SetName(isNormal.ToString() + ": " + expr.ToString());
         }
     }
 }
