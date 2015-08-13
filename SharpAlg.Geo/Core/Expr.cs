@@ -135,6 +135,11 @@ namespace SharpAlg.Geo.Core {
 
         public static Expr ToSqrt(this Expr expr)
             => Builder.ToSqrt(expr);
+        public static Expr AsSqrt(this Expr expr)
+            => Builder.AsSqrt(expr);
+        public static bool IsSqrt(this Expr expr)
+            => expr.AsSqrt() != null;
+
         public static DivInfo ToDiv(this Expr expr)
             => Builder.ToDiv(expr);
 

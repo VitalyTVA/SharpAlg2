@@ -151,6 +151,10 @@ namespace SharpAlg.Geo.Core {
         internal static Expr ToSqrt(Expr expr)
             => ((SqrtExpr)expr).Value;
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
+        internal static Expr AsSqrt(Expr expr)
+            => (expr as SqrtExpr)?.Value;
+
+        [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static DivInfo ToDiv(Expr expr) {
             var divExpr = (DivExpr)expr;
             return new DivInfo(divExpr.Numerator, divExpr.Denominator);

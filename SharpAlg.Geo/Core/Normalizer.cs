@@ -1,4 +1,4 @@
-﻿using System;
+﻿//using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -47,15 +47,18 @@ namespace SharpAlg.Geo.Core {
         }
 
         static bool IsNormalProduct(ExprList args) {
-            var paramOrPowerArgs = GetParamOrPowerArgs(args);
+            if(args.Last().AsSqrt().Return(x => !x.IsNormalNoDiv(), () => false))
+                return false;
+            var noSqrtArgs = args.Last().IsSqrt() ? args.Take(args.Length - 1) : args;
+            var paramOrPowerArgs = GetParamOrPowerArgs(noSqrtArgs);
             return paramOrPowerArgs.All(x => x != null) &&
                 paramOrPowerArgs
                     .Select(x => x.Value)
                     .IsOrdered(new DelegateComparer<ParamPowerInfo>((x, y) => Comparer<string>.Default.Compare(x.Param, y.Param)));
         }
 
-        private static IEnumerable<ParamPowerInfo?> GetParamOrPowerArgs(ExprList args) {
-            var noConstArgs = args[0].IsConst() ? args.Tail() : args;
+        private static IEnumerable<ParamPowerInfo?> GetParamOrPowerArgs(IEnumerable<Expr> args) {
+            var noConstArgs = args.First().IsConst() ? args.Tail() : args;
             var paramOrPowerArgs = noConstArgs.Select(x => x.ParamOrParamPowerAsPowerInfo());
             return paramOrPowerArgs;
         }
