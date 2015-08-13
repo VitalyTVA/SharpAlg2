@@ -41,7 +41,12 @@ namespace SharpAlg.Geo.Core {
             var lengthComparison = Comparer<int>.Default.Compare(x.Count(), y.Count());
             if(lengthComparison != 0)
                 return lengthComparison;
-            return x.Zip(y, (a, b) => Comparer<string>.Default.Compare(a.Param, b.Param)).FirstOrDefault(a => a != 0);
+            return x.Zip(y, (a, b) => {
+                var paramComparison = Comparer<string>.Default.Compare(a.Param, b.Param);
+                if(paramComparison != 0)
+                    return paramComparison;
+                return Comparer<BigInteger>.Default.Compare(b.Power, a.Power);
+            }).FirstOrDefault(a => a != 0);
         }
 
         private static BigInteger GetTotalPower(IEnumerable<ParamPowerInfo> paramPowerInfo) {
