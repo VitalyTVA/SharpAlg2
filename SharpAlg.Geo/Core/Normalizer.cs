@@ -13,8 +13,8 @@ namespace SharpAlg.Geo.Core {
             );
         }
         static bool IsNormalNoDiv(this Expr expr) {
-            return expr.MatchDefault(
-                x => { throw new NotImplementedException(); },
+            return expr.MatchStrict(
+                sqrt: IsNormalNoDiv,
                 div: (n, d) => false,
                 add: IsNormalSum,
                 mult: IsNormalProduct,

@@ -3,7 +3,7 @@ using SharpAlg.Geo.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-//using static SharpAlg.Geo.Core.Utility;
+using static SharpAlg.Geo.Core.ExprExtensions;
 
 namespace SharpAlg.Geo.Tests {
     public static class MyFactoryClass {
@@ -97,6 +97,13 @@ namespace SharpAlg.Geo.Tests {
 
                 yield return MakeIsNormalTestCase(true, (x, y) => (5 * x) / y);
                 //yield return MakeIsNormalTestCase(false, (x, y) => x / (5 * y));
+                #endregion
+
+                #region sqrt
+                yield return MakeIsNormalTestCase(false, (x, y) => Sqrt(x + y) ^ 2);
+                yield return MakeIsNormalTestCase(true, (x, y) => Sqrt(x + y));
+                yield return MakeIsNormalTestCase(false, (x, y) => Sqrt(y + x));
+                yield return MakeIsNormalTestCase(false, (x, y, z) => Sqrt((x + y) / z));
                 #endregion
             }
         }
