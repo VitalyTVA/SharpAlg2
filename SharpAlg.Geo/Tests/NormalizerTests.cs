@@ -2,6 +2,7 @@
 using SharpAlg.Geo.Core;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 //using static SharpAlg.Geo.Core.Utility;
 
@@ -15,7 +16,7 @@ namespace SharpAlg.Geo.Tests {
             return expr.IsNormal();
         }
 
-        public static IEnumerable TestCases {
+        public static IEnumerable<TestCaseData> TestCases {
             get {
                 yield return MakeIsNormalTestCase(true, x => 1);
                 yield return MakeIsNormalTestCase(true, x => x);
