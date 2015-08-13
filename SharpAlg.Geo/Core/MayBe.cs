@@ -92,6 +92,9 @@ namespace SharpAlg.Geo.Core {
             }
             return true;
         }
+        //public static IEnumerable<T> Flatten<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> getItems) {
+        //    return source.SelectMany(item => item.Yield().Concat(getItems(item).Flatten(getItems)));
+        //}
     }
     //public class NoMatchException : ApplicationException { }
 
@@ -160,6 +163,15 @@ namespace SharpAlg.Geo.Core {
     //}
     public static class Utility {
         public static Func<T1, TR> Func<T1, TR>(Func<T1, TR> f) {
+            return f;
+        }
+        public static Func<T1, T2, TR> Func<T1, T2, TR>(Func<T1, T2, TR> f) {
+            return f;
+        }
+        public static Action<T1> Action<T1>(Action<T1> f) {
+            return f;
+        }
+        public static Action<T1, T2> Action<T1, T2>(Action<T1, T2> f) {
             return f;
         }
         public static Expression<Func<T1, TR>> Expr<T1, TR>(Expression<Func<T1, TR>> e) {

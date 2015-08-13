@@ -6,6 +6,7 @@ using SharpAlg.Geo.Core;
 using System.Linq.Expressions;
 using System.Linq;
 using static SharpAlg.Geo.Core.ExprExtensions;
+using static SharpAlg.Geo.Core.Utility;
 using System.Diagnostics;
 using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
 using System.Collections.Immutable;
@@ -100,15 +101,16 @@ namespace SharpAlg.Geo.Tests {
             builder.Build((x, y) => (x + 1) ^ (2 * 3)).AssertSimpleStringRepresentation("(x + 1) ^ 6");
 
             builder.Build(x => 9 - (-x)).AssertSimpleStringRepresentation("9 - (-x)");
-            builder.Build(x => 9 * (-x)).AssertSimpleStringRepresentation("9 * (-x)");
+            builder.Build(x => 9 * (-x)).AssertSimpleStringRepresentation("9 * (-1) * x");
+            builder.Build(x => 9 / (-x)).AssertSimpleStringRepresentation("9 / (-x)");
             builder.Build(x => x * (-1)).AssertSimpleStringRepresentation("x * (-1)");
 
             builder.Build(x => (-2) * x).AssertSimpleStringRepresentation("-2 * x");
             builder.Build(x => -2 * (x + 1)).AssertSimpleStringRepresentation("-2 * (x + 1)");
             builder.Build((x, y) => -x + y).AssertSimpleStringRepresentation("-x + y");
 
-            builder.Build((x, y) => y * (-x)).AssertSimpleStringRepresentation("y * (-x)");
-            builder.Build((x, y) => -y * x).AssertSimpleStringRepresentation("(-y) * x");
+            builder.Build((x, y) => y * (-x)).AssertSimpleStringRepresentation("y * (-1) * x");
+            builder.Build((x, y) => -y * x).AssertSimpleStringRepresentation("-y * x");
 
             builder.Build((x, y) =>Sqrt(x + y)).AssertSimpleStringRepresentation("sqrt(x + y)");
         }
@@ -323,27 +325,43 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreSame(addArgs.First(), addArgs.Last().ToPower().Value);
             //Assert.AreNotSame(e.Args.First(), builder.Build(x => x ^ 3));
         }
+        [Test]
+        public void MergeAddExpr() {
+            var assert = Action((string[] expected, Expr expr) 
+                => CollectionAssert.AreEqual(expected, expr.ToAdd().Select(x => x.ToParam())));
+            assert(new[] { "x", "y", "z" }, builder.Build((x, y, z) => x + y + z));
+            assert(new[] { "x", "y", "z" }, builder.Build((x, y, z) => (x + y) + z));
+            assert(new[] { "x", "y", "z", "w" }, builder.Build((x, y, z, w) => (x + (y + z)) + w));
+        }
+        [Test]
+        public void MergeMultExpr() {
+            var assert = Action((string[] expected, Expr expr)
+                => CollectionAssert.AreEqual(expected, expr.ToMult().Select(x => x.ToParam())));
+            assert(new[] { "x", "y", "z" }, builder.Build((x, y, z) => x * y * z));
+            assert(new[] { "x", "y", "z" }, builder.Build((x, y, z) => (x * y) * z));
+            assert(new[] { "x", "y", "z", "w" }, builder.Build((x, y, z, w) => (x * (y * z)) * w));
+        }
     }
     public static class ExprTestExtensions {
-        [DebuggerStepThrough]
-        public static void AssertIsNormal(this Builder builder, bool isNormal, Expression<Func<Expr, Expr>> f) {
-            AssertIsNormal(isNormal, builder.Build(f));
-        }
-        [DebuggerStepThrough]
-        public static void AssertIsNormal(this Builder builder, bool isNormal, Expression<Func<Expr, Expr, Expr>> f) {
-            AssertIsNormal(isNormal, builder.Build(f));
-        }
-        [DebuggerStepThrough]
-        public static void AssertIsNormal(this Builder builder, bool isNormal, Expression<Func<Expr, Expr, Expr, Expr>> f) {
-            AssertIsNormal(isNormal, builder.Build(f));
-        }
+        //[DebuggerStepThrough]
+        //public static void AssertIsNormal(this Builder builder, bool isNormal, Expression<Func<Expr, Expr>> f) {
+        //    AssertIsNormal(isNormal, builder.Build(f));
+        //}
+        //[DebuggerStepThrough]
+        //public static void AssertIsNormal(this Builder builder, bool isNormal, Expression<Func<Expr, Expr, Expr>> f) {
+        //    AssertIsNormal(isNormal, builder.Build(f));
+        //}
+        //[DebuggerStepThrough]
+        //public static void AssertIsNormal(this Builder builder, bool isNormal, Expression<Func<Expr, Expr, Expr, Expr>> f) {
+        //    AssertIsNormal(isNormal, builder.Build(f));
+        //}
         //public static void AssertIsNormal(this Builder builder, bool isNormal, Expression<Func<Expr, Expr, Expr, Expr, Expr>> f) {
         //    AssertIsNormal(isNormal, builder.Build(f));
         //}
-        [DebuggerStepThrough]
-        static void AssertIsNormal(bool isNormal, Expr expr) {
-            Assert.AreEqual(isNormal, expr.IsNormal());
-        }
+        //[DebuggerStepThrough]
+        //static void AssertIsNormal(bool isNormal, Expr expr) {
+        //    Assert.AreEqual(isNormal, expr.IsNormal());
+        //}
         public static Expr Build(this Builder builder, Expression<Func<Expr, Expr>> f) {
             return builder.Build(f, GetParameters(f).Single());
         }
@@ -354,6 +372,10 @@ namespace SharpAlg.Geo.Tests {
         public static Expr Build(this Builder builder, Expression<Func<Expr, Expr, Expr, Expr>> f) {
             var parameters = GetParameters(f);
             return builder.Build(f, parameters[0], parameters[1], parameters[2]);
+        }
+        public static Expr Build(this Builder builder, Expression<Func<Expr, Expr, Expr, Expr, Expr>> f) {
+            var parameters = GetParameters(f);
+            return builder.Build(f, parameters[0], parameters[1], parameters[2], parameters[3]);
         }
         static ExprList GetParameters(LambdaExpression expression) {
             return expression.Parameters.Select(x => Param(x.Name)).ToImmutableArray();

@@ -120,6 +120,10 @@ namespace SharpAlg.Geo.Core {
 
         public static ExprList ToAdd(this Expr expr) 
             => Builder.ToAdd(expr);
+        public static ExprList? AsAdd(this Expr expr)
+            => Builder.AsAdd(expr);
+        public static bool IsAdd(this Expr expr)
+            => expr.AsAdd() != null;
 
         public static ExprList ToMult(this Expr expr)
             => Builder.ToMult(expr);

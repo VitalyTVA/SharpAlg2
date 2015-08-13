@@ -135,6 +135,9 @@ namespace SharpAlg.Geo.Core {
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static ExprList ToAdd(Expr expr)
             => ((AddExpr)expr).Args;
+        [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
+        internal static ExprList? AsAdd(Expr expr)
+            => (expr as AddExpr)?.Args;
 
         [DebuggerStepThrough, EditorBrowsable(EditorBrowsableState.Never)]
         internal static ExprList ToMult(Expr expr)
@@ -226,11 +229,16 @@ namespace SharpAlg.Geo.Core {
         }
 
         public Expr Add(params Expr[] args) {
-            return add(new AddExpr(this, ImmutableArray.Create(args)));
+            return add(new AddExpr(this, MergeArgs(args, x => x.AsAdd())));
         }
-
         public Expr Multiply(params Expr[] args) {
-            return mult(new MultExpr(this, ImmutableArray.Create(args)));
+            return mult(new MultExpr(this, MergeArgs(args, x => x.AsMult())));
+        }
+        ExprList MergeArgs(Expr[] args, Func<Expr, ExprList?> getArgs) {
+            Check(args);
+            return args
+                .SelectMany(x => getArgs(x) ?? x.Yield())
+                .ToImmutableArray();
         }
         public Expr Divide(Expr a, Expr b) {
             return div(new DivExpr(this, a, b));
