@@ -6,7 +6,7 @@ using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.E
 using CoreBuilder = SharpAlg.Geo.Core.Builder.CoreBuilder;
 
 namespace SharpAlg.Geo.Core {
-    class Transformer {
+    public class Transformer {
         public static readonly Transformer Default = new Transformer(
             add: (b, args) => b.Add(MergeArgs(args, x => x.AsAdd())),
             mult: (b, args) => b.Multiply(MergeArgs(args, x => x.AsMult())),
@@ -14,6 +14,7 @@ namespace SharpAlg.Geo.Core {
             div: (b, n, d) => b.Divide(n, d),
             sqrt: (b, e) => b.Sqrt(e)
         );
+        public static readonly Transformer SingleDiv = Default;
         static ExprList MergeArgs(Expr[] args, Func<Expr, ExprList?> getArgs) {
             return args
                 .SelectMany(x => getArgs(x) ?? x.Yield())

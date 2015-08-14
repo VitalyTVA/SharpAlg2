@@ -242,13 +242,13 @@ namespace SharpAlg.Geo.Core {
 
         public static readonly Builder Simple = new Builder(CoreBuilder.CreateSimple, Transformer.Default);
         public static Builder CreateSimple() {
-            return CreateCaching(x => 0);
+            return CreateCaching(x => 0, null);
         }
-        public static Builder CreateRealLife() {
-            return CreateCaching(x => x.GetHashCode());
+        public static Builder CreateRealLife(Transformer transformer = null) {
+            return CreateCaching(x => x.GetHashCode(), transformer);
         }
-        static Builder CreateCaching(Func<Expr, int> getHashCode) {
-            return new Builder(CoreBuilder.CachingFactory(getHashCode), Transformer.Default);
+        static Builder CreateCaching(Func<Expr, int> getHashCode, Transformer tranfomer) {
+            return new Builder(CoreBuilder.CachingFactory(getHashCode), tranfomer ?? Transformer.Default);
         }
 
         readonly CoreBuilder builder;

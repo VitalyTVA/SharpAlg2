@@ -86,6 +86,7 @@
     <Compile Include="Tests\IntersectionsTests.cs" />
     <Compile Include="Tests\NormalizerTests.cs" />
     <Compile Include="Tests\ProblemsTests.cs" />
+    <Compile Include="Tests\TransformerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

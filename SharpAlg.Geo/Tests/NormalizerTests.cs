@@ -6,8 +6,6 @@ using System.Linq.Expressions;
 using static SharpAlg.Geo.Core.ExprExtensions;
 
 namespace SharpAlg.Geo.Tests {
-    public static class MyFactoryClass {
-    }
     [TestFixture]
     public static class IsNormalTests {
         [Test, Explicit]
