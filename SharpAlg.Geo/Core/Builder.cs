@@ -203,10 +203,14 @@ namespace SharpAlg.Geo.Core {
                     mult: Memoize<MultExpr>((x, y) => Enumerable.SequenceEqual(x.Args, y.Args), getHashCode),
                     sqrt: Memoize<SqrtExpr>((x, y) => Equals(x.Value, y.Value), getHashCode),
                     power: Memoize<PowerExpr>((x, y) => Equals(x.Value, y.Value) && Equals(x.Power, y.Power), getHashCode),
-                    div: Memoize<DivExpr>((x, y) => Equals(x.Numerator, y.Numerator) && Equals(x.Denominator, y.Denominator), getHashCode));
+                    div: Memoize<DivExpr>((x, y) => Equals(x.Numerator, y.Numerator) && Equals(x.Denominator, y.Denominator), getHashCode),
+                    check: (builder, args) => {
+                        if(args.OfType<ComplexExpr>().Any(x => x.Builder != builder))
+                            throw new CannotMixExpressionsFromDifferentBuildersException();
+                    });
             }
             public static CoreBuilder CreateSimple(Builder builder)
-                => new CoreBuilder(builder, x => x, x => x, x => x, x => x, x => x);
+                => new CoreBuilder(builder, x => x, x => x, x => x, x => x, x => x, (b, args) => { });
 
             readonly Builder owner;
             readonly Func<AddExpr, AddExpr> add;
@@ -214,13 +218,15 @@ namespace SharpAlg.Geo.Core {
             readonly Func<SqrtExpr, SqrtExpr> sqrt;
             readonly Func<PowerExpr, PowerExpr> power;
             readonly Func<DivExpr, DivExpr> div;
-            CoreBuilder(Builder owner, Func<AddExpr, AddExpr> add, Func<MultExpr, MultExpr> mult, Func<SqrtExpr, SqrtExpr> sqrt, Func<PowerExpr, PowerExpr> power, Func<DivExpr, DivExpr> div) {
+            public readonly Action<Builder, IEnumerable<Expr>> Check;
+            CoreBuilder(Builder owner, Func<AddExpr, AddExpr> add, Func<MultExpr, MultExpr> mult, Func<SqrtExpr, SqrtExpr> sqrt, Func<PowerExpr, PowerExpr> power, Func<DivExpr, DivExpr> div, Action<Builder, IEnumerable<Expr>> check) {
                 this.owner = owner;
                 this.add = add;
                 this.mult = mult;
                 this.sqrt = sqrt;
                 this.power = power;
                 this.div = div;
+                Check = check;
             }
             public Expr Add(ExprList args)
                 => add(new AddExpr(owner, args));
@@ -235,7 +241,7 @@ namespace SharpAlg.Geo.Core {
         }
         #endregion
 
-        public static readonly Builder Simple = new Builder(CoreBuilder.CreateSimple, (builder, args) => { });
+        public static readonly Builder Simple = new Builder(CoreBuilder.CreateSimple);
         public static Builder CreateSimple() {
             return CreateCaching(x => 0);
         }
@@ -244,20 +250,14 @@ namespace SharpAlg.Geo.Core {
         }
         static Builder CreateCaching(Func<Expr, int> getHashCode) {
             return new Builder(
-                CoreBuilder.CachingFactory(getHashCode),
-                check: (builder, args) => {
-                    if(args.OfType<ComplexExpr>().Any(x => x.Builder != builder))
-                        throw new CannotMixExpressionsFromDifferentBuildersException();
-                }
+                CoreBuilder.CachingFactory(getHashCode)
             );
         }
 
-        readonly Action<Builder, IEnumerable<Expr>> check;
         readonly CoreBuilder builder;
 
-        Builder(Func<Builder, CoreBuilder> createBuilder, Action<Builder, IEnumerable<Expr>> check) {
+        Builder(Func<Builder, CoreBuilder> createBuilder) {
             builder = createBuilder(this);
-            this.check = check;
         }
 
         public Expr Add(params Expr[] args) {
@@ -281,7 +281,7 @@ namespace SharpAlg.Geo.Core {
             return builder.Sqrt(value);
         }
         public void Check(IEnumerable<Expr> args) {
-            check(this, args);
+            builder.Check(this, args);
         }
     }
 }
