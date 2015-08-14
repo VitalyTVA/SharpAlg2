@@ -14,7 +14,21 @@ namespace SharpAlg.Geo.Core {
             div: (b, n, d) => b.Divide(n, d),
             sqrt: (b, e) => b.Sqrt(e)
         );
-        public static readonly Transformer SingleDiv = Default;
+        public static readonly Transformer SingleDiv = new Transformer(
+            add: (b, args) => b.Add(MergeArgs(args, x => x.AsAdd())),
+            mult: (b, args) => b.Multiply(MergeArgs(args, x => x.AsMult())),
+            power: (b, val, pow) => b.Power(val, pow),
+            div: SingleDiv_Div,
+            sqrt: (b, e) => b.Sqrt(e)
+        );
+
+        private static Expr SingleDiv_Div(CoreBuilder b, Expr num, Expr den) {
+            return den.MatchDefault(
+                x => b.Divide(num, x), 
+                div: (n, d) => b.Divide(b.Multiply(ImmutableArray.Create(num, d)), n)
+            );
+        }
+
         static ExprList MergeArgs(Expr[] args, Func<Expr, ExprList?> getArgs) {
             return args
                 .SelectMany(x => getArgs(x) ?? x.Yield())

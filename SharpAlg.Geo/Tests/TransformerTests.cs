@@ -8,5 +8,12 @@ namespace SharpAlg.Geo.Tests {
         protected override Builder CreateBuilder() {
             return Builder.CreateRealLife(Transformer.SingleDiv);
         }
+        [Test]
+        public void SingleDiv() {
+            Assert.AreEqual(3, builder.Build((x, y, z) => x + y + z).ToAdd().Length);
+            Assert.AreEqual(3, builder.Build((x, y, z) => x * y * z).ToMult().Length);
+            builder.Build((x, y, z) => x / y).AssertSimpleStringRepresentation("x / y");
+            builder.Build((x, y, z) => x / (y / z)).AssertSimpleStringRepresentation("(x * z) / y");
+        }
     }
 }
