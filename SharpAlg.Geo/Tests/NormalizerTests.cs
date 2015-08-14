@@ -124,8 +124,13 @@ namespace SharpAlg.Geo.Tests {
 
                 yield return MakeIsNormalTestCase(true, (x, y) => x * Sqrt(x + y) + x);
                 yield return MakeIsNormalTestCase(false, (x, y) => x  + x * Sqrt(x + y));
+                yield return MakeIsNormalTestCase(true, (x, y) => x  + Sqrt(x + y));
+                yield return MakeIsNormalTestCase(false, (x, y) => Sqrt(x + y) + x);
 
-                //yield return MakeIsNormalTestCase(true, (x, y) => Sqrt(x + y) + Sqrt(x + z));
+                //yield return MakeIsNormalTestCase(true, (x, y, z) => Sqrt(x + y) + Sqrt(x + z));
+                //yield return MakeIsNormalTestCase(false, (x, y, z) => Sqrt(x + y) + Sqrt(x + z));
+                //yield return MakeIsNormalTestCase(true, (x, y, z) => Sqrt(y) + Sqrt(z));
+                //yield return MakeIsNormalTestCase(false, (x, y, z) => Sqrt(y) + Sqrt(z));
                 #endregion
             }
         }

@@ -51,6 +51,8 @@ namespace SharpAlg.Geo.Core {
                 return Comparer<int>.Default.Compare(yList.Sqrt.ExprOrAddToAdd().Length, xList.Sqrt.ExprOrAddToAdd().Length);
             //return 0;
         }
+        //static int CompareAdd(IEnumerable<ParamPowerInfoListWithSqrt> xList, IEnumerable<ParamPowerInfoListWithSqrt> yList) {
+        //}
 
         static BigInteger GetTotalPower(IEnumerable<ParamPowerInfo> paramPowerInfo) {
             return paramPowerInfo.Aggregate<ParamPowerInfo, BigInteger>(0, (sum, a) => sum + a.Power);
