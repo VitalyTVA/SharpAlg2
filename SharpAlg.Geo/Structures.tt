@@ -6,6 +6,7 @@
 <#@ output extension=".cs" #>
 
 using System.Numerics;
+using System.Collections.Generic;
 
 <#GenStructure("SharpAlg.Geo.Core", "DivInfo", 
     new Field("Num", "Expr"), new Field("Den", "Expr"));#>
@@ -13,6 +14,8 @@ using System.Numerics;
     new Field("Value", "Expr"), new Field("Power", "BigInteger"));#>
 <#GenStructure("SharpAlg.Geo.Core", "ParamPowerInfo", 
     new Field("Param", "string"), new Field("Power", "BigInteger"));#>
+<#GenStructure("SharpAlg.Geo.Core", "ParamPowerInfoListWithSqrt", 
+    new Field("ParamPowerInfoList", "IEnumerable<ParamPowerInfo?>"), new Field("Sqrt", "Expr"));#>
 
 <#+
 class Field {

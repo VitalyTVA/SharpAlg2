@@ -27,10 +27,12 @@ namespace SharpAlg.Geo.Core {
             var multArgs = args.Select(x => x.ExprOrMultToMult());
             return 
                 multArgs.All(x => IsNormalProduct(x)) &&
-                multArgs.Select(x => GetParamOrPowerArgs(x).Select(y => y.Value))
-                    .IsOrdered(new DelegateComparer<IEnumerable<ParamPowerInfo>>(CompareMult));
+                multArgs.Select(x => GetParamOrPowerArgsWithSqrt(x))
+                    .IsOrdered(new DelegateComparer<ParamPowerInfoListWithSqrt>(CompareMult));
         }
-        static int CompareMult(IEnumerable<ParamPowerInfo> x, IEnumerable<ParamPowerInfo> y) {
+        static int CompareMult(ParamPowerInfoListWithSqrt xList, ParamPowerInfoListWithSqrt yList) {
+            var x = xList.ParamPowerInfoList.Select(a => a.Value);
+            var y = yList.ParamPowerInfoList.Select(a => a.Value);
             var powerComparison = Comparer<BigInteger>.Default.Compare(GetTotalPower(y), GetTotalPower(x));
             if(powerComparison != 0)
                 return powerComparison;
@@ -47,14 +49,17 @@ namespace SharpAlg.Geo.Core {
         }
 
         static bool IsNormalProduct(ExprList args) {
-            if(args.Last().AsSqrt().Return(x => !x.IsNormalNoDiv(), () => false))
+            var paramPowerInfoListWithSqrt = GetParamOrPowerArgsWithSqrt(args);
+            if(paramPowerInfoListWithSqrt.Sqrt.Return(x => !x.IsNormalNoDiv(), () => false))
                 return false;
-            var noSqrtArgs = args.Last().IsSqrt() ? args.Take(args.Length - 1) : args;
-            var paramOrPowerArgs = GetParamOrPowerArgs(noSqrtArgs);
-            return paramOrPowerArgs.All(x => x != null) &&
-                paramOrPowerArgs
+            return paramPowerInfoListWithSqrt.ParamPowerInfoList.All(x => x != null) &&
+                paramPowerInfoListWithSqrt.ParamPowerInfoList
                     .Select(x => x.Value)
                     .IsOrdered(new DelegateComparer<ParamPowerInfo>((x, y) => Comparer<string>.Default.Compare(x.Param, y.Param)));
+        }
+        static ParamPowerInfoListWithSqrt GetParamOrPowerArgsWithSqrt(ExprList args) {
+            var noSqrtArgs = args.Last().IsSqrt() ? args.Take(args.Length - 1) : args;
+            return new ParamPowerInfoListWithSqrt(GetParamOrPowerArgs(noSqrtArgs), args.Last().AsSqrt());
         }
 
         static IEnumerable<ParamPowerInfo?> GetParamOrPowerArgs(IEnumerable<Expr> args) {

@@ -1,5 +1,6 @@
 ﻿
 using System.Numerics;
+using System.Collections.Generic;
 
 namespace SharpAlg.Geo.Core {
     public struct DivInfo {
@@ -99,6 +100,40 @@ namespace SharpAlg.Geo.Core {
             return 
                 Param.GetHashCode() ^
                 Power.GetHashCode();
+
+        }
+    }
+}
+namespace SharpAlg.Geo.Core {
+    public struct ParamPowerInfoListWithSqrt {
+        public static bool operator !=(ParamPowerInfoListWithSqrt left, ParamPowerInfoListWithSqrt right) {
+            return !(left == right);
+        }
+
+        public static bool operator ==(ParamPowerInfoListWithSqrt left, ParamPowerInfoListWithSqrt right) {
+            return 
+                left.ParamPowerInfoList == right.ParamPowerInfoList &&
+                left.Sqrt == right.Sqrt;
+        }
+
+        public readonly IEnumerable<ParamPowerInfo?> ParamPowerInfoList;
+        public readonly Expr Sqrt;
+
+        public ParamPowerInfoListWithSqrt(IEnumerable<ParamPowerInfo?> _ParamPowerInfoList, Expr _Sqrt) {
+            ParamPowerInfoList = _ParamPowerInfoList;
+            Sqrt = _Sqrt;
+        }
+
+        public override bool Equals(object obj) {
+            if (!(obj is ParamPowerInfoListWithSqrt))
+                return false;
+            return this == (ParamPowerInfoListWithSqrt)obj;
+        }
+
+        public override int GetHashCode() {
+            return 
+                ParamPowerInfoList.GetHashCode() ^
+                Sqrt.GetHashCode();
 
         }
     }
