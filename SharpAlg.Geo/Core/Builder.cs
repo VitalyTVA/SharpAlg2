@@ -244,7 +244,10 @@ namespace SharpAlg.Geo.Core {
         class Transformer {
             public static readonly Transformer Default = new Transformer(
                 add: (b, args) => b.Add(MergeArgs(args, x => x.AsAdd())),
-                mult: (b, args) => b.Multiply(MergeArgs(args, x => x.AsMult()))
+                mult: (b, args) => b.Multiply(MergeArgs(args, x => x.AsMult())),
+                power: (b, val, pow) => b.Power(val, pow),
+                div: (b, n, d) => b.Divide(n, d),
+                sqrt: (b, e) => b.Sqrt(e)
             );
             static ExprList MergeArgs(Expr[] args, Func<Expr, ExprList?> getArgs) {
                 return args
@@ -253,10 +256,22 @@ namespace SharpAlg.Geo.Core {
             }
             public readonly Func<CoreBuilder, Expr[], Expr> Add;
             public readonly Func<CoreBuilder, Expr[], Expr> Mult;
+            public readonly Func<CoreBuilder, Expr, Expr, Expr> Div;
+            public readonly Func<CoreBuilder, Expr, Expr> Sqrt;
+            public readonly Func<CoreBuilder, Expr, BigInteger, Expr> Power;
 
-            public Transformer(Func<CoreBuilder, Expr[], Expr> add, Func<CoreBuilder, Expr[], Expr> mult) {
+            public Transformer(
+                Func<CoreBuilder, Expr[], Expr> add, 
+                Func<CoreBuilder, Expr[], Expr> mult,
+                Func<CoreBuilder, Expr, Expr, Expr> div,
+                Func<CoreBuilder, Expr, Expr> sqrt,
+                Func<CoreBuilder, Expr, BigInteger, Expr> power) 
+            {
                 Add = add;
                 Mult = mult;
+                Power = power;
+                Div = div;
+                Sqrt = sqrt;
             }
         }
 
@@ -286,13 +301,13 @@ namespace SharpAlg.Geo.Core {
             return transformer.Mult(builder, args);
         }
         public Expr Divide(Expr a, Expr b) {
-            return builder.Divide(a, b);
+            return transformer.Div(builder, a, b);
         }
         public Expr Power(Expr value, BigInteger pow) {
-            return builder.Power(value, pow);
+            return transformer.Power(builder, value , pow);
         }
         public Expr Sqrt(Expr value) {
-            return builder.Sqrt(value);
+            return transformer.Sqrt(builder, value);
         }
         public void Check(IEnumerable<Expr> args) {
             builder.Check(this, args);
