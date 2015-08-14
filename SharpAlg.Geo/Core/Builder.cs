@@ -1,7 +1,6 @@
 ﻿using Numerics;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -240,40 +239,6 @@ namespace SharpAlg.Geo.Core {
                 => sqrt(new SqrtExpr(owner, value));
         }
         #endregion
-
-        class Transformer {
-            public static readonly Transformer Default = new Transformer(
-                add: (b, args) => b.Add(MergeArgs(args, x => x.AsAdd())),
-                mult: (b, args) => b.Multiply(MergeArgs(args, x => x.AsMult())),
-                power: (b, val, pow) => b.Power(val, pow),
-                div: (b, n, d) => b.Divide(n, d),
-                sqrt: (b, e) => b.Sqrt(e)
-            );
-            static ExprList MergeArgs(Expr[] args, Func<Expr, ExprList?> getArgs) {
-                return args
-                    .SelectMany(x => getArgs(x) ?? x.Yield())
-                    .ToImmutableArray();
-            }
-            public readonly Func<CoreBuilder, Expr[], Expr> Add;
-            public readonly Func<CoreBuilder, Expr[], Expr> Mult;
-            public readonly Func<CoreBuilder, Expr, Expr, Expr> Div;
-            public readonly Func<CoreBuilder, Expr, Expr> Sqrt;
-            public readonly Func<CoreBuilder, Expr, BigInteger, Expr> Power;
-
-            public Transformer(
-                Func<CoreBuilder, Expr[], Expr> add, 
-                Func<CoreBuilder, Expr[], Expr> mult,
-                Func<CoreBuilder, Expr, Expr, Expr> div,
-                Func<CoreBuilder, Expr, Expr> sqrt,
-                Func<CoreBuilder, Expr, BigInteger, Expr> power) 
-            {
-                Add = add;
-                Mult = mult;
-                Power = power;
-                Div = div;
-                Sqrt = sqrt;
-            }
-        }
 
         public static readonly Builder Simple = new Builder(CoreBuilder.CreateSimple, Transformer.Default);
         public static Builder CreateSimple() {
