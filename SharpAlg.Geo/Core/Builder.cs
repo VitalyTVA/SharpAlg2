@@ -192,7 +192,50 @@ namespace SharpAlg.Geo.Core {
             => (expr as ConstExpr)?.Value;
         #endregion
 
-        public static readonly Builder Simple = new Builder(b => new CoreBuilder(b, x => x, x => x, x => x, x => x, x => x), (builder, args) => { });
+        #region CoreBuilder
+        class CoreBuilder {
+            static Func<T, T> Memoize<T>(Func<T, T, bool> equals, Func<T, int> getHashCode) {
+                return Func((T x) => x).Memoize(new DelegateEqualityComparer<T>(equals, x => x.GetHashCode()));
+            }
+            public static Func<Builder, CoreBuilder> CachingFactory(Func<Expr, int> getHashCode) {
+                return b => new CoreBuilder(b,
+                    add: Memoize<AddExpr>((x, y) => Enumerable.SequenceEqual(x.Args, y.Args), getHashCode),
+                    mult: Memoize<MultExpr>((x, y) => Enumerable.SequenceEqual(x.Args, y.Args), getHashCode),
+                    sqrt: Memoize<SqrtExpr>((x, y) => Equals(x.Value, y.Value), getHashCode),
+                    power: Memoize<PowerExpr>((x, y) => Equals(x.Value, y.Value) && Equals(x.Power, y.Power), getHashCode),
+                    div: Memoize<DivExpr>((x, y) => Equals(x.Numerator, y.Numerator) && Equals(x.Denominator, y.Denominator), getHashCode));
+            }
+            public static CoreBuilder CreateSimple(Builder builder)
+                => new CoreBuilder(builder, x => x, x => x, x => x, x => x, x => x);
+
+            readonly Builder owner;
+            readonly Func<AddExpr, AddExpr> add;
+            readonly Func<MultExpr, MultExpr> mult;
+            readonly Func<SqrtExpr, SqrtExpr> sqrt;
+            readonly Func<PowerExpr, PowerExpr> power;
+            readonly Func<DivExpr, DivExpr> div;
+            CoreBuilder(Builder owner, Func<AddExpr, AddExpr> add, Func<MultExpr, MultExpr> mult, Func<SqrtExpr, SqrtExpr> sqrt, Func<PowerExpr, PowerExpr> power, Func<DivExpr, DivExpr> div) {
+                this.owner = owner;
+                this.add = add;
+                this.mult = mult;
+                this.sqrt = sqrt;
+                this.power = power;
+                this.div = div;
+            }
+            public Expr Add(ExprList args)
+                => add(new AddExpr(owner, args));
+            public Expr Multiply(ExprList args)
+                => mult(new MultExpr(owner, args));
+            public Expr Divide(Expr a, Expr b)
+                => div(new DivExpr(owner, a, b));
+            public Expr Power(Expr value, BigInteger pow)
+                => power(new PowerExpr(owner, value, pow));
+            public Expr Sqrt(Expr value)
+                => sqrt(new SqrtExpr(owner, value));
+        }
+        #endregion
+
+        public static readonly Builder Simple = new Builder(CoreBuilder.CreateSimple, (builder, args) => { });
         public static Builder CreateSimple() {
             return CreateCaching(x => 0);
         }
@@ -201,52 +244,12 @@ namespace SharpAlg.Geo.Core {
         }
         static Builder CreateCaching(Func<Expr, int> getHashCode) {
             return new Builder(
-                b => new CoreBuilder(b,
-                    add: Memoize<AddExpr>((x, y) => Enumerable.SequenceEqual(x.Args, y.Args), getHashCode),
-                    mult: Memoize<MultExpr>((x, y) => Enumerable.SequenceEqual(x.Args, y.Args), getHashCode),
-                    sqrt: Memoize<SqrtExpr>((x, y) => Equals(x.Value, y.Value), getHashCode),
-                    power: Memoize<PowerExpr>((x, y) => Equals(x.Value, y.Value) && Equals(x.Power, y.Power), getHashCode),
-                    div: Memoize<DivExpr>((x, y) => Equals(x.Numerator, y.Numerator) && Equals(x.Denominator, y.Denominator), getHashCode)),
+                CoreBuilder.CachingFactory(getHashCode),
                 check: (builder, args) => {
                     if(args.OfType<ComplexExpr>().Any(x => x.Builder != builder))
                         throw new CannotMixExpressionsFromDifferentBuildersException();
                 }
             );
-        }
-        static Func<T, T> Memoize<T>(Func<T, T, bool> equals, Func<T, int> getHashCode) {
-            return Func((T x) => x).Memoize(new DelegateEqualityComparer<T>(equals, x => x.GetHashCode()));
-        }
-
-        class CoreBuilder {
-            readonly Builder owner;
-            readonly Func<AddExpr, AddExpr> add;
-            readonly Func<MultExpr, MultExpr> mult;
-            readonly Func<SqrtExpr, SqrtExpr> sqrt;
-            readonly Func<PowerExpr, PowerExpr> power;
-            readonly Func<DivExpr, DivExpr> div;
-            public CoreBuilder(Builder owner, Func<AddExpr, AddExpr> add, Func<MultExpr, MultExpr> mult, Func<SqrtExpr, SqrtExpr> sqrt, Func<PowerExpr, PowerExpr> power, Func<DivExpr, DivExpr> div) {
-                this.owner = owner;
-                this.add = add;
-                this.mult = mult;
-                this.sqrt = sqrt;
-                this.power = power;
-                this.div = div;
-            }
-            public Expr Add(ExprList args) {
-                return add(new AddExpr(owner, args));
-            }
-            public Expr Multiply(ExprList args) {
-                return mult(new MultExpr(owner, args));
-            }
-            public Expr Divide(Expr a, Expr b) {
-                return div(new DivExpr(owner, a, b));
-            }
-            public Expr Power(Expr value, BigInteger pow) {
-                return power(new PowerExpr(owner, value, pow));
-            }
-            public Expr Sqrt(Expr value) {
-                return sqrt(new SqrtExpr(owner, value));
-            }
         }
 
         readonly Action<Builder, IEnumerable<Expr>> check;
