@@ -265,7 +265,7 @@ namespace SharpAlg.Geo.Tests {
 
         [Test]
         public void CannotMixExprsFromDifferentBuilders() {
-            var expr = Builder.Simple.Add(Param("a"), Param("b"));
+            var expr = Builder.Simple.Add(Builder.Simple.Power(Param("a"), 2), Param("b"));
             Action<TestDelegate> assertThrows = x => Assert.Throws<CannotMixExpressionsFromDifferentBuildersException>(x);
             assertThrows(() => builder.Add(1, expr));
             assertThrows(() => builder.Multiply(1, expr));
