@@ -12,7 +12,7 @@ namespace SharpAlg.Geo.Tests {
     public static class IsNormalTests {
         [Test, Explicit]
         public static void Explicit() {
-            Assert.IsTrue(Builder.CreateSimple().Build((x, y, z) => Sqrt(x + y + z) + Sqrt(x + y)).IsNormal());
+            Assert.IsTrue(Builder.CreateSimple().Build((x, y, z) => Sqrt(x + y) + Sqrt(x + z)).IsNormal());
         }
         [Test, TestCaseSource("TestCases")]
         public static bool IsNormal(Expr expr) {
@@ -127,8 +127,9 @@ namespace SharpAlg.Geo.Tests {
                 yield return MakeIsNormalTestCase(true, (x, y) => x  + Sqrt(x + y));
                 yield return MakeIsNormalTestCase(false, (x, y) => Sqrt(x + y) + x);
 
-                //yield return MakeIsNormalTestCase(true, (x, y, z) => Sqrt(x + y) + Sqrt(x + z));
-                //yield return MakeIsNormalTestCase(false, (x, y, z) => Sqrt(x + y) + Sqrt(x + z));
+                yield return MakeIsNormalTestCase(true, (x, y, z) => Sqrt(x + y) + Sqrt(x + z));
+                yield return MakeIsNormalTestCase(false, (x, y, z) => Sqrt(x + z) + Sqrt(x + y));
+                yield return MakeIsNormalTestCase(false, (x, y, z) => Sqrt(x + y) + Sqrt(x + y));
                 //yield return MakeIsNormalTestCase(true, (x, y, z) => Sqrt(y) + Sqrt(z));
                 //yield return MakeIsNormalTestCase(false, (x, y, z) => Sqrt(y) + Sqrt(z));
                 #endregion

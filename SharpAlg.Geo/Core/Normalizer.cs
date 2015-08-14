@@ -47,13 +47,16 @@ namespace SharpAlg.Geo.Core {
             var nullComparison = LinqExtensions.CompareObjects(xList.Sqrt, yList.Sqrt);
             if(nullComparison != 0)
                 return nullComparison;
-            //if(xList.Sqrt != null && yList.Sqrt != null)
-                return Comparer<int>.Default.Compare(yList.Sqrt.ExprOrAddToAdd().Length, xList.Sqrt.ExprOrAddToAdd().Length);
-            //return 0;
-        }
-        //static int CompareAdd(IEnumerable<ParamPowerInfoListWithSqrt> xList, IEnumerable<ParamPowerInfoListWithSqrt> yList) {
-        //}
+            if(xList.Sqrt == null && yList.Sqrt == null)
+                return 0;
+            var sqrtLengthComparison = Comparer<int>.Default.Compare(yList.Sqrt.ExprOrAddToAdd().Length, xList.Sqrt.ExprOrAddToAdd().Length);
+            if(sqrtLengthComparison != 0)
+                return sqrtLengthComparison;
+            var xSqrtList = xList.Sqrt.ExprOrAddToAdd().Select(a => GetParamOrPowerArgsWithSqrt(a.ExprOrMultToMult()));
+            var ySqrtList = yList.Sqrt.ExprOrAddToAdd().Select(a => GetParamOrPowerArgsWithSqrt(a.ExprOrMultToMult()));
+            return xSqrtList.Zip(ySqrtList, (a, b) => CompareMult(a, b)).FirstOrDefault(a => a != 0);
 
+        }
         static BigInteger GetTotalPower(IEnumerable<ParamPowerInfo> paramPowerInfo) {
             return paramPowerInfo.Aggregate<ParamPowerInfo, BigInteger>(0, (sum, a) => sum + a.Power);
         }
