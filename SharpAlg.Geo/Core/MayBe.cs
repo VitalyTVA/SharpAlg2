@@ -94,6 +94,13 @@ namespace SharpAlg.Geo.Core {
             }
             return true;
         }
+        public static int CompareObjects<T>(T x, T y) {
+            if(x != null && y == null)
+                return -1;
+            if(x == null && y != null)
+                return 1;
+            return 0;
+        }
         //public static IEnumerable<T> Flatten<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> getItems) {
         //    return source.SelectMany(item => item.Yield().Concat(getItems(item).Flatten(getItems)));
         //}

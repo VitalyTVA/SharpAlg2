@@ -44,10 +44,12 @@ namespace SharpAlg.Geo.Core {
             }).FirstOrDefault(a => a != 0);
             if(itemsComparison != 0)
                 return itemsComparison;
-
-            if(xList.Sqrt != null && yList.Sqrt != null)
+            var nullComparison = LinqExtensions.CompareObjects(xList.Sqrt, yList.Sqrt);
+            if(nullComparison != 0)
+                return nullComparison;
+            //if(xList.Sqrt != null && yList.Sqrt != null)
                 return Comparer<int>.Default.Compare(yList.Sqrt.ExprOrAddToAdd().Length, xList.Sqrt.ExprOrAddToAdd().Length);
-            return 0;
+            //return 0;
         }
 
         static BigInteger GetTotalPower(IEnumerable<ParamPowerInfo> paramPowerInfo) {
