@@ -169,6 +169,9 @@ namespace SharpAlg.Geo.Core {
         public static ExprList ExprOrMultToMult(this Expr expr) {
             return expr.AsMult() ?? ImmutableArray.Create(expr);
         }
+        public static ExprList ExprOrAddToAdd(this Expr expr) {
+            return expr.AsAdd() ?? ImmutableArray.Create(expr);
+        }
         //public static bool IsParamOrPower(this Expr expr) {
         //    return expr.ParamOrPowerAsPowerInfo() != null;
         //}

@@ -46,7 +46,7 @@ namespace SharpAlg.Geo.Core {
                 return itemsComparison;
 
             if(xList.Sqrt != null && yList.Sqrt != null)
-                return Comparer<int>.Default.Compare(yList.Sqrt.ToAdd().Length, xList.Sqrt.ToAdd().Length);
+                return Comparer<int>.Default.Compare(yList.Sqrt.ExprOrAddToAdd().Length, xList.Sqrt.ExprOrAddToAdd().Length);
             return 0;
         }
 
