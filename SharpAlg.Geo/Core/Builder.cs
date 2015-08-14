@@ -193,7 +193,7 @@ namespace SharpAlg.Geo.Core {
         #endregion
 
         #region CoreBuilder
-        class CoreBuilder {
+        public class CoreBuilder {
             static Func<T, T> Memoize<T>(Func<T, T, bool> equals, Func<T, int> getHashCode) {
                 return Func((T x) => x).Memoize(new DelegateEqualityComparer<T>(equals, x => x.GetHashCode()));
             }
