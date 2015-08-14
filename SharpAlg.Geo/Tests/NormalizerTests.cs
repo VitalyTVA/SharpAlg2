@@ -12,7 +12,7 @@ namespace SharpAlg.Geo.Tests {
     public static class IsNormalTests {
         [Test, Explicit]
         public static void Explicit() {
-            Assert.IsTrue(Builder.CreateSimple().Build((x, y, z) => Sqrt(x + y) + Sqrt(x + z)).IsNormal());
+            Assert.IsTrue(Builder.CreateSimple().Build((x, y, z) => x + Sqrt(x * 5 * y)).IsNormal());
         }
         [Test, TestCaseSource("TestCases")]
         public static bool IsNormal(Expr expr) {
@@ -132,6 +132,24 @@ namespace SharpAlg.Geo.Tests {
                 yield return MakeIsNormalTestCase(false, (x, y, z) => Sqrt(x + y) + Sqrt(x + y));
                 yield return MakeIsNormalTestCase(true, (x, y, z) => Sqrt(y) + Sqrt(z));
                 yield return MakeIsNormalTestCase(false, (x, y, z) => Sqrt(z) + Sqrt(y));
+
+                yield return MakeIsNormalTestCase(true, (x, y) => Sqrt(x * y));
+                yield return MakeIsNormalTestCase(false, (x, y) => Sqrt(y * x));
+                yield return MakeIsNormalTestCase(false, (x, y) => Sqrt(x * y + y * x));
+                yield return MakeIsNormalTestCase(true, (x, y) => Sqrt(5 * x * y));
+                yield return MakeIsNormalTestCase(false, (x, y) => x + Sqrt(x * 5 * y));
+                yield return MakeIsNormalTestCase(false, (x, y) => Sqrt(x * 5 * y));
+                yield return MakeIsNormalTestCase(true, (x, y) => Sqrt(x + y));
+                yield return MakeIsNormalTestCase(false, (x, y) => Sqrt(y + x));
+
+                yield return MakeIsNormalTestCase(true, (x, y) => Sqrt(Sqrt(x * y)));
+                yield return MakeIsNormalTestCase(false, (x, y) => Sqrt(Sqrt(y * x)));
+                yield return MakeIsNormalTestCase(false, (x, y) => Sqrt(Sqrt(x * y + y * x)));
+                yield return MakeIsNormalTestCase(true, (x, y) => Sqrt(Sqrt(5 * x * y)));
+                yield return MakeIsNormalTestCase(false, (x, y) => Sqrt(x + Sqrt(x * 5 * y)));
+                yield return MakeIsNormalTestCase(false, (x, y) => Sqrt(Sqrt(x * 5 * y)));
+                yield return MakeIsNormalTestCase(true, (x, y) => Sqrt(Sqrt(x + y)));
+                yield return MakeIsNormalTestCase(false, (x, y) => Sqrt(Sqrt(y + x)));
                 #endregion
             }
         }
