@@ -14,6 +14,7 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual(3, builder.Build((x, y, z) => x * y * z).ToMult().Length);
             builder.Build((x, y, z) => x / y).AssertSimpleStringRepresentation("x / y");
             builder.Build((x, y, z) => x / (y / z)).AssertSimpleStringRepresentation("(x * z) / y");
+            builder.Build((x, y, z) => (x / y) / z).AssertSimpleStringRepresentation("x / (y * z)");
         }
     }
 }

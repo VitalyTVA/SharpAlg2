@@ -142,6 +142,8 @@ namespace SharpAlg.Geo.Core {
 
         public static DivInfo ToDiv(this Expr expr)
             => Builder.ToDiv(expr);
+        public static DivInfo? AsDiv(this Expr expr)
+            => Builder.AsDiv(expr);
 
         public static PowerInfo ToPower(this Expr expr)
             => Builder.ToPower(expr);

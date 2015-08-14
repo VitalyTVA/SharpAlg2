@@ -52,6 +52,12 @@ namespace SharpAlg.Geo.Core {
             action(input);
             return input;
         }
+        public static TI? Do<TI>(this TI? input, Action<TI> action) where TI : struct {
+            if(input == null)
+                return null;
+            action(input.Value);
+            return input;
+        }
     }
     public static class LinqExtensions {
         public static IEnumerable<T> Yield<T>(this T item) {
