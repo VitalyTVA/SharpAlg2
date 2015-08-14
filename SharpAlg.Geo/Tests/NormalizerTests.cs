@@ -93,11 +93,12 @@ namespace SharpAlg.Geo.Tests {
                 #region div
                 yield return MakeIsNormalTestCase(true, (x, y) => x / y);
                 yield return MakeIsNormalTestCase(true, (x, y) => (x + y) / (y ^ 2));
+                yield return MakeIsNormalTestCase(false, (x, y) => (y + x) / (y ^ 2));
                 yield return MakeIsNormalTestCase(false, (x, y, z) => x / (y / z));
                 yield return MakeIsNormalTestCase(false, (x, y) => (x + (y / x)) / y);
 
                 yield return MakeIsNormalTestCase(true, (x, y) => (5 * x) / y);
-                //yield return MakeIsNormalTestCase(false, (x, y) => x / (5 * y));
+                yield return MakeIsNormalTestCase(true, (x, y) => x / (5 * y));
                 #endregion
 
                 #region sqrt
@@ -112,6 +113,8 @@ namespace SharpAlg.Geo.Tests {
                 yield return MakeIsNormalTestCase(false, (x, y) => x * Sqrt(y + x));
 
                 yield return MakeIsNormalTestCase(true, (x, y) => x * Sqrt(x + y) + y);
+                yield return MakeIsNormalTestCase(false, (x, y) => y + x * Sqrt(x + y));
+                yield return MakeIsNormalTestCase(false, (x, y) => x * Sqrt(y + x) + y);
                 //yield return MakeIsNormalTestCase(true, (x, y) => Sqrt(x + y) + Sqrt(x));
                 //yield return MakeIsNormalTestCase(false, (x, y) => Sqrt(x) + Sqrt(x + y));
                 #endregion
