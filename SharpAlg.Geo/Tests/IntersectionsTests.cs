@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using RealPoint = System.Windows.Point;
 using static SharpAlg.Geo.Core.ExprExtensions;
+using SharpAlg.Geo.Core;
 
 namespace SharpAlg.Geo.Tests {
     [TestFixture]
@@ -216,6 +217,8 @@ namespace SharpAlg.Geo.Tests {
             for(int i = 0; i < iterations; i++) {
                 center = builder.IntersectLineAndCircle(line, new Circle(center.X, center.Y, r)).Item1;
             }
+            Assert.IsFalse(center.X.IsNormal());
+            Assert.IsFalse(center.Y.IsNormal());
             var context = ImmutableContext.Empty
                 .RegisterValue(a, -3.0d / 4.0d)
                 .RegisterValue(b, 1)
