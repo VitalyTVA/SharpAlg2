@@ -168,5 +168,17 @@ namespace SharpAlg.Geo.Tests {
                 .Returns(isNormal)
                 .SetName(isNormal.ToString() + ": " + expr.ToString());
         }
+
+        [Test, Ignore] //TODO memoize
+        public static void LargeNormalExpression() {
+            var builder = Builder.CreateRealLife();
+            var x = Param("x");
+            var y = Param("y");
+            var expr = builder.Build((a, b) => Sqrt(a + b), x, y);
+            for(int i = 0; i < 17; i++) {
+                expr = builder.Build((a, b, e) => Sqrt(a * e + b * e), x, y, expr);
+            }
+            Assert.IsTrue(expr.IsNormal());
+        }
     }
 }
