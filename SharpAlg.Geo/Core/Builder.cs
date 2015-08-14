@@ -241,7 +241,26 @@ namespace SharpAlg.Geo.Core {
         }
         #endregion
 
-        public static readonly Builder Simple = new Builder(CoreBuilder.CreateSimple);
+        class Transformer {
+            public static readonly Transformer Default = new Transformer(
+                add: (b, args) => b.Add(MergeArgs(args, x => x.AsAdd())),
+                mult: (b, args) => b.Multiply(MergeArgs(args, x => x.AsMult()))
+            );
+            static ExprList MergeArgs(Expr[] args, Func<Expr, ExprList?> getArgs) {
+                return args
+                    .SelectMany(x => getArgs(x) ?? x.Yield())
+                    .ToImmutableArray();
+            }
+            public readonly Func<CoreBuilder, Expr[], Expr> Add;
+            public readonly Func<CoreBuilder, Expr[], Expr> Mult;
+
+            public Transformer(Func<CoreBuilder, Expr[], Expr> add, Func<CoreBuilder, Expr[], Expr> mult) {
+                Add = add;
+                Mult = mult;
+            }
+        }
+
+        public static readonly Builder Simple = new Builder(CoreBuilder.CreateSimple, Transformer.Default);
         public static Builder CreateSimple() {
             return CreateCaching(x => 0);
         }
@@ -249,27 +268,22 @@ namespace SharpAlg.Geo.Core {
             return CreateCaching(x => x.GetHashCode());
         }
         static Builder CreateCaching(Func<Expr, int> getHashCode) {
-            return new Builder(
-                CoreBuilder.CachingFactory(getHashCode)
-            );
+            return new Builder(CoreBuilder.CachingFactory(getHashCode), Transformer.Default);
         }
 
         readonly CoreBuilder builder;
+        readonly Transformer transformer;
 
-        Builder(Func<Builder, CoreBuilder> createBuilder) {
+        Builder(Func<Builder, CoreBuilder> createBuilder, Transformer transformer) {
             builder = createBuilder(this);
+            this.transformer = transformer;
         }
 
         public Expr Add(params Expr[] args) {
-            return builder.Add(MergeArgs(args, x => x.AsAdd()));
+            return transformer.Add(builder, args);
         }
         public Expr Multiply(params Expr[] args) {
-            return builder.Multiply(MergeArgs(args, x => x.AsMult()));
-        }
-        static ExprList MergeArgs(Expr[] args, Func<Expr, ExprList?> getArgs) {
-            return args
-                .SelectMany(x => getArgs(x) ?? x.Yield())
-                .ToImmutableArray();
+            return transformer.Mult(builder, args);
         }
         public Expr Divide(Expr a, Expr b) {
             return builder.Divide(a, b);
