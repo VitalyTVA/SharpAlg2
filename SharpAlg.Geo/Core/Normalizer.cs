@@ -36,12 +36,18 @@ namespace SharpAlg.Geo.Core {
             var powerComparison = Comparer<BigInteger>.Default.Compare(GetTotalPower(y), GetTotalPower(x));
             if(powerComparison != 0)
                 return powerComparison;
-            return x.Zip(y, (a, b) => {
+            var itemsComparison = x.Zip(y, (a, b) => {
                 var paramComparison = Comparer<string>.Default.Compare(a.Param, b.Param);
                 if(paramComparison != 0)
                     return paramComparison;
                 return Comparer<BigInteger>.Default.Compare(b.Power, a.Power);
             }).FirstOrDefault(a => a != 0);
+            if(itemsComparison != 0)
+                return itemsComparison;
+
+            if(xList.Sqrt != null && yList.Sqrt != null)
+                return Comparer<int>.Default.Compare(yList.Sqrt.ToAdd().Length, xList.Sqrt.ToAdd().Length);
+            return 0;
         }
 
         static BigInteger GetTotalPower(IEnumerable<ParamPowerInfo> paramPowerInfo) {
@@ -63,7 +69,7 @@ namespace SharpAlg.Geo.Core {
         }
 
         static IEnumerable<ParamPowerInfo?> GetParamOrPowerArgs(IEnumerable<Expr> args) {
-            var noConstArgs = args.First().IsConst() ? args.Tail() : args;
+            var noConstArgs = (args.Any() && args.First().IsConst()) ? args.Tail() : args;
             return noConstArgs.Select(x => x.ParamOrParamPowerAsPowerInfo());
         }
     }
