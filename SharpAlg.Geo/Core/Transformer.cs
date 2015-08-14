@@ -34,14 +34,6 @@ namespace SharpAlg.Geo.Core {
                 rNum = b.Multiply(ImmutableArray.Create(num, x.Den));
             });
             return b.Divide(rNum, rDen);
-            //var n = num;
-            //var d = den;
-            //num.AsAdd
-
-            //return den.MatchDefault(
-            //    x => b.Divide(num, x),
-            //    div: (n, d) => b.Divide(b.Multiply(ImmutableArray.Create(num, d)), n)
-            //);
         }
 
         static ExprList MergeArgs(Expr[] args, Func<Expr, ExprList?> getArgs) {
