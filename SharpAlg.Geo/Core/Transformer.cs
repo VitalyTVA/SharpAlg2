@@ -4,6 +4,8 @@ using System.Linq;
 using System.Numerics;
 using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
 using CoreBuilder = SharpAlg.Geo.Core.Builder.CoreBuilder;
+using Numerics;
+using static SharpAlg.Geo.Core.ExprExtensions;
 
 namespace SharpAlg.Geo.Core {
     public static class SingleDivTransformer {
@@ -14,12 +16,26 @@ namespace SharpAlg.Geo.Core {
             div: Div,
             sqrt: (b, e) => b.Sqrt(e)
         );
+        static ExprList MergeAddArgs(params Expr[] args) {
+            return MergeArgs(args, x => x.AsAdd(), BigRational.Zero, BigRational.Add);
+        }
+        static ExprList MergeMultArgs(params Expr[] args) {
+            return MergeArgs(args, x => x.AsMult(), BigRational.One, BigRational.Multiply);
+        }
+        static ExprList MergeArgs(Expr[] args, Func<Expr, ExprList?> getArgs, BigRational aggregateSeed, Func<BigRational, BigRational, BigRational> aggregate) {
+            var mergedArgs = args.SelectMany(x => getArgs(x) ?? x.Yield());
+            var @const = mergedArgs.Select(x => x.AsConst()).Where(x => x != null).Select(x => x.Value).Aggregate(aggregateSeed, aggregate);
+            var other = mergedArgs.Where(x => !x.IsConst());
+            return (@const == aggregateSeed ? other : Const(@const).Yield().Concat(other)).ToImmutableArray();
+        }
 
         static Expr Mult(CoreBuilder b, params Expr[] args) {
             var mergedArgs = MergeMultArgs(args);
             if(mergedArgs.Length == 0)
                 return Expr.One;
-            return mergedArgs.Length == 1 ? mergedArgs.Single() : b.Multiply(mergedArgs);
+            if(mergedArgs.Length == 1)
+                return mergedArgs.Single();
+            return b.Multiply(mergedArgs);
         }
 
         static Expr Add(CoreBuilder b, params Expr[] args) {
@@ -36,19 +52,6 @@ namespace SharpAlg.Geo.Core {
                 Mult(b, numDiv.Num, denDiv.Den),
                 Mult(b, numDiv.Den, denDiv.Num)
             );
-        }
-
-        static ExprList MergeAddArgs(params Expr[] args) {
-            return MergeArgs(args, x => x.AsAdd(), Expr.Zero);
-        }
-        static ExprList MergeMultArgs(params Expr[] args) {
-            return MergeArgs(args, x => x.AsMult(), Expr.One);
-        }
-        static ExprList MergeArgs(Expr[] args, Func<Expr, ExprList?> getArgs, Expr filterOutValue) {
-            return args
-                .Where(x => !Equals(x, filterOutValue))
-                .SelectMany(x => getArgs(x) ?? x.Yield())
-                .ToImmutableArray();
         }
     }
     public static class DefaultTransformer {
