@@ -21,6 +21,16 @@ namespace SharpAlg.Geo.Tests {
             builder.Build(x => 0 * x).AssertSimpleStringRepresentation("0");
         }
         [Test]
+        public void ElementaryConvolutionPower() {
+            builder.Build(x => x ^ 1).AssertSimpleStringRepresentation("x");
+            builder.Build(x => (Expr)3 ^ 2).AssertSimpleStringRepresentation("9");
+
+            builder.Build(x => (-x) ^ 2).AssertSimpleStringRepresentation("x ^ 2");
+            builder.Build(x => (-5 * x) ^ 2).AssertSimpleStringRepresentation("25 * (x ^ 2)");
+            builder.Build((x, y) => (-x * y) ^ 4).AssertSimpleStringRepresentation("(x ^ 4) * (y ^ 4)");
+            builder.Build((x, y) => (-x * y) ^ 3).AssertSimpleStringRepresentation("-(x ^ 3) * (y ^ 3)");
+        }
+        [Test]
         public void ElementaryConvolutionAdd() {
             builder.Build(x => (Expr)0 + 0).AssertSimpleStringRepresentation("0");
             builder.Build(x => x + 0).AssertSimpleStringRepresentation("x").ToParam();

@@ -175,7 +175,7 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual(3, roots.Item1.ToReal(context));
             Assert.AreEqual(-1, roots.Item2.ToReal(context));
         }
-        [Test, Ignore]
+        [Test]
         public void Middle1() {
             var p1 = new Point(0, 0);
             var p2 = new Point(0, Param("a"));
@@ -184,8 +184,8 @@ namespace SharpAlg.Geo.Tests {
 
             var c1 = builder.MakeCircle(p1, p2);
             var c2 = builder.MakeCircle(p2, p1);
-            Assert.AreEqual("x ^ 2 + y ^ 2 - a ^ 2", c1.ToString());
-            Assert.AreEqual("x ^ 2 + (y - a) ^ 2 - a ^ 2", c2.ToString());
+            Assert.AreEqual("x ^ 2 + (y ^ 2) - (a ^ 2)", c1.ToString());
+            Assert.AreEqual("x ^ 2 + ((y - a) ^ 2) - (a ^ 2)", c2.ToString());
 
             var c1_c2 = builder.IntersectCircles(c1, c2);
             Assert.AreEqual("(1/8 * (48 * a ^ 6) ^ (1/2) * a ^ (-2), 1/2 * a)", c1_c2.Item1.ToString());
@@ -212,9 +212,9 @@ namespace SharpAlg.Geo.Tests {
             //Assert.AreEqual("(-1/8 * 48 ^ (1/2) * a, 1/2 * a)", c1_c2.Item2.ToString());
             var l2 = builder.MakeLine(c1_c2.Item1, c1_c2.Item2);
 
-            //var l1_l2 = 
+            var l1_l2 = 
                 builder.IntersectLines(l1, l2);
-            //Assert.AreEqual("(0, 1/2 * a)", l1_l2.ToString());
+            Assert.AreEqual("(0, 1/2 * a)", l1_l2.ToString());
         }
         [Test]
         public void LongIntersectionsSequence() {

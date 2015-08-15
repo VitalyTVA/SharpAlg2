@@ -13,10 +13,23 @@ namespace SharpAlg.Geo.Core {
         public static readonly Transformer Instance = new Transformer(
             add: Add,
             mult: Mult,
-            power: (b, val, pow) => b.Power(val, pow),
+            power: (b, val, pow) => Power(b, val, pow),
             div: Div,
             sqrt: (b, e) => b.Sqrt(e)
         );
+
+        static Expr Power(CoreBuilder b, Expr val, BigInteger pow) {
+            if(pow == BigInteger.One)
+                return val;
+            var constVal = val.AsConst();
+            if(constVal != null)
+                return Const(BigRational.Pow(constVal.Value, pow));
+            var multVal = val.AsMult();
+            if(multVal != null)
+                return Mult(b, multVal.Value.Select(x => Power(b, x, pow)).ToArray());
+            return b.Power(val, pow);
+        }
+
         static ExprList MergeAddArgs(IEnumerable<Expr> args) {
             return MergeArgs(args, x => x.AsAdd(), BigRational.Zero, BigRational.Add);
         }
