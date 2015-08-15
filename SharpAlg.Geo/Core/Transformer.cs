@@ -21,13 +21,11 @@ namespace SharpAlg.Geo.Core {
         static Expr Power(CoreBuilder b, Expr val, BigInteger pow) {
             if(pow == BigInteger.One)
                 return val;
-            var constVal = val.AsConst();
-            if(constVal != null)
-                return Const(BigRational.Pow(constVal.Value, pow));
-            var multVal = val.AsMult();
-            if(multVal != null)
-                return Mult(b, multVal.Value.Select(x => Power(b, x, pow)).ToArray());
-            return b.Power(val, pow);
+            return val.MatchDefault(
+                @default: x => b.Power(x, pow),
+                @const: x => Const(BigRational.Pow(x, pow)),
+                mult: args => Mult(b, args.Select(x => Power(b, x, pow)).ToArray())
+            );
         }
 
         static ExprList MergeAddArgs(IEnumerable<Expr> args) {
