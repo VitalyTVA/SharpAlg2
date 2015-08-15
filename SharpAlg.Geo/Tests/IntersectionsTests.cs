@@ -153,6 +153,13 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual(3, roots.Item1.ToReal(context));
             Assert.AreEqual(-1, roots.Item2.ToReal(context));
 
+            context = ImmutableContext.Empty
+                .Register("A", -2)
+                .Register("B", 4)
+                .Register("C", 6);
+            Assert.AreEqual(-1, roots.Item1.ToReal(context));
+            Assert.AreEqual(3, roots.Item2.ToReal(context));
+
             roots = builder.SolveQuadraticEquation(builder.Build(X => X + 1), builder.Build(Y => Y -2), builder.Build(Z => Z / 2));
             context = ImmutableContext.Empty
                 .Register("X", 0)

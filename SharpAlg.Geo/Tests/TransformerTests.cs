@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using SharpAlg.Geo.Core;
-//using static SharpAlg.Geo.Core.ExprExtensions;
+using static SharpAlg.Geo.Core.ExprExtensions;
 
 namespace SharpAlg.Geo.Tests {
     [TestFixture]
@@ -22,7 +22,7 @@ namespace SharpAlg.Geo.Tests {
             builder.Build((x, y, z, w, v) => (x / y) / (z / (w * v))).AssertSimpleStringRepresentation("(x * w * v) / (y * z)");
             builder.Build((x, y, z, w, v) => (x / y) / ((z * w) / v)).AssertSimpleStringRepresentation("(x * v) / (y * z * w)");
 
-            //builder.Build((x, y) => Sqrt(x / y)).AssertSimpleStringRepresentation("x / y");
+            builder.Build((x, y) => Sqrt(x / y)).AssertSimpleStringRepresentation("sqrt(x / y)");
         }
     }
 }
