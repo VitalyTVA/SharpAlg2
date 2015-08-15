@@ -103,12 +103,20 @@ namespace SharpAlg.Geo.Tests {
                 yield return MakeIsNormalTestCase(false, (x, y) => Sqrt(x + y) ^ 2);
                 yield return MakeIsNormalTestCase(true, (x, y) => Sqrt(x + y));
                 yield return MakeIsNormalTestCase(false, (x, y) => Sqrt(y + x));
-                yield return MakeIsNormalTestCase(false, (x, y, z) => Sqrt((x + y) / z));
                 yield return MakeIsNormalTestCase(false, (x, y) => Sqrt(x + y) * x);
                 yield return MakeIsNormalTestCase(false, (x, y) => x * Sqrt(x + y) * y);
                 yield return MakeIsNormalTestCase(true, (x, y) => x * Sqrt(x + y));
-                yield return MakeIsNormalTestCase(false, (x, y, z) => x * Sqrt((x + y) / z));
                 yield return MakeIsNormalTestCase(false, (x, y) => x * Sqrt(y + x));
+
+                yield return MakeIsNormalTestCase(true, (x, y, z) => Sqrt((x + y) / z));
+                yield return MakeIsNormalTestCase(true, (x, y, z) => Sqrt(x / (y + z)));
+                yield return MakeIsNormalTestCase(false, (x, y, z) => Sqrt((y + x) / z));
+                yield return MakeIsNormalTestCase(false, (x, y, z) => Sqrt(x / (z + y)));
+                yield return MakeIsNormalTestCase(true, (x, y, z) => x * Sqrt((x + y) / z));
+                yield return MakeIsNormalTestCase(false, (x, y, z) => x * Sqrt((y + x) / z));
+
+                //yield return MakeIsNormalTestCase(true, (x, y, z) => Sqrt(x / (y + z)) + Sqrt(x / y));
+                //yield return MakeIsNormalTestCase(false, (x, y, z) => Sqrt(x / y) + Sqrt(x / (y + z)));
 
                 yield return MakeIsNormalTestCase(true, (x, y) => x * Sqrt(x + y) + y);
                 yield return MakeIsNormalTestCase(false, (x, y) => y + x * Sqrt(x + y));

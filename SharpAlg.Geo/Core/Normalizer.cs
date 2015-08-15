@@ -14,7 +14,7 @@ namespace SharpAlg.Geo.Core {
         }
         static bool IsNormalNoDiv(this Expr expr) {
             return expr.MatchStrict(
-                sqrt: IsNormalNoDiv,
+                sqrt: IsNormal,
                 div: (n, d) => false,
                 add: IsNormalSum,
                 mult: IsNormalProduct,
@@ -63,7 +63,7 @@ namespace SharpAlg.Geo.Core {
 
         static bool IsNormalProduct(ExprList args) {
             var paramPowerInfoListWithSqrt = GetParamOrPowerArgsWithSqrt(args);
-            if(paramPowerInfoListWithSqrt.Sqrt.Return(x => !x.IsNormalNoDiv(), () => false))
+            if(paramPowerInfoListWithSqrt.Sqrt.Return(x => !x.IsNormal(), () => false))
                 return false;
             return paramPowerInfoListWithSqrt.ParamPowerInfoList.All(x => x != null) &&
                 paramPowerInfoListWithSqrt.ParamPowerInfoList
