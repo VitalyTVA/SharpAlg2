@@ -160,6 +160,13 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual(-1, roots.Item1.ToReal(context));
             Assert.AreEqual(3, roots.Item2.ToReal(context));
 
+            context = ImmutableContext.Empty
+                .Register("A", 1)
+                .Register("B", 1)
+                .Register("C", 1);
+            Assert.IsNaN(roots.Item1.ToReal(context));
+            Assert.IsNaN(roots.Item2.ToReal(context));
+
             roots = builder.SolveQuadraticEquation(builder.Build(X => X + 1), builder.Build(Y => Y -2), builder.Build(Z => Z / 2));
             context = ImmutableContext.Empty
                 .Register("X", 0)
