@@ -4,17 +4,29 @@ using System.Linq;
 using System.Numerics;
 using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
 using CoreBuilder = SharpAlg.Geo.Core.Builder.CoreBuilder;
-using System.Collections.Generic;
 
 namespace SharpAlg.Geo.Core {
     public class Transformer {
         public static readonly Transformer Default = new Transformer(
-            add: (b, args) => b.Add(MergeAddArgs(args)),
-            mult: (b, args) => b.Multiply(MergeMultArgs(args)),
+            add: (b, args) => b.Add(MergeAddArgsSimple(args)),
+            mult: (b, args) => b.Multiply(MergeMultArgsSimple(args)),
             power: (b, val, pow) => b.Power(val, pow),
             div: (b, n, d) => b.Divide(n, d),
             sqrt: (b, e) => b.Sqrt(e)
         );
+        static ExprList MergeAddArgsSimple(params Expr[] args) {
+            return MergeArgsSimple(args, x => x.AsAdd());
+        }
+        static ExprList MergeMultArgsSimple(params Expr[] args) {
+            return MergeArgsSimple(args, x => x.AsMult());
+        }
+        static ExprList MergeArgsSimple(Expr[] args, Func<Expr, ExprList?> getArgs) {
+            return args
+                .SelectMany(x => getArgs(x) ?? x.Yield())
+                .ToImmutableArray();
+        }
+
+
         public static readonly Transformer SingleDiv = new Transformer(
             add: (b, args) => b.Add(MergeAddArgs(args)),
             mult: (b, args) => b.Multiply(MergeMultArgs(args)),
@@ -23,6 +35,13 @@ namespace SharpAlg.Geo.Core {
             sqrt: (b, e) => b.Sqrt(e)
         );
 
+        //static Expr SingleDiv_Div(CoreBuilder b, Expr num, Expr den) {
+        //    var numDiv = num.ExprOrDivToDiv();
+        //    var denDiv = den.ExprOrDivToDiv();
+        //    return b.Divide(
+        //        b.Multiply(MergeMultArgs(numDiv.Num, denDiv.Den)),
+        //        b.Multiply(MergeMultArgs(numDiv.Den, denDiv.Num))
+        //    );
         private static Expr SingleDiv_Div(CoreBuilder b, Expr num, Expr den) {
             var numDiv = num.AsDiv();
             var denDiv = den.AsDiv();
