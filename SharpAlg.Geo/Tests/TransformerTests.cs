@@ -23,8 +23,11 @@ namespace SharpAlg.Geo.Tests {
         [Test]
         public void ElementaryConvolutionAdd() {
             builder.Build(x => (Expr)0 + 0).AssertSimpleStringRepresentation("0");
-            builder.Build(x => x  + 0).AssertSimpleStringRepresentation("x").ToParam();
+            builder.Build(x => x + 0).AssertSimpleStringRepresentation("x").ToParam();
+            builder.Build(x => x - 0).AssertSimpleStringRepresentation("x").ToParam();
+            builder.Build(x => x + 2 - 2).AssertSimpleStringRepresentation("x").ToParam();
             builder.Build(x => 0 + x).AssertSimpleStringRepresentation("x");
+            builder.Build(x => -0 + x).AssertSimpleStringRepresentation("x");
             builder.Build((x, y) => x  + (y + 0)).AssertSimpleStringRepresentation("x + y");
             builder.Build((x, y) => x + (0 + y)).AssertSimpleStringRepresentation("x + y");
             builder.Build((x, y) => x + 2 + y + 3).AssertSimpleStringRepresentation("5 + x + y");
