@@ -49,13 +49,20 @@ namespace SharpAlg.Geo.Core {
                 return nullComparison;
             if(xList.Sqrt == null && yList.Sqrt == null)
                 return 0;
-            var sqrtLengthComparison = Comparer<int>.Default.Compare(yList.Sqrt.ExprOrAddToAdd().Length, xList.Sqrt.ExprOrAddToAdd().Length);
+            var xSqrt = xList.Sqrt.ExprOrDivToDiv();
+            var ySqrt = yList.Sqrt.ExprOrDivToDiv();
+            var numSqrtComparison = CompareSqrtPart(xSqrt.Num, ySqrt.Num);
+            if(numSqrtComparison != 0)
+                return numSqrtComparison;
+            return CompareSqrtPart(xSqrt.Den, ySqrt.Den);
+        }
+        static int CompareSqrtPart(Expr x, Expr y) {
+            var sqrtLengthComparison = Comparer<int>.Default.Compare(y.ExprOrAddToAdd().Length, x.ExprOrAddToAdd().Length);
             if(sqrtLengthComparison != 0)
                 return sqrtLengthComparison;
-            var xSqrtList = xList.Sqrt.ExprOrAddToAdd().Select(a => GetParamOrPowerArgsWithSqrt(a.ExprOrMultToMult()));
-            var ySqrtList = yList.Sqrt.ExprOrAddToAdd().Select(a => GetParamOrPowerArgsWithSqrt(a.ExprOrMultToMult()));
+            var xSqrtList = x.ExprOrAddToAdd().Select(a => GetParamOrPowerArgsWithSqrt(a.ExprOrMultToMult()));
+            var ySqrtList = y.ExprOrAddToAdd().Select(a => GetParamOrPowerArgsWithSqrt(a.ExprOrMultToMult()));
             return xSqrtList.Zip(ySqrtList, (a, b) => CompareMult(a, b)).FirstOrDefault(a => a != 0);
-
         }
         static BigInteger GetTotalPower(IEnumerable<ParamPowerInfo> paramPowerInfo) {
             return paramPowerInfo.Aggregate<ParamPowerInfo, BigInteger>(0, (sum, a) => sum + a.Power);
