@@ -12,7 +12,7 @@ namespace SharpAlg.Geo {
         }
         internal static Circle Offset(this Builder builder, Circle c, Point offset) {
             var center = builder.Offset(c.Center, offset);
-            return new Circle(center.X, center.Y, c.R);
+            return new Circle(builder, center.X, center.Y, c.R);
         }
         internal static Point Middle(this Builder builder, Point p1, Point p2) {
             return new Point(builder.Mean(p1.X, p2.X), builder.Mean(p1.Y, p2.Y));
@@ -21,7 +21,7 @@ namespace SharpAlg.Geo {
 
         internal static Circle MakeCircle(this Builder builder, Point p1, Point p2) {
             var r = builder.Build((x1, x2, y1, y2) => ((x1 - x2) ^ 2) + ((y1 - y2) ^ 2), p1.X, p2.X, p1.Y, p2.Y);
-            return new Circle(p1.X, p1.Y, r);
+            return new Circle(builder, p1.X, p1.Y, r);
         }
         internal static Point MakePoint(this Builder builder, char name) {
             if(!char.IsUpper(name))

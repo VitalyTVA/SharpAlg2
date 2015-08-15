@@ -229,7 +229,7 @@ namespace SharpAlg.Geo.Tests {
             var line = new Line(builder, a, b, c);
             const int iterations = 42;
             for(int i = 0; i < iterations; i++) {
-                center = builder.IntersectLineAndCircle(line, new Circle(center.X, center.Y, r)).Item1;
+                center = builder.IntersectLineAndCircle(line, new Circle(builder, center.X, center.Y, r)).Item1;
             }
             Assert.IsFalse(center.X.IsNormal());
             Assert.IsFalse(center.Y.IsNormal());

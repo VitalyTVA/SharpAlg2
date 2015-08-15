@@ -30,15 +30,17 @@ namespace SharpAlg.Geo {
     }
 
     public class Circle {
+        readonly Builder builder;
         public readonly Expr X, Y, R;
         public Point Center { get { return new Point(X, Y); } }
-        public Circle(Expr x, Expr y, Expr r) {
+        public Circle(Builder builder, Expr x, Expr y, Expr r) {
+            this.builder = builder;
             X = x;
             Y = y;
             R = r;
         }
         public override string ToString() {
-            return Builder.Simple.Build((X, Y, R, x, y) => ((x - X) ^ 2) + ((y - Y) ^ 2) - R, X, Y, R, Param("x"), Param("y")).ToString();
+            return builder.Build((X, Y, R, x, y) => ((x - X) ^ 2) + ((y - Y) ^ 2) - R, X, Y, R, Param("x"), Param("y")).ToString();
         }
     }
 
