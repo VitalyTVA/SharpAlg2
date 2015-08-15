@@ -33,6 +33,8 @@ namespace SharpAlg.Geo.Core {
         static Expr Mult(CoreBuilder b, params Expr[] args) {
             var mergedArgsNum = MergeMultArgs(args.Select(x => x.ExprOrDivToDiv().Num));
             var mergedArgsDen = MergeMultArgs(args.Select(x => x.ExprOrDivToDiv().Den));
+            if(Equals(mergedArgsNum.First(), Expr.Zero))
+                return Expr.Zero;
             return Div(b,
                 mergedArgsNum.Length == 1 ? mergedArgsNum.Single() : b.Multiply(mergedArgsNum),
                 mergedArgsDen.Length == 1 ? mergedArgsDen.Single() : b.Multiply(mergedArgsDen)

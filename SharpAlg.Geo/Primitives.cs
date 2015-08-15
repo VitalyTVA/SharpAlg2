@@ -16,14 +16,16 @@ namespace SharpAlg.Geo {
     }
 
     public class Line {
+        readonly Builder builder;
         public readonly Expr A, B, C;
-        public Line(Expr a, Expr b, Expr c) {
+        public Line(Builder builder, Expr a, Expr b, Expr c) {
+            this.builder = builder;
             A = a;
             B = b;
             C = c;
         }
         public override string ToString() {
-            return Builder.Simple.Build((A, B, C, x, y) => A * x + B * y + C, A, B, C, Param("x"), Param("y")).ToString();
+            return builder.Build((A, B, C, x, y) => A * x + B * y + C, A, B, C, Param("x"), Param("y")).ToString();
         }
     }
 

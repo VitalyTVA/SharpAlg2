@@ -113,18 +113,18 @@ simplify({0});
         #region perpendicular
         [Test]
         public void Perpendicular2_Calc() {
-            var res = GetPerpendocularZeroAssertion2(new Line(0, 1, 4), new Circle(0, 0, 25));
+            var res = GetPerpendocularZeroAssertion2(new Line(builder, 0, 1, 4), new Circle(0, 0, 25));
             Assert.AreEqual(0, res.ToReal(ImmutableContext.Empty));
             //Assert.IsTrue(res.ExprEquals(Expr.Zero));
         }
         [Test]
         public void Perpendicular2_Calc2() {
-            var res = GetPerpendocularZeroAssertion2(new Line(0, 1, 4), new Circle(0, 0, 25));
+            var res = GetPerpendocularZeroAssertion2(new Line(builder, 0, 1, 4), new Circle(0, 0, 25));
             Assert.AreEqual(0, res.ToReal(ImmutableContext.Empty));
         }
         string Perpendicular2_Maple() {
             //var res = GetPerpendocularZeroAssertion2(new Line(Expr.Parameter("k"), Expr.One, Expr.Parameter("b")), new Circle(Expr.Zero, Expr.Zero, Expr.Parameter("R")));
-            var res = GetPerpendocularZeroAssertion2(new Line(0, 1, Param("b")), new Circle(Param("X0"), Param("Y0"), Param("R")));
+            var res = GetPerpendocularZeroAssertion2(new Line(builder, 0, 1, Param("b")), new Circle(Param("X0"), Param("Y0"), Param("R")));
             return string.Format(@"
 assume(R>0);
 simplify({0});

@@ -226,7 +226,7 @@ namespace SharpAlg.Geo.Tests {
             var r = Param("R");
 
             var center = new Point(x, y);
-            var line = new Line(a, b, c);
+            var line = new Line(builder, a, b, c);
             const int iterations = 42;
             for(int i = 0; i < iterations; i++) {
                 center = builder.IntersectLineAndCircle(line, new Circle(center.X, center.Y, r)).Item1;

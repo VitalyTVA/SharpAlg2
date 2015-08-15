@@ -32,7 +32,7 @@ namespace SharpAlg.Geo {
             var a = builder.Subtract(p1.Y, p2.Y);
             var b = builder.Subtract(p2.X, p1.X);
             var c = builder.Subtract(builder.Multiply(p1.X, p2.Y), builder.Multiply(p2.X, p1.Y));
-            return new Line(a, b, c);
+            return new Line(builder, a, b, c);
         }
         internal static Point IntersectLines(this Builder builder, Line l1, Line l2) {
             var x = builder.Build((A1, B1, C1, A2, B2, C2) => (B1 * C2 - B2 * C1) / (A1 * B2 - A2 * B1), l1.A, l1.B, l1.C, l2.A, l2.B, l2.C);
