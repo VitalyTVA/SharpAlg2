@@ -31,12 +31,12 @@ namespace SharpAlg.Geo.Core {
         }
 
         static Expr Mult(CoreBuilder b, params Expr[] args) {
-            //var mergedArgsNum = MergeMultArgs(args.Select(x => x.ExprOrDivToDiv().Num));
-            //var mergedArgsDen = MergeMultArgs(args.Select(x => x.ExprOrDivToDiv().Den));
-            var mergedArgs = MergeMultArgs(args);
-            if(mergedArgs.Length == 1)
-                return mergedArgs.Single();
-            return b.Multiply(mergedArgs);
+            var mergedArgsNum = MergeMultArgs(args.Select(x => x.ExprOrDivToDiv().Num));
+            var mergedArgsDen = MergeMultArgs(args.Select(x => x.ExprOrDivToDiv().Den));
+            return Div(b,
+                mergedArgsNum.Length == 1 ? mergedArgsNum.Single() : b.Multiply(mergedArgsNum),
+                mergedArgsDen.Length == 1 ? mergedArgsDen.Single() : b.Multiply(mergedArgsDen)
+            );
         }
 
         static Expr Add(CoreBuilder b, params Expr[] args) {
@@ -45,6 +45,8 @@ namespace SharpAlg.Geo.Core {
         }
 
         static Expr Div(CoreBuilder b, Expr num, Expr den) {
+            if(Equals(den, Expr.One))
+                return num;
             var numDiv = num.ExprOrDivToDiv();
             var denDiv = den.ExprOrDivToDiv();
             return b.Divide(

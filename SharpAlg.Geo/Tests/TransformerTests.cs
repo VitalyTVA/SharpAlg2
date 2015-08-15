@@ -27,15 +27,19 @@ namespace SharpAlg.Geo.Tests {
             builder.Build((x, y) => x + (0 + y)).AssertSimpleStringRepresentation("x + y");
             builder.Build((x, y) => x + 2 + y + 3).AssertSimpleStringRepresentation("5 + x + y");
         }
-        //[Test]
-        //public void Mult() {
-        //    builder.Build((x, y, z) => (x / y) * z).AssertSimpleStringRepresentation("(x * z) / y");
-        //}
+        [Test]
+        public void Mult() {
+            builder.Build((x, y, z) => (x / y) * z).AssertSimpleStringRepresentation("(x * z) / y");
+            builder.Build((x, y, z) => x * (y / z)).AssertSimpleStringRepresentation("(x * y) / z");
+            builder.Build((x, y, z, w) => (x / y) * (z / w)).AssertSimpleStringRepresentation("(x * z) / (y * w)");
+        }
         [Test]
         public void Div() {
             Assert.AreEqual(3, builder.Build((x, y, z) => x + y + z).ToAdd().Length);
             Assert.AreEqual(3, builder.Build((x, y, z) => x * y * z).ToMult().Length);
 
+            builder.Build(x => x / 1).AssertSimpleStringRepresentation("x");
+            builder.Build((x, y) => (x + y) / 1).AssertSimpleStringRepresentation("x + y");
             builder.Build((x, y, z) => x / y).AssertSimpleStringRepresentation("x / y");
             builder.Build((x, y, z) => x / (y / z)).AssertSimpleStringRepresentation("(x * z) / y");
             builder.Build((x, y, z) => (x / y) / z).AssertSimpleStringRepresentation("x / (y * z)");
