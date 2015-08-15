@@ -6,6 +6,7 @@ using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.E
 using CoreBuilder = SharpAlg.Geo.Core.Builder.CoreBuilder;
 using Numerics;
 using static SharpAlg.Geo.Core.ExprExtensions;
+using System.Collections.Generic;
 
 namespace SharpAlg.Geo.Core {
     public static class SingleDivTransformer {
@@ -16,23 +17,23 @@ namespace SharpAlg.Geo.Core {
             div: Div,
             sqrt: (b, e) => b.Sqrt(e)
         );
-        static ExprList MergeAddArgs(params Expr[] args) {
+        static ExprList MergeAddArgs(IEnumerable<Expr> args) {
             return MergeArgs(args, x => x.AsAdd(), BigRational.Zero, BigRational.Add);
         }
-        static ExprList MergeMultArgs(params Expr[] args) {
+        static ExprList MergeMultArgs(IEnumerable<Expr> args) {
             return MergeArgs(args, x => x.AsMult(), BigRational.One, BigRational.Multiply);
         }
-        static ExprList MergeArgs(Expr[] args, Func<Expr, ExprList?> getArgs, BigRational aggregateSeed, Func<BigRational, BigRational, BigRational> aggregate) {
+        static ExprList MergeArgs(IEnumerable<Expr> args, Func<Expr, ExprList?> getArgs, BigRational aggregateSeed, Func<BigRational, BigRational, BigRational> aggregate) {
             var mergedArgs = args.SelectMany(x => getArgs(x) ?? x.Yield());
             var @const = mergedArgs.Select(x => x.AsConst()).Where(x => x != null).Select(x => x.Value).Aggregate(aggregateSeed, aggregate);
             var other = mergedArgs.Where(x => !x.IsConst());
-            return (@const == aggregateSeed ? other : Const(@const).Yield().Concat(other)).ToImmutableArray();
+            return (@const == aggregateSeed && other.Any() ? other : Const(@const).Yield().Concat(other)).ToImmutableArray();
         }
 
         static Expr Mult(CoreBuilder b, params Expr[] args) {
+            //var mergedArgsNum = MergeMultArgs(args.Select(x => x.ExprOrDivToDiv().Num));
+            //var mergedArgsDen = MergeMultArgs(args.Select(x => x.ExprOrDivToDiv().Den));
             var mergedArgs = MergeMultArgs(args);
-            if(mergedArgs.Length == 0)
-                return Expr.One;
             if(mergedArgs.Length == 1)
                 return mergedArgs.Single();
             return b.Multiply(mergedArgs);
@@ -40,8 +41,6 @@ namespace SharpAlg.Geo.Core {
 
         static Expr Add(CoreBuilder b, params Expr[] args) {
             var mergedArgs = MergeAddArgs(args);
-            if(mergedArgs.Length == 0)
-                return Expr.Zero;
             return mergedArgs.Length == 1 ? mergedArgs.Single() : b.Add(mergedArgs);
         }
 
