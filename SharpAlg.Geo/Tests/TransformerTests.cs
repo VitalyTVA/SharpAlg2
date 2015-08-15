@@ -10,20 +10,24 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test]
         public void ElementaryConvolution() {
-            builder.Build(x => 1 * 1).AssertSimpleStringRepresentation("1");
+            builder.Build(x => (Expr)1 * 1).AssertSimpleStringRepresentation("1");
             builder.Build(x => x * 1).AssertSimpleStringRepresentation("x");
             builder.Build(x => 1 * x).AssertSimpleStringRepresentation("x");
             builder.Build((x, y) => x * (y * 1)).AssertSimpleStringRepresentation("x * y");
             builder.Build((x, y) => x * (1 * y)).AssertSimpleStringRepresentation("x * y");
 
-            builder.Build(x => 0 + 0).AssertSimpleStringRepresentation("0");
+            builder.Build(x => (Expr)0 + 0).AssertSimpleStringRepresentation("0");
             builder.Build(x => x  + 0).AssertSimpleStringRepresentation("x").ToParam();
             builder.Build(x => 0 + x).AssertSimpleStringRepresentation("x");
             builder.Build((x, y) => x  + (y + 0)).AssertSimpleStringRepresentation("x + y");
             builder.Build((x, y) => x + (0 + y)).AssertSimpleStringRepresentation("x + y");
         }
         [Test]
-        public void SingleDiv() {
+        public void Mult() {
+            builder.Build((x, y, z) => (x / y) * z).AssertSimpleStringRepresentation("(x * z) / y");
+        }
+        [Test]
+        public void Div() {
             Assert.AreEqual(3, builder.Build((x, y, z) => x + y + z).ToAdd().Length);
             Assert.AreEqual(3, builder.Build((x, y, z) => x * y * z).ToMult().Length);
 

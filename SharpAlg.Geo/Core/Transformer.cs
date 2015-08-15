@@ -24,6 +24,8 @@ namespace SharpAlg.Geo.Core {
 
         static Expr Add(CoreBuilder b, params Expr[] args) {
             var mergedArgs = MergeAddArgs(args);
+            if(mergedArgs.Length == 0)
+                return Expr.Zero;
             return mergedArgs.Length == 1 ? mergedArgs.Single() : b.Add(mergedArgs);
         }
 
