@@ -9,7 +9,7 @@ namespace SharpAlg.Geo.Tests {
             return Builder.CreateRealLife();
         }
         [Test]
-        public void ElementaryConvolutionMult() {
+        public void ElementaryConvolution_Mult() {
             builder.Build(x => (Expr)1 * 1).AssertSimpleStringRepresentation("1");
             builder.Build(x => x * 1).AssertSimpleStringRepresentation("x");
             builder.Build(x => 1 * x).AssertSimpleStringRepresentation("x");
@@ -21,7 +21,7 @@ namespace SharpAlg.Geo.Tests {
             builder.Build(x => 0 * x).AssertSimpleStringRepresentation("0");
         }
         [Test]
-        public void ElementaryConvolutionPower() {
+        public void ElementaryConvolution_Power() {
             builder.Build(x => x ^ 1).AssertSimpleStringRepresentation("x");
             builder.Build(x => (Expr)3 ^ 2).AssertSimpleStringRepresentation("9");
 
@@ -33,7 +33,7 @@ namespace SharpAlg.Geo.Tests {
             builder.Build((x, y) => ((x * y) ^ 2) ^ 5).AssertSimpleStringRepresentation("(x ^ 10) * (y ^ 10)");
         }
         [Test]
-        public void ElementaryConvolutionAdd() {
+        public void ElementaryConvolution_Add() {
             builder.Build(x => (Expr)0 + 0).AssertSimpleStringRepresentation("0");
             builder.Build(x => x + 0).AssertSimpleStringRepresentation("x").ToParam();
             builder.Build(x => x - 0).AssertSimpleStringRepresentation("x").ToParam();
@@ -43,6 +43,10 @@ namespace SharpAlg.Geo.Tests {
             builder.Build((x, y) => x  + (y + 0)).AssertSimpleStringRepresentation("x + y");
             builder.Build((x, y) => x + (0 + y)).AssertSimpleStringRepresentation("x + y");
             builder.Build((x, y) => x + 2 + y + 3).AssertSimpleStringRepresentation("5 + x + y");
+        }
+        [Test]
+        public void ElementaryConvolution_Sqrt() {
+            builder.Build(x => Sqrt(0)).AssertSimpleStringRepresentation("0");
         }
         [Test]
         public void Group_Mult() {

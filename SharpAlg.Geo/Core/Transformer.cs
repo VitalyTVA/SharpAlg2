@@ -15,8 +15,15 @@ namespace SharpAlg.Geo.Core {
             mult: Mult,
             power: (b, val, pow) => Power(b, val, pow),
             div: Div,
-            sqrt: (b, e) => b.Sqrt(e)
+            sqrt: (b, e) => Sqrt(b, e)
         );
+
+        static Expr Sqrt(CoreBuilder b, Expr e) {
+            var @const = e.AsConst();
+            if(@const != null && @const.Value == BigRational.Zero)
+                return Expr.Zero;
+            return b.Sqrt(e);
+        }
 
         static Expr Power(CoreBuilder b, Expr val, BigInteger pow) {
             if(pow == BigInteger.One)
@@ -30,25 +37,24 @@ namespace SharpAlg.Geo.Core {
         }
 
         static ExprList MergeAddArgs(CoreBuilder b, IEnumerable<Expr> args) {
-            return MergeArgs(b, args, x => x.AsAdd(), BigRational.Zero, BigRational.Add, 
+            return MergeArgs(b, args, x => x.AsAdd(), BigRational.Zero, BigRational.Add,
                 y => y.Select(x => x.ExprOrMultToKoeffMultInfo(b))
                     .GroupBy(x => x.Mult)
                     .Select(x => Mult(b, new Expr[] { Const(x.Aggregate(BigRational.Zero, (acc, val) => acc + val.Koeff)), x.Key })));
         }
         static ExprList MergeMultArgs(CoreBuilder b, IEnumerable<Expr> args) {
-            return MergeArgs(b, args, x => x.AsMult(), BigRational.One, BigRational.Multiply, 
+            return MergeArgs(b, args, x => x.AsMult(), BigRational.One, BigRational.Multiply,
                 y => y.Select(x => x.ExprOrPowerToPower())
                     .GroupBy(x => x.Value)
                     .Select(x => Power(b, x.Key, x.Aggregate(BigInteger.Zero, (acc, val) => acc + val.Power))));
         }
         static ExprList MergeArgs(
             CoreBuilder b,
-            IEnumerable<Expr> args, 
-            Func<Expr, ExprList?> getArgs, 
-            BigRational aggregateSeed, 
+            IEnumerable<Expr> args,
+            Func<Expr, ExprList?> getArgs,
+            BigRational aggregateSeed,
             Func<BigRational, BigRational, BigRational> aggregate,
-            Func<IEnumerable<Expr>, IEnumerable<Expr>> group) 
-        {
+            Func<IEnumerable<Expr>, IEnumerable<Expr>> group) {
             var mergedArgs = args
                 .SelectMany(x => getArgs(x) ?? x.Yield());
             var @const = mergedArgs
