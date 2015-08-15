@@ -52,7 +52,6 @@ namespace SharpAlg.Geo.Tests {
         [Test]
         public void Group_Add() {
             builder.Build((x, y) => 3 + x  + (y ^ 2) + 6 + 2 * x + 5 * (y ^ 2)).AssertSimpleStringRepresentation("9 + 3 * x + 6 * (y ^ 2)");
-            //builder.Build((x, y) => (3 / x) * (y / (x ^ 2))).AssertSimpleStringRepresentation("(3 * y) / (x ^ 3)");
         }
         [Test]
         public void Mult() {
