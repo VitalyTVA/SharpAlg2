@@ -8,15 +8,15 @@ using CoreBuilder = SharpAlg.Geo.Core.Builder.CoreBuilder;
 namespace SharpAlg.Geo.Core {
     public class Transformer {
         public static readonly Transformer Default = new Transformer(
-            add: (b, args) => b.Add(MergeArgs(args, x => x.AsAdd())),
-            mult: (b, args) => b.Multiply(MergeArgs(args, x => x.AsMult())),
+            add: (b, args) => b.Add(MergeAddArgs(args)),
+            mult: (b, args) => b.Multiply(MergeMultArgs(args)),
             power: (b, val, pow) => b.Power(val, pow),
             div: (b, n, d) => b.Divide(n, d),
             sqrt: (b, e) => b.Sqrt(e)
         );
         public static readonly Transformer SingleDiv = new Transformer(
-            add: (b, args) => b.Add(MergeArgs(args, x => x.AsAdd())),
-            mult: (b, args) => b.Multiply(MergeArgs(args, x => x.AsMult())),
+            add: (b, args) => b.Add(MergeAddArgs(args)),
+            mult: (b, args) => b.Multiply(MergeMultArgs(args)),
             power: (b, val, pow) => b.Power(val, pow),
             div: SingleDiv_Div,
             sqrt: (b, e) => b.Sqrt(e)
@@ -27,23 +27,28 @@ namespace SharpAlg.Geo.Core {
             var denDiv = den.AsDiv();
             if(numDiv != null && denDiv != null)
                 return b.Divide(
-                    b.Multiply(ImmutableArray.Create(numDiv.Value.Num, denDiv.Value.Den)),
-                    b.Multiply(ImmutableArray.Create(numDiv.Value.Den, denDiv.Value.Num))
+                    b.Multiply(MergeMultArgs(numDiv.Value.Num, denDiv.Value.Den)),
+                    b.Multiply(MergeMultArgs(numDiv.Value.Den, denDiv.Value.Num))
                 );
             if(numDiv == null && denDiv != null)
                 return b.Divide(
-                    b.Multiply(ImmutableArray.Create(num, denDiv.Value.Den)),
+                    b.Multiply(MergeMultArgs(num, denDiv.Value.Den)),
                     denDiv.Value.Num
                 );
             if(numDiv != null && denDiv == null)
                 return b.Divide(
                     numDiv.Value.Num,
-                    b.Multiply(ImmutableArray.Create(numDiv.Value.Den, den))
+                    b.Multiply(MergeMultArgs(numDiv.Value.Den, den))
                 );
-
             return b.Divide(num, den);
         }
 
+        static ExprList MergeAddArgs(params Expr[] args) {
+            return MergeArgs(args, x => x.AsAdd());
+        }
+        static ExprList MergeMultArgs(params Expr[] args) {
+            return MergeArgs(args, x => x.AsMult());
+        }
         static ExprList MergeArgs(Expr[] args, Func<Expr, ExprList?> getArgs) {
             return args
                 .SelectMany(x => getArgs(x) ?? x.Yield())

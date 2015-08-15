@@ -377,6 +377,10 @@ namespace SharpAlg.Geo.Tests {
             var parameters = GetParameters(f);
             return builder.Build(f, parameters[0], parameters[1], parameters[2], parameters[3]);
         }
+        public static Expr Build(this Builder builder, Expression<Func<Expr, Expr, Expr, Expr, Expr, Expr>> f) {
+            var parameters = GetParameters(f);
+            return builder.Build(f, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
+        }
         static ExprList GetParameters(LambdaExpression expression) {
             return expression.Parameters.Select(x => Param(x.Name)).ToImmutableArray();
         }
