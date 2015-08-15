@@ -243,15 +243,15 @@ namespace SharpAlg.Geo.Core {
         }
         #endregion
 
-        public static readonly Builder Simple = new Builder(CoreBuilder.CreateSimple, Transformer.Default);
+        public static readonly Builder Simple = new Builder(CoreBuilder.CreateSimple, DefaultTransformer.Instance);
         public static Builder CreateSimple() {
             return CreateCaching(x => 0, null);
         }
         public static Builder CreateRealLife() {
-            return CreateCaching(x => x.GetHashCode(), Transformer.SingleDiv);
+            return CreateCaching(x => x.GetHashCode(), SingleDivTransformer.Instance);
         }
         static Builder CreateCaching(Func<Expr, int> getHashCode, Transformer tranfomer) {
-            return new Builder(CoreBuilder.CachingFactory(getHashCode), tranfomer ?? Transformer.Default);
+            return new Builder(CoreBuilder.CachingFactory(getHashCode), tranfomer ?? DefaultTransformer.Instance);
         }
 
         readonly CoreBuilder builder;

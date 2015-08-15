@@ -6,28 +6,8 @@ using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.E
 using CoreBuilder = SharpAlg.Geo.Core.Builder.CoreBuilder;
 
 namespace SharpAlg.Geo.Core {
-    public class Transformer {
-        public static readonly Transformer Default = new Transformer(
-            add: (b, args) => b.Add(MergeAddArgsSimple(args)),
-            mult: (b, args) => b.Multiply(MergeMultArgsSimple(args)),
-            power: (b, val, pow) => b.Power(val, pow),
-            div: (b, n, d) => b.Divide(n, d),
-            sqrt: (b, e) => b.Sqrt(e)
-        );
-        static ExprList MergeAddArgsSimple(params Expr[] args) {
-            return MergeArgsSimple(args, x => x.AsAdd());
-        }
-        static ExprList MergeMultArgsSimple(params Expr[] args) {
-            return MergeArgsSimple(args, x => x.AsMult());
-        }
-        static ExprList MergeArgsSimple(Expr[] args, Func<Expr, ExprList?> getArgs) {
-            return args
-                .SelectMany(x => getArgs(x) ?? x.Yield())
-                .ToImmutableArray();
-        }
-
-
-        public static readonly Transformer SingleDiv = new Transformer(
+    public static class SingleDivTransformer {
+        public static readonly Transformer Instance = new Transformer(
             add: (b, args) => b.Add(MergeAddArgs(args)),
             mult: (b, args) => b.Multiply(MergeMultArgs(args)),
             power: (b, val, pow) => b.Power(val, pow),
@@ -75,6 +55,28 @@ namespace SharpAlg.Geo.Core {
                 .SelectMany(x => getArgs(x) ?? x.Yield())
                 .ToImmutableArray();
         }
+    }
+    public static class DefaultTransformer {
+        public static readonly Transformer Instance = new Transformer(
+            add: (b, args) => b.Add(MergeAddArgsSimple(args)),
+            mult: (b, args) => b.Multiply(MergeMultArgsSimple(args)),
+            power: (b, val, pow) => b.Power(val, pow),
+            div: (b, n, d) => b.Divide(n, d),
+            sqrt: (b, e) => b.Sqrt(e)
+        );
+        static ExprList MergeAddArgsSimple(params Expr[] args) {
+            return MergeArgsSimple(args, x => x.AsAdd());
+        }
+        static ExprList MergeMultArgsSimple(params Expr[] args) {
+            return MergeArgsSimple(args, x => x.AsMult());
+        }
+        static ExprList MergeArgsSimple(Expr[] args, Func<Expr, ExprList?> getArgs) {
+            return args
+                .SelectMany(x => getArgs(x) ?? x.Yield())
+                .ToImmutableArray();
+        }
+    }
+    public class Transformer {
         public readonly Func<CoreBuilder, Expr[], Expr> Add;
         public readonly Func<CoreBuilder, Expr[], Expr> Mult;
         public readonly Func<CoreBuilder, Expr, Expr, Expr> Div;
