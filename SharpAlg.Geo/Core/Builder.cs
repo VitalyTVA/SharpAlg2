@@ -247,8 +247,8 @@ namespace SharpAlg.Geo.Core {
         public static Builder CreateSimple() {
             return CreateCaching(x => 0, null);
         }
-        public static Builder CreateRealLife(Transformer transformer = null) {
-            return CreateCaching(x => x.GetHashCode(), transformer);
+        public static Builder CreateRealLife() {
+            return CreateCaching(x => x.GetHashCode(), Transformer.SingleDiv);
         }
         static Builder CreateCaching(Func<Expr, int> getHashCode, Transformer tranfomer) {
             return new Builder(CoreBuilder.CachingFactory(getHashCode), tranfomer ?? Transformer.Default);

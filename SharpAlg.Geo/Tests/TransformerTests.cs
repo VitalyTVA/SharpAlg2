@@ -6,12 +6,13 @@ namespace SharpAlg.Geo.Tests {
     [TestFixture]
     public class SingleDivTransfomerTests : ExprTestsBase {
         protected override Builder CreateBuilder() {
-            return Builder.CreateRealLife(Transformer.SingleDiv);
+            return Builder.CreateRealLife();
         }
         [Test]
         public void SingleDiv() {
             Assert.AreEqual(3, builder.Build((x, y, z) => x + y + z).ToAdd().Length);
             Assert.AreEqual(3, builder.Build((x, y, z) => x * y * z).ToMult().Length);
+
             builder.Build((x, y, z) => x / y).AssertSimpleStringRepresentation("x / y");
             builder.Build((x, y, z) => x / (y / z)).AssertSimpleStringRepresentation("(x * z) / y");
             builder.Build((x, y, z) => (x / y) / z).AssertSimpleStringRepresentation("x / (y * z)");
@@ -20,6 +21,8 @@ namespace SharpAlg.Geo.Tests {
             builder.Build((x, y, z, w) => (x / (y * w)) / z).AssertSimpleStringRepresentation("x / (y * w * z)");
             builder.Build((x, y, z, w, v) => (x / y) / (z / (w * v))).AssertSimpleStringRepresentation("(x * w * v) / (y * z)");
             builder.Build((x, y, z, w, v) => (x / y) / ((z * w) / v)).AssertSimpleStringRepresentation("(x * v) / (y * z * w)");
+
+            //builder.Build((x, y) => Sqrt(x / y)).AssertSimpleStringRepresentation("x / y");
         }
     }
 }
