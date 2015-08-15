@@ -8,6 +8,8 @@ using System.Collections.Immutable;
 
 namespace SharpAlg.Geo.Core {
     public abstract class Expr {
+        public static readonly Expr One = 1;
+        public static readonly Expr Zero = 0;
         public static implicit operator Expr(int val) {
             return Builder.Const(val);
         }

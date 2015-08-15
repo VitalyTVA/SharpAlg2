@@ -9,6 +9,18 @@ namespace SharpAlg.Geo.Tests {
             return Builder.CreateRealLife();
         }
         [Test]
+        public void ElementaryConvolution() {
+            builder.Build(x => x * 1).AssertSimpleStringRepresentation("x");
+            builder.Build(x => 1 * x).AssertSimpleStringRepresentation("x");
+            builder.Build((x, y) => x * (y * 1)).AssertSimpleStringRepresentation("x * y");
+            builder.Build((x, y) => x * (1 * y)).AssertSimpleStringRepresentation("x * y");
+
+            builder.Build(x => x  + 0).AssertSimpleStringRepresentation("x");
+            builder.Build(x => 0 + x).AssertSimpleStringRepresentation("x");
+            builder.Build((x, y) => x  + (y + 0)).AssertSimpleStringRepresentation("x + y");
+            builder.Build((x, y) => x + (0 + y)).AssertSimpleStringRepresentation("x + y");
+        }
+        [Test]
         public void SingleDiv() {
             Assert.AreEqual(3, builder.Build((x, y, z) => x + y + z).ToAdd().Length);
             Assert.AreEqual(3, builder.Build((x, y, z) => x * y * z).ToMult().Length);

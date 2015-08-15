@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
 using CoreBuilder = SharpAlg.Geo.Core.Builder.CoreBuilder;
+using System.Collections.Generic;
 
 namespace SharpAlg.Geo.Core {
     public class Transformer {
@@ -44,13 +45,14 @@ namespace SharpAlg.Geo.Core {
         }
 
         static ExprList MergeAddArgs(params Expr[] args) {
-            return MergeArgs(args, x => x.AsAdd());
+            return MergeArgs(args, x => x.AsAdd(), Expr.Zero);
         }
         static ExprList MergeMultArgs(params Expr[] args) {
-            return MergeArgs(args, x => x.AsMult());
+            return MergeArgs(args, x => x.AsMult(), Expr.One);
         }
-        static ExprList MergeArgs(Expr[] args, Func<Expr, ExprList?> getArgs) {
+        static ExprList MergeArgs(Expr[] args, Func<Expr, ExprList?> getArgs, Expr filterOutValue) {
             return args
+                .Where(x => !Equals(x, filterOutValue))
                 .SelectMany(x => getArgs(x) ?? x.Yield())
                 .ToImmutableArray();
         }
