@@ -23,17 +23,25 @@ namespace SharpAlg.Geo.Core {
         );
 
         private static Expr SingleDiv_Div(CoreBuilder b, Expr num, Expr den) {
-            var rNum = num;
-            var rDen = den;
-            num.AsDiv().Do(x => {
-                rNum = x.Num;
-                rDen = b.Multiply(ImmutableArray.Create(x.Den, den));
-            });
-            den.AsDiv().Do(x => {
-                rDen = x.Num;
-                rNum = b.Multiply(ImmutableArray.Create(num, x.Den));
-            });
-            return b.Divide(rNum, rDen);
+            var numDiv = num.AsDiv();
+            var denDiv = den.AsDiv();
+            if(numDiv != null && denDiv != null)
+                return b.Divide(
+                    b.Multiply(ImmutableArray.Create(numDiv.Value.Num, denDiv.Value.Den)),
+                    b.Multiply(ImmutableArray.Create(numDiv.Value.Den, denDiv.Value.Num))
+                );
+            if(numDiv == null && denDiv != null)
+                return b.Divide(
+                    b.Multiply(ImmutableArray.Create(num, denDiv.Value.Den)),
+                    denDiv.Value.Num
+                );
+            if(numDiv != null && denDiv == null)
+                return b.Divide(
+                    numDiv.Value.Num,
+                    b.Multiply(ImmutableArray.Create(numDiv.Value.Den, den))
+                );
+
+            return b.Divide(num, den);
         }
 
         static ExprList MergeArgs(Expr[] args, Func<Expr, ExprList?> getArgs) {
