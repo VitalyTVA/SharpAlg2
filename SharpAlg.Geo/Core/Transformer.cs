@@ -8,39 +8,32 @@ using CoreBuilder = SharpAlg.Geo.Core.Builder.CoreBuilder;
 namespace SharpAlg.Geo.Core {
     public static class SingleDivTransformer {
         public static readonly Transformer Instance = new Transformer(
-            add: (b, args) => b.Add(MergeAddArgs(args)),
-            mult: (b, args) => b.Multiply(MergeMultArgs(args)),
+            add: Add,
+            mult: Mult,
             power: (b, val, pow) => b.Power(val, pow),
-            div: SingleDiv_Div,
+            div: Div,
             sqrt: (b, e) => b.Sqrt(e)
         );
 
-        //static Expr SingleDiv_Div(CoreBuilder b, Expr num, Expr den) {
-        //    var numDiv = num.ExprOrDivToDiv();
-        //    var denDiv = den.ExprOrDivToDiv();
-        //    return b.Divide(
-        //        b.Multiply(MergeMultArgs(numDiv.Num, denDiv.Den)),
-        //        b.Multiply(MergeMultArgs(numDiv.Den, denDiv.Num))
-        //    );
-        private static Expr SingleDiv_Div(CoreBuilder b, Expr num, Expr den) {
-            var numDiv = num.AsDiv();
-            var denDiv = den.AsDiv();
-            if(numDiv != null && denDiv != null)
-                return b.Divide(
-                    b.Multiply(MergeMultArgs(numDiv.Value.Num, denDiv.Value.Den)),
-                    b.Multiply(MergeMultArgs(numDiv.Value.Den, denDiv.Value.Num))
-                );
-            if(numDiv == null && denDiv != null)
-                return b.Divide(
-                    b.Multiply(MergeMultArgs(num, denDiv.Value.Den)),
-                    denDiv.Value.Num
-                );
-            if(numDiv != null && denDiv == null)
-                return b.Divide(
-                    numDiv.Value.Num,
-                    b.Multiply(MergeMultArgs(numDiv.Value.Den, den))
-                );
-            return b.Divide(num, den);
+        static Expr Mult(CoreBuilder b, params Expr[] args) {
+            var mergedArgs = MergeMultArgs(args);
+            if(mergedArgs.Length == 0)
+                return Expr.One;
+            return mergedArgs.Length == 1 ? mergedArgs.Single() : b.Multiply(mergedArgs);
+        }
+
+        static Expr Add(CoreBuilder b, params Expr[] args) {
+            var mergedArgs = MergeAddArgs(args);
+            return mergedArgs.Length == 1 ? mergedArgs.Single() : b.Add(mergedArgs);
+        }
+
+        static Expr Div(CoreBuilder b, Expr num, Expr den) {
+            var numDiv = num.ExprOrDivToDiv();
+            var denDiv = den.ExprOrDivToDiv();
+            return b.Divide(
+                Mult(b, numDiv.Num, denDiv.Den),
+                Mult(b, numDiv.Den, denDiv.Num)
+            );
         }
 
         static ExprList MergeAddArgs(params Expr[] args) {
