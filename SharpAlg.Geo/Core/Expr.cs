@@ -176,6 +176,9 @@ namespace SharpAlg.Geo.Core {
         public static ExprList ExprOrAddToAdd(this Expr expr) {
             return expr.AsAdd() ?? ImmutableArray.Create(expr);
         }
+        public static PowerInfo ExprOrPowerToPower(this Expr expr) {
+            return expr.AsPower() ?? new PowerInfo(expr, BigInteger.One);
+        }
         public static DivInfo ExprOrDivToDiv(this Expr expr) {
             return expr.AsDiv() ?? new DivInfo(expr, 1);
         }

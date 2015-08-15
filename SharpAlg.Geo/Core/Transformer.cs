@@ -29,22 +29,41 @@ namespace SharpAlg.Geo.Core {
             );
         }
 
-        static ExprList MergeAddArgs(IEnumerable<Expr> args) {
-            return MergeArgs(args, x => x.AsAdd(), BigRational.Zero, BigRational.Add);
+        static ExprList MergeAddArgs(CoreBuilder b, IEnumerable<Expr> args) {
+            return MergeArgs(b, args, x => x.AsAdd(), BigRational.Zero, BigRational.Add, false);
         }
-        static ExprList MergeMultArgs(IEnumerable<Expr> args) {
-            return MergeArgs(args, x => x.AsMult(), BigRational.One, BigRational.Multiply);
+        static ExprList MergeMultArgs(CoreBuilder b, IEnumerable<Expr> args) {
+            return MergeArgs(b, args, x => x.AsMult(), BigRational.One, BigRational.Multiply, true);
         }
-        static ExprList MergeArgs(IEnumerable<Expr> args, Func<Expr, ExprList?> getArgs, BigRational aggregateSeed, Func<BigRational, BigRational, BigRational> aggregate) {
-            var mergedArgs = args.SelectMany(x => getArgs(x) ?? x.Yield());
-            var @const = mergedArgs.Select(x => x.AsConst()).Where(x => x != null).Select(x => x.Value).Aggregate(aggregateSeed, aggregate);
-            var other = mergedArgs.Where(x => !x.IsConst());
+        static ExprList MergeArgs(
+            CoreBuilder b,
+            IEnumerable<Expr> args, 
+            Func<Expr, ExprList?> getArgs, 
+            BigRational aggregateSeed, 
+            Func<BigRational, BigRational, BigRational> aggregate,
+            bool useGrouping) 
+        {
+            var mergedArgs = args
+                .SelectMany(x => getArgs(x) ?? x.Yield());
+            var @const = mergedArgs
+                .Select(x => x.AsConst())
+                .Where(x => x != null)
+                .Select(x => x.Value)
+                .Aggregate(aggregateSeed, aggregate);
+            var other = mergedArgs
+                .Where(x => !x.IsConst());
+            if(useGrouping) {
+                other = other
+                    .Select(x => x.ExprOrPowerToPower())
+                    .GroupBy(x => x.Value)
+                    .Select(x => Power(b, x.Key, x.Aggregate(BigInteger.Zero, (acc, val) => acc + val.Power)));
+            }
             return (@const == aggregateSeed && other.Any() ? other : Const(@const).Yield().Concat(other)).ToImmutableArray();
         }
 
         static Expr Mult(CoreBuilder b, params Expr[] args) {
-            var mergedArgsNum = MergeMultArgs(args.Select(x => x.ExprOrDivToDiv().Num));
-            var mergedArgsDen = MergeMultArgs(args.Select(x => x.ExprOrDivToDiv().Den));
+            var mergedArgsNum = MergeMultArgs(b, args.Select(x => x.ExprOrDivToDiv().Num));
+            var mergedArgsDen = MergeMultArgs(b, args.Select(x => x.ExprOrDivToDiv().Den));
             if(Equals(mergedArgsNum.First(), Expr.Zero))
                 return Expr.Zero;
             return Div(b,
@@ -54,7 +73,7 @@ namespace SharpAlg.Geo.Core {
         }
 
         static Expr Add(CoreBuilder b, params Expr[] args) {
-            var mergedArgs = MergeAddArgs(args);
+            var mergedArgs = MergeAddArgs(b, args);
             return mergedArgs.Length == 1 ? mergedArgs.Single() : b.Add(mergedArgs);
         }
 
