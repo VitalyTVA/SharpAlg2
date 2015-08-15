@@ -29,6 +29,8 @@ namespace SharpAlg.Geo.Tests {
             builder.Build(x => (-5 * x) ^ 2).AssertSimpleStringRepresentation("25 * (x ^ 2)");
             builder.Build((x, y) => (-x * y) ^ 4).AssertSimpleStringRepresentation("(x ^ 4) * (y ^ 4)");
             builder.Build((x, y) => (-x * y) ^ 3).AssertSimpleStringRepresentation("-(x ^ 3) * (y ^ 3)");
+            builder.Build(x => ((-x) ^ 2) ^ 3).AssertSimpleStringRepresentation("x ^ 6");
+            builder.Build((x, y) => ((x * y) ^ 2) ^ 5).AssertSimpleStringRepresentation("(x ^ 10) * (y ^ 10)");
         }
         [Test]
         public void ElementaryConvolutionAdd() {

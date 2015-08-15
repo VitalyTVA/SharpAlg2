@@ -24,7 +24,8 @@ namespace SharpAlg.Geo.Core {
             return val.MatchDefault(
                 @default: x => b.Power(x, pow),
                 @const: x => Const(BigRational.Pow(x, pow)),
-                mult: args => Mult(b, args.Select(x => Power(b, x, pow)).ToArray())
+                mult: args => Mult(b, args.Select(x => Power(b, x, pow)).ToArray()),
+                power: (v, p) => b.Power(v, pow * p)
             );
         }
 

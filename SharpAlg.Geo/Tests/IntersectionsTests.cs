@@ -188,8 +188,8 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual("x ^ 2 + ((y - a) ^ 2) - (a ^ 2)", c2.ToString());
 
             var c1_c2 = builder.IntersectCircles(c1, c2);
-            Assert.AreEqual("(1/8 * (48 * a ^ 6) ^ (1/2) * a ^ (-2), 1/2 * a)", c1_c2.Item1.ToString());
-            Assert.AreEqual("(-1/8 * (48 * a ^ 6) ^ (1/2) * a ^ (-2), 1/2 * a)", c1_c2.Item2.ToString());
+            Assert.AreEqual("(1/8 * sqrt(48 * a ^ 6) / (a ^ 2), 1/2 * a)", c1_c2.Item1.ToString());
+            Assert.AreEqual("(-1/8 * sqrt(48 * a ^ 6) / (a ^ 2), 1/2 * a)", c1_c2.Item2.ToString());
             var l2 = builder.MakeLine(c1_c2.Item1, c1_c2.Item2);
 
             var l1_l2 = builder.IntersectLines(l1, l2);
