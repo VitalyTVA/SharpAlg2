@@ -5,8 +5,10 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
 
+using Numerics;
 using System.Numerics;
 using System.Collections.Generic;
+//using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
 
 <#GenStructure("SharpAlg.Geo.Core", "DivInfo", 
     new Field("Num", "Expr"), new Field("Den", "Expr"));#>
@@ -16,6 +18,8 @@ using System.Collections.Generic;
     new Field("Param", "string"), new Field("Power", "BigInteger"));#>
 <#GenStructure("SharpAlg.Geo.Core", "ParamPowerInfoListWithSqrt", 
     new Field("ParamPowerInfoList", "IEnumerable<ParamPowerInfo?>"), new Field("Sqrt", "Expr"));#>
+<#GenStructure("SharpAlg.Geo.Core", "KoeffMultInfo", 
+    new Field("Koeff", "BigRational"), new Field("Mult", "Expr"));#>
 
 <#+
 class Field {

@@ -173,6 +173,11 @@ namespace SharpAlg.Geo.Core {
         public static ExprList ExprOrMultToMult(this Expr expr) {
             return expr.AsMult() ?? ImmutableArray.Create(expr);
         }
+        public static KoeffMultInfo  ExprOrMultToKoeffMultInfo(this Expr expr, Builder.CoreBuilder b) {
+            var args = expr.ExprOrMultToMult();
+            var @const = args.First().AsConst() ?? BigRational.One;
+            return new KoeffMultInfo(@const, b.Multiply((args.First().IsConst() ? args.Tail() : args).ToImmutableArray()));
+        }
         public static ExprList ExprOrAddToAdd(this Expr expr) {
             return expr.AsAdd() ?? ImmutableArray.Create(expr);
         }

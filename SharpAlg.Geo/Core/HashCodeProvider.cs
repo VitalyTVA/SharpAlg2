@@ -36,7 +36,7 @@ namespace SharpAlg.Geo.Core {
 
         static int PairHash<T1, T2>(int salt, T1 value1, T2 value2) => salt ^ value1.GetHashCode() ^ value2.GetHashCode();
         static int SingleHash<T>(int salt, T value) => salt ^ value.GetHashCode();
-        static int SequenceHash<T>(int salt, IEnumerable<T> args) => args.Aggregate(salt, (hash, x) => hash ^ x.GetHashCode());
+        public static int SequenceHash<T>(int salt, IEnumerable<T> args) => args.Aggregate(salt, (hash, x) => hash ^ x.GetHashCode());
     }
     public sealed class DelegateEqualityComparer<T> : IEqualityComparer<T> {
         readonly Func<T, int> getHashCode;

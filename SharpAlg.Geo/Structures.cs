@@ -1,6 +1,8 @@
 ﻿
+using Numerics;
 using System.Numerics;
 using System.Collections.Generic;
+//using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
 
 namespace SharpAlg.Geo.Core {
     public struct DivInfo {
@@ -134,6 +136,40 @@ namespace SharpAlg.Geo.Core {
             return 
                 ParamPowerInfoList.GetHashCode() ^
                 Sqrt.GetHashCode();
+
+        }
+    }
+}
+namespace SharpAlg.Geo.Core {
+    public struct KoeffMultInfo {
+        public static bool operator !=(KoeffMultInfo left, KoeffMultInfo right) {
+            return !(left == right);
+        }
+
+        public static bool operator ==(KoeffMultInfo left, KoeffMultInfo right) {
+            return 
+                left.Koeff == right.Koeff &&
+                left.Mult == right.Mult;
+        }
+
+        public readonly BigRational Koeff;
+        public readonly Expr Mult;
+
+        public KoeffMultInfo(BigRational _Koeff, Expr _Mult) {
+            Koeff = _Koeff;
+            Mult = _Mult;
+        }
+
+        public override bool Equals(object obj) {
+            if (!(obj is KoeffMultInfo))
+                return false;
+            return this == (KoeffMultInfo)obj;
+        }
+
+        public override int GetHashCode() {
+            return 
+                Koeff.GetHashCode() ^
+                Mult.GetHashCode();
 
         }
     }

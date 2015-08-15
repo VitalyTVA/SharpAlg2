@@ -30,10 +30,16 @@ namespace SharpAlg.Geo.Core {
         }
 
         static ExprList MergeAddArgs(CoreBuilder b, IEnumerable<Expr> args) {
-            return MergeArgs(b, args, x => x.AsAdd(), BigRational.Zero, BigRational.Add, false);
+            return MergeArgs(b, args, x => x.AsAdd(), BigRational.Zero, BigRational.Add, 
+                y => y.Select(x => x.ExprOrMultToKoeffMultInfo(b))
+                    .GroupBy(x => x.Mult)
+                    .Select(x => Mult(b, new Expr[] { Const(x.Aggregate(BigRational.Zero, (acc, val) => acc + val.Koeff)), x.Key })));
         }
         static ExprList MergeMultArgs(CoreBuilder b, IEnumerable<Expr> args) {
-            return MergeArgs(b, args, x => x.AsMult(), BigRational.One, BigRational.Multiply, true);
+            return MergeArgs(b, args, x => x.AsMult(), BigRational.One, BigRational.Multiply, 
+                y => y.Select(x => x.ExprOrPowerToPower())
+                    .GroupBy(x => x.Value)
+                    .Select(x => Power(b, x.Key, x.Aggregate(BigInteger.Zero, (acc, val) => acc + val.Power))));
         }
         static ExprList MergeArgs(
             CoreBuilder b,
@@ -41,7 +47,7 @@ namespace SharpAlg.Geo.Core {
             Func<Expr, ExprList?> getArgs, 
             BigRational aggregateSeed, 
             Func<BigRational, BigRational, BigRational> aggregate,
-            bool useGrouping) 
+            Func<IEnumerable<Expr>, IEnumerable<Expr>> group) 
         {
             var mergedArgs = args
                 .SelectMany(x => getArgs(x) ?? x.Yield());
@@ -50,14 +56,7 @@ namespace SharpAlg.Geo.Core {
                 .Where(x => x != null)
                 .Select(x => x.Value)
                 .Aggregate(aggregateSeed, aggregate);
-            var other = mergedArgs
-                .Where(x => !x.IsConst());
-            if(useGrouping) {
-                other = other
-                    .Select(x => x.ExprOrPowerToPower())
-                    .GroupBy(x => x.Value)
-                    .Select(x => Power(b, x.Key, x.Aggregate(BigInteger.Zero, (acc, val) => acc + val.Power)));
-            }
+            var other = group(mergedArgs.Where(x => !x.IsConst()));
             return (@const == aggregateSeed && other.Any() ? other : Const(@const).Yield().Concat(other)).ToImmutableArray();
         }
 
