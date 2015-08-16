@@ -40,7 +40,7 @@ namespace SharpAlg.Geo.Core {
             return MergeArgs(b, args, x => x.AsAdd(), BigRational.Zero, BigRational.Add,
                 y => y.Select(x => x.ExprOrMultToKoeffMultInfo(b))
                     .GroupBy(x => x.Mult)
-                    .Select(x => Mult(b, new Expr[] { Const(x.Aggregate(BigRational.Zero, (acc, val) => acc + val.Koeff)), x.Key })));
+                    .Select(x => Mult(b, Const(x.Aggregate(BigRational.Zero, (acc, val) => acc + val.Koeff)).Yield().Concat(x.Key.ToMult()).ToArray())));
         }
         static ExprList MergeMultArgs(CoreBuilder b, IEnumerable<Expr> args) {
             return MergeArgs(b, args, x => x.AsMult(), BigRational.One, BigRational.Multiply,
