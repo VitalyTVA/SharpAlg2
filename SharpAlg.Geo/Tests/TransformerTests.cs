@@ -82,6 +82,7 @@ namespace SharpAlg.Geo.Tests {
             builder.Build((x, y) => sqrt(x / y)).AssertSimpleStringRepresentation("sqrt(x / y)");
 
             builder.Build(x => 0 / x).AssertSimpleStringRepresentation("0");
+            builder.Build((x, y) => (y - y) / x).AssertSimpleStringRepresentation("0");
         }
         [Test]
         public void DivSimplify() {
