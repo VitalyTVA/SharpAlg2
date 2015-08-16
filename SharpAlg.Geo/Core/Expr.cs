@@ -48,7 +48,7 @@ namespace SharpAlg.Geo.Core {
     }
 
     public static class ExprExtensions {
-        public static Expr Sqrt(Expr value) {
+        public static Expr sqrt(Expr value) {
             throw new CannotImplicitlyCreateExpressionException();
             //return new SqrtExpr(value);
         }

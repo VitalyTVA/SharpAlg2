@@ -193,6 +193,7 @@ namespace SharpAlg.Geo.Tests {
             var l2 = builder.MakeLine(c1_c2.Item1, c1_c2.Item2);
 
             var l1_l2 = builder.IntersectLines(l1, l2);
+            Assert.AreEqual(new RealPoint(0, 0.5), l1_l2.ToRealPoint(ImmutableContext.Empty.Register("a", 1)));
             Assert.AreEqual("(0, 1/2 * a)", l1_l2.ToString()); 
         }
         [Test, Ignore]

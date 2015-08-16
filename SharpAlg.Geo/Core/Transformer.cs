@@ -83,6 +83,8 @@ namespace SharpAlg.Geo.Core {
         }
 
         static Expr Div(CoreBuilder b, Expr num, Expr den) {
+            if(Equals(num, Expr.Zero))
+                return Expr.Zero;
             if(Equals(den, Expr.One))
                 return num;
 

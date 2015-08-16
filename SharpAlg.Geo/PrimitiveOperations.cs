@@ -71,7 +71,7 @@ namespace SharpAlg.Geo {
             return builder.Build((A, B, C, X) => -(A * X + C) / B, l.A, l.B, l.C, x);
         }
         internal static Tuple<Expr, Expr> SolveQuadraticEquation(this Builder builder, Expr a, Expr b, Expr c) {
-            var d = builder.Build((A, B, C) => Sqrt((B ^ 2) - 4 * A * C), a, b, c);
+            var d = builder.Build((A, B, C) => sqrt((B ^ 2) - 4 * A * C), a, b, c);
             var x1 = builder.Build((A, B, D) => (-B + D) / (2 * A), a, b, d);
             var x2 = builder.Build((A, B, D) => (-B - D) / (2 * A), a, b, d);
             return Tuple.Create(x1, x2);

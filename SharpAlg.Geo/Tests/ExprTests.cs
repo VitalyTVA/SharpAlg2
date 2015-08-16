@@ -54,7 +54,7 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual((BigRational)5, five_mult_a[0].ToConst());
             Assert.AreSame(a, five_mult_a[1]);
 
-            var sqrt_a = builder.Build(x => Sqrt(x), a).ToSqrt();
+            var sqrt_a = builder.Build(x => sqrt(x), a).ToSqrt();
             Assert.AreSame(a, sqrt_a);
 
             var a_power_five = builder.Build(x => x ^ 5, a).ToPower();
@@ -112,7 +112,7 @@ namespace SharpAlg.Geo.Tests {
             builder.Build((x, y) => y * (-x)).AssertSimpleStringRepresentation("y * (-1) * x");
             builder.Build((x, y) => -y * x).AssertSimpleStringRepresentation("-y * x");
 
-            builder.Build((x, y) =>Sqrt(x + y)).AssertSimpleStringRepresentation("sqrt(x + y)");
+            builder.Build((x, y) =>sqrt(x + y)).AssertSimpleStringRepresentation("sqrt(x + y)");
         }
         [Test]
         public void ToStringTest_Div() {
@@ -288,7 +288,7 @@ namespace SharpAlg.Geo.Tests {
                 }
                 throw new InvalidOperationException();
             };
-            var sqrtExpr = builder.Build(a => Sqrt(a));
+            var sqrtExpr = builder.Build(a => sqrt(a));
             var addExpr = builder.Build(b => b + 1);
             var expr = builder.Build((x, y) => x + y + 1 / x + 1 / y, sqrtExpr, addExpr);
             Assert.AreEqual(6.75, expr.ToReal(getParam));
@@ -296,7 +296,7 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test]
         public void AddExprMemoization() {
-            var addArgs = builder.Build(x => Sqrt(x + 1) + 1 / (x + 1)).ToAdd();
+            var addArgs = builder.Build(x => sqrt(x + 1) + 1 / (x + 1)).ToAdd();
             Assert.AreSame(addArgs.First().ToSqrt(), addArgs.Last().ToDiv().Den);
             var e2 = builder.Build(x => x + 1);
             Assert.AreSame(addArgs.First().ToSqrt(), e2);
@@ -305,12 +305,12 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test]
         public void MultExprMemoization() {
-            var addArgs = builder.Build(x => Sqrt(2 * x) + 1 / (2 * x)).ToAdd();
+            var addArgs = builder.Build(x => sqrt(2 * x) + 1 / (2 * x)).ToAdd();
             Assert.AreSame(addArgs.First().ToSqrt(), addArgs.Last().ToDiv().Den);
         }
         [Test]
         public void SqrtExprMemoization() {
-            var addArgs = builder.Build(x => Sqrt(2 * x) + 1 / Sqrt(2 * x)).ToAdd();
+            var addArgs = builder.Build(x => sqrt(2 * x) + 1 / sqrt(2 * x)).ToAdd();
             Assert.AreSame(addArgs.First(), addArgs.Last().ToDiv().Den);
         }
         [Test]

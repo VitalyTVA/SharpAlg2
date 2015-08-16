@@ -46,7 +46,7 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test]
         public void ElementaryConvolution_Sqrt() {
-            builder.Build(x => Sqrt(0)).AssertSimpleStringRepresentation("0");
+            builder.Build(x => sqrt(0)).AssertSimpleStringRepresentation("0");
         }
         [Test]
         public void Group_Mult() {
@@ -79,7 +79,9 @@ namespace SharpAlg.Geo.Tests {
             builder.Build((x, y, z, w, v) => (x / y) / (z / (w * v))).AssertSimpleStringRepresentation("(x * w * v) / (y * z)");
             builder.Build((x, y, z, w, v) => (x / y) / ((z * w) / v)).AssertSimpleStringRepresentation("(x * v) / (y * z * w)");
 
-            builder.Build((x, y) => Sqrt(x / y)).AssertSimpleStringRepresentation("sqrt(x / y)");
+            builder.Build((x, y) => sqrt(x / y)).AssertSimpleStringRepresentation("sqrt(x / y)");
+
+            builder.Build(x => 0 / x).AssertSimpleStringRepresentation("0");
         }
         [Test]
         public void DivSimplify() {
@@ -87,6 +89,11 @@ namespace SharpAlg.Geo.Tests {
                 .AssertSimpleStringRepresentation("(5/2 * (x ^ 3) * z) / ((y ^ 2) * w)");
             builder.Build(x => (x ^ 5) / x)
                 .AssertSimpleStringRepresentation("x ^ 4");
+
+
+
+            //builder.Build(a => ((-1 / 16 * sqrt(48 * (a ^ 6))) / a) / ((-1 / 8 * sqrt(48 * (a ^ 6))) / (a ^ 2)))
+            //    .AssertSimpleStringRepresentation("x ^ 4");
         }
     }
 }

@@ -28,7 +28,7 @@ namespace SharpAlg.Geo.Core {
             var argsDict = expression.Parameters.Select((x, i) => new { Parameter = x, Expr = args[i] }).ToImmutableDictionary(x => x.Parameter, x => x.Expr);
             return builder.BuildCore(expression.Body, x => argsDict[x]);
         }
-        static readonly Expression<Func<Expr, Expr>> SqrtExpression = x => Sqrt(x);
+        static readonly Expression<Func<Expr, Expr>> SqrtExpression = x => sqrt(x);
 
 
         static Expr BuildCore(this Builder builder, Expression expression, Func<ParameterExpression, Expr> getArgs) {
