@@ -23,10 +23,13 @@ using System.Collections.Generic;
 
 <#+
 class Field {
-    public readonly string Name, Type;
-    public Field(string name, string type) {
+    public readonly string Name, Type, HashCode; 
+    public readonly new string Equals; 
+    public Field(string name, string type, string equals = "Equals", string hashCode = "GetHashCode()") {
         this.Name = name;
         this.Type = type;
+        this.Equals = equals;
+        this.HashCode = hashCode;
     }
 }
 void GenStructure(string nameSpace, string name, params Field[] fields) {
@@ -40,9 +43,9 @@ namespace <#=nameSpace#> {
         public static bool operator ==(<#=name#> left, <#=name#> right) {
             return 
 <#+foreach(var field in fields.Take(fields.Length - 1)) {#>
-                left.<#=field.Name#> == right.<#=field.Name#> &&
+                <#=fields.Last().Equals#>(left.<#=field.Name#>, right.<#=field.Name#>) &&
 <#+}#>
-                left.<#=fields.Last().Name#> == right.<#=fields.Last().Name#>;
+                <#=fields.Last().Equals#>(left.<#=fields.Last().Name#>, right.<#=fields.Last().Name#>);
         }
 
 <#+foreach(var field in fields) {#>
@@ -64,9 +67,9 @@ namespace <#=nameSpace#> {
         public override int GetHashCode() {
             return 
 <#+foreach(var field in fields.Take(fields.Length - 1)) {#>
-                <#=field.Name#>.GetHashCode() ^
+                <#=field.Name#>.<#=fields.Last().HashCode#> ^
 <#+}#>
-                <#=fields.Last().Name#>.GetHashCode();
+                <#=fields.Last().Name#>.<#=fields.Last().HashCode#>;
 
         }
     }

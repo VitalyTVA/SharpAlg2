@@ -12,8 +12,8 @@ namespace SharpAlg.Geo.Core {
 
         public static bool operator ==(DivInfo left, DivInfo right) {
             return 
-                left.Num == right.Num &&
-                left.Den == right.Den;
+                Equals(left.Num, right.Num) &&
+                Equals(left.Den, right.Den);
         }
 
         public readonly Expr Num;
@@ -46,8 +46,8 @@ namespace SharpAlg.Geo.Core {
 
         public static bool operator ==(PowerInfo left, PowerInfo right) {
             return 
-                left.Value == right.Value &&
-                left.Power == right.Power;
+                Equals(left.Value, right.Value) &&
+                Equals(left.Power, right.Power);
         }
 
         public readonly Expr Value;
@@ -80,8 +80,8 @@ namespace SharpAlg.Geo.Core {
 
         public static bool operator ==(ParamPowerInfo left, ParamPowerInfo right) {
             return 
-                left.Param == right.Param &&
-                left.Power == right.Power;
+                Equals(left.Param, right.Param) &&
+                Equals(left.Power, right.Power);
         }
 
         public readonly string Param;
@@ -114,8 +114,8 @@ namespace SharpAlg.Geo.Core {
 
         public static bool operator ==(ParamPowerInfoListWithSqrt left, ParamPowerInfoListWithSqrt right) {
             return 
-                left.ParamPowerInfoList == right.ParamPowerInfoList &&
-                left.Sqrt == right.Sqrt;
+                Equals(left.ParamPowerInfoList, right.ParamPowerInfoList) &&
+                Equals(left.Sqrt, right.Sqrt);
         }
 
         public readonly IEnumerable<ParamPowerInfo?> ParamPowerInfoList;
@@ -148,8 +148,8 @@ namespace SharpAlg.Geo.Core {
 
         public static bool operator ==(KoeffMultInfo left, KoeffMultInfo right) {
             return 
-                left.Koeff == right.Koeff &&
-                left.Mult == right.Mult;
+                Equals(left.Koeff, right.Koeff) &&
+                Equals(left.Mult, right.Mult);
         }
 
         public readonly BigRational Koeff;
