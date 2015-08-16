@@ -28,15 +28,15 @@ namespace SharpAlg.Geo.Core {
         public static int DivHash(Expr numerator, Expr denominator)
             => PairHash(DivSalt, numerator, denominator);
         public static int AddHash(IEnumerable<Expr> args)
-            => SequenceHash(AddSalt, args);
+            => args.SequenceHash(AddSalt);
         public static int MultHash(IEnumerable<Expr> args)
-            => SequenceHash(MultSalt, args);
+            => args.SequenceHash(MultSalt);
         public static int SqrtHash(Expr value)
             => SingleHash(SqrtSalt, value);
 
         static int PairHash<T1, T2>(int salt, T1 value1, T2 value2) => salt ^ value1.GetHashCode() ^ value2.GetHashCode();
         static int SingleHash<T>(int salt, T value) => salt ^ value.GetHashCode();
-        public static int SequenceHash<T>(int salt, IEnumerable<T> args) => args.Aggregate(salt, (hash, x) => hash ^ x.GetHashCode());
+        public static int SequenceHash<T>(this IEnumerable<T> args, int salt) => args.Aggregate(salt, (hash, x) => hash ^ x.GetHashCode());
     }
     public sealed class DelegateEqualityComparer<T> : IEqualityComparer<T> {
         readonly Func<T, int> getHashCode;
