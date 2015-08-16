@@ -1,7 +1,6 @@
 ﻿
 using Numerics;
 using System.Numerics;
-using System.Linq;
 using System.Collections.Generic;
 using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
 

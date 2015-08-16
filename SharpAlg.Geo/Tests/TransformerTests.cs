@@ -87,6 +87,10 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test]
         public void DivSimplify() {
+            builder.Build(x => (2 * x) / x)
+                .AssertSimpleStringRepresentation("2");
+            builder.Build(x => (2 * x) / (2 * x))
+                .AssertSimpleStringRepresentation("1");
             builder.Build((x, y, z, w) => (10 * (x ^ 5) * y * z) / (4 * (x ^ 2) * (y ^ 3) * w))
                 .AssertSimpleStringRepresentation("(5/2 * (x ^ 3) * z) / ((y ^ 2) * w)");
             builder.Build(x => (x ^ 5) / x)
@@ -96,6 +100,17 @@ namespace SharpAlg.Geo.Tests {
 
             builder.Build(x => (2 * (x ^ 2) - (-2 * (x ^ 2))) / x)
                 .AssertSimpleStringRepresentation("4 * x");
+        }
+
+        [Test, Ignore]
+        public void Mult_OpenBraces() {
+            builder.Build((x, y, z, w) => (x + y) * (z + w))
+                .AssertSimpleStringRepresentation("x * z + x * w + y * z + y * w");
+            builder.Build((x, y, z, w) => (x + y) * ((z ^ 3) + 2 * w) * ((x ^ 2) + w))
+                .AssertSimpleStringRepresentation("(x ^ 3) * (z ^ 3) + x * (z ^ 3) * w + 2 * (x ^ 3) * w + 2 * x * (w ^ 2) + y * (z ^ 3) * (x ^ 2) + y * (z ^ 3) * w + 2 * y * w * (x ^ 2) + 2 * y * (w ^ 2)");
+            builder.Build((x, y, z, w) => 2 * (x + y))
+                .AssertSimpleStringRepresentation("2 * x + 2 * y");
+            //builder.Build((x, y, z, w) => (x + y) * (x + 2 * y)).AssertSimpleStringRepresentation("(x ^ 2) + 3 * x * y + 2 * (y ^ 2)");//TODO sort
         }
     }
 }

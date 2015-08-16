@@ -67,8 +67,17 @@ namespace SharpAlg.Geo.Core {
         }
 
         static Expr Mult(CoreBuilder b, params Expr[] args) {
-            var mergedArgsNum = MergeMultArgs(b, args.Select(x => x.ExprOrDivToDiv().Num));
-            var mergedArgsDen = MergeMultArgs(b, args.Select(x => x.ExprOrDivToDiv().Den));
+            //var openBraceArgs = OpenBraces(b, args.Select(x => x.ExprOrAddToAdd()));
+            //if(openBraceArgs.Length > 1) {
+            //    return Add(b, openBraceArgs.ToArray());
+            //}
+            //return Mult_NoOpenBraces(b, openBraceArgs.Single().ExprOrMultToMult());
+
+            return Mult_NoOpenBraces(b, args);
+        }
+        static Expr Mult_NoOpenBraces(CoreBuilder b, IEnumerable<Expr> openBraceArgs) {
+            var mergedArgsNum = MergeMultArgs(b, openBraceArgs.Select(x => x.ExprOrDivToDiv().Num));
+            var mergedArgsDen = MergeMultArgs(b, openBraceArgs.Select(x => x.ExprOrDivToDiv().Den));
             if(Equals(mergedArgsNum.First(), Expr.Zero))
                 return Expr.Zero;
             return Div(b,
@@ -76,6 +85,14 @@ namespace SharpAlg.Geo.Core {
                 mergedArgsDen.Length == 1 ? mergedArgsDen.Single() : b.Multiply(mergedArgsDen)
             );
         }
+
+        //static ExprList OpenBraces(CoreBuilder b, IEnumerable<ExprList> addArgs) {
+        //    if(!addArgs.Any())
+        //        return ImmutableArray<Expr>.Empty;
+        //    return addArgs.Tail()
+        //        .Aggregate<ExprList, IEnumerable<Expr>>(addArgs.First(), (acc, val) => acc.SelectMany(x => val, (x, y) => Mult_NoOpenBraces(b, ImmutableArray.Create(x, y))))
+        //        .ToImmutableArray();
+        //}
 
         static Expr Add(CoreBuilder b, params Expr[] args) {
             var mergedArgs = MergeAddArgs(b, args);
@@ -112,7 +129,7 @@ namespace SharpAlg.Geo.Core {
         }
         static Expr[] Divide(CoreBuilder builder, ExprList x, PowerInfo[] gcd) {
             var xInfoList = x.Select(a => a.ExprOrPowerToPower());
-            return xInfoList.Select(a => {
+            var result = xInfoList.Select(a => {
                 var foundGcdPart = gcd.Select(b => (PowerInfo?)b).FirstOrDefault(b => Equals(a.Value, b.Value.Value));
                 if(foundGcdPart != null)
                     return new PowerInfo(a.Value, a.Power - foundGcdPart.Value.Power);
@@ -120,6 +137,7 @@ namespace SharpAlg.Geo.Core {
             }).Where(a => a.Power > 0)
             .Select(a => Power(builder, a.Value, a.Power))
             .ToArray();
+            return result.Length > 0 ? result : new[] { Expr.One };
         }
     }
     public static class DefaultTransformer {
