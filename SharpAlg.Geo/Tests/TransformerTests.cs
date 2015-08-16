@@ -59,6 +59,7 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test]
         public void Mult() {
+            builder.Build((x, y, z) => 2 * (x / y)).AssertSimpleStringRepresentation("(2 * x) / y");
             builder.Build((x, y, z) => (x / y) * z).AssertSimpleStringRepresentation("(x * z) / y");
             builder.Build((x, y, z) => x * (y / z)).AssertSimpleStringRepresentation("(x * y) / z");
             builder.Build((x, y, z, w) => (x / y) * (z / w)).AssertSimpleStringRepresentation("(x * z) / (y * w)");
@@ -92,6 +93,9 @@ namespace SharpAlg.Geo.Tests {
                 .AssertSimpleStringRepresentation("x ^ 4");
             builder.Build(a => (((Expr)(-1) / 16 * sqrt(48 * (a ^ 6))) / a) / (((Expr)(-1) / 8 * sqrt(48 * (a ^ 6))) / (a ^ 2)))
                 .AssertSimpleStringRepresentation("1/2 * a");
+
+            builder.Build(x => (2 * (x ^ 2) - (-2 * (x ^ 2))) / x)
+                .AssertSimpleStringRepresentation("4 * x");
         }
     }
 }
