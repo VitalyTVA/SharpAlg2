@@ -9,14 +9,22 @@ using static SharpAlg.Geo.Core.ExprExtensions;
 using System.Collections.Generic;
 
 namespace SharpAlg.Geo.Core {
-    public static class SingleDivTransformer {
-        public static readonly Transformer Instance = new Transformer(
-            add: Add,
-            mult: Mult,
-            power: (b, val, pow) => Power(b, val, pow),
-            div: Div,
-            sqrt: (b, e) => Sqrt(b, e)
-        );
+    public class SingleDivTransformer {
+        public static Transformer Create(bool openBraces) {
+            var transformer = new SingleDivTransformer(openBraces);
+            return new Transformer(
+                add: transformer.Add,
+                mult: transformer.Mult,
+                power: (b, val, pow) => transformer.Power(b, val, pow),
+                div: transformer.Div,
+                sqrt: (b, e) => Sqrt(b, e)
+            );
+        }
+        readonly bool openBraces;
+
+        SingleDivTransformer(bool openBraces) {
+            this.openBraces = openBraces;
+        }
 
         static Expr Sqrt(CoreBuilder b, Expr e) {
             var @const = e.AsConst();
@@ -25,7 +33,7 @@ namespace SharpAlg.Geo.Core {
             return b.Sqrt(e);
         }
 
-        static Expr Power(CoreBuilder b, Expr val, BigInteger pow) {
+        Expr Power(CoreBuilder b, Expr val, BigInteger pow) {
             if(pow == BigInteger.One)
                 return val;
             return val.MatchDefault(
@@ -36,13 +44,13 @@ namespace SharpAlg.Geo.Core {
             );
         }
 
-        static ExprList MergeAddArgs(CoreBuilder builber, IEnumerable<Expr> args) {
+        ExprList MergeAddArgs(CoreBuilder builber, IEnumerable<Expr> args) {
             return MergeArgs(builber, args, x => x.AsAdd(), BigRational.Zero, BigRational.Add,
                 y => y.Select(x => x.ExprOrMultToKoeffMultInfo(builber))
                     .GroupBy(x => x.Mult, new DelegateEqualityComparer<ExprList>((a, b) => Enumerable.SequenceEqual(a, b), a => a.SequenceHash()))
                     .Select(x => Mult(builber, Const(x.Aggregate(BigRational.Zero, (acc, val) => acc + val.Koeff)).Yield().Concat(x.Key).ToArray())));
         }
-        static ExprList MergeMultArgs(CoreBuilder builder, IEnumerable<Expr> args) {
+        ExprList MergeMultArgs(CoreBuilder builder, IEnumerable<Expr> args) {
             return MergeArgs(builder, args, x => x.AsMult(), BigRational.One, BigRational.Multiply,
                 y => y.Select(x => x.ExprOrPowerToPower())
                     .GroupBy(x => x.Value)
@@ -66,16 +74,17 @@ namespace SharpAlg.Geo.Core {
             return (@const == aggregateSeed && other.Any() ? other : Const(@const).Yield().Concat(other)).ToImmutableArray();
         }
 
-        static Expr Mult(CoreBuilder b, params Expr[] args) {
-            //var openBraceArgs = OpenBraces(b, args.Select(x => x.ExprOrAddToAdd()));
-            //if(openBraceArgs.Length > 1) {
-            //    return Add(b, openBraceArgs.ToArray());
-            //}
-            //return Mult_NoOpenBraces(b, openBraceArgs.Single().ExprOrMultToMult());
-
+        Expr Mult(CoreBuilder b, params Expr[] args) {
+            if(openBraces) {
+                var openBraceArgs = OpenBraces(b, args.Select(x => x.ExprOrAddToAdd()));
+                if(openBraceArgs.Length > 1) {
+                    return Add(b, openBraceArgs.ToArray());
+                }
+                return Mult_NoOpenBraces(b, openBraceArgs.Single().ExprOrMultToMult());
+            }
             return Mult_NoOpenBraces(b, args);
         }
-        static Expr Mult_NoOpenBraces(CoreBuilder b, IEnumerable<Expr> openBraceArgs) {
+        Expr Mult_NoOpenBraces(CoreBuilder b, IEnumerable<Expr> openBraceArgs) {
             var mergedArgsNum = MergeMultArgs(b, openBraceArgs.Select(x => x.ExprOrDivToDiv().Num));
             var mergedArgsDen = MergeMultArgs(b, openBraceArgs.Select(x => x.ExprOrDivToDiv().Den));
             if(Equals(mergedArgsNum.First(), Expr.Zero))
@@ -86,20 +95,20 @@ namespace SharpAlg.Geo.Core {
             );
         }
 
-        //static ExprList OpenBraces(CoreBuilder b, IEnumerable<ExprList> addArgs) {
-        //    if(!addArgs.Any())
-        //        return ImmutableArray<Expr>.Empty;
-        //    return addArgs.Tail()
-        //        .Aggregate<ExprList, IEnumerable<Expr>>(addArgs.First(), (acc, val) => acc.SelectMany(x => val, (x, y) => Mult_NoOpenBraces(b, ImmutableArray.Create(x, y))))
-        //        .ToImmutableArray();
-        //}
+        ExprList OpenBraces(CoreBuilder b, IEnumerable<ExprList> addArgs) {
+            if(!addArgs.Any())
+                return ImmutableArray<Expr>.Empty;
+            return addArgs.Tail()
+                .Aggregate<ExprList, IEnumerable<Expr>>(addArgs.First(), (acc, val) => acc.SelectMany(x => val, (x, y) => Mult_NoOpenBraces(b, ImmutableArray.Create(x, y))))
+                .ToImmutableArray();
+        }
 
-        static Expr Add(CoreBuilder b, params Expr[] args) {
+        Expr Add(CoreBuilder b, params Expr[] args) {
             var mergedArgs = MergeAddArgs(b, args);
             return mergedArgs.Length == 1 ? mergedArgs.Single() : b.Add(mergedArgs);
         }
 
-        static Expr Div(CoreBuilder b, Expr num, Expr den) {
+        Expr Div(CoreBuilder b, Expr num, Expr den) {
             if(Equals(num, Expr.Zero))
                 return Expr.Zero;
             if(Equals(den, Expr.One))
@@ -127,7 +136,7 @@ namespace SharpAlg.Geo.Core {
                 .Join(yInfoList, a => a.Value, a => a.Value, (a, b) => new PowerInfo(a.Value, BigInteger.Min(a.Power, b.Power)))
                 .ToArray();
         }
-        static Expr[] Divide(CoreBuilder builder, ExprList x, PowerInfo[] gcd) {
+        Expr[] Divide(CoreBuilder builder, ExprList x, PowerInfo[] gcd) {
             var xInfoList = x.Select(a => a.ExprOrPowerToPower());
             var result = xInfoList.Select(a => {
                 var foundGcdPart = gcd.Select(b => (PowerInfo?)b).FirstOrDefault(b => Equals(a.Value, b.Value.Value));

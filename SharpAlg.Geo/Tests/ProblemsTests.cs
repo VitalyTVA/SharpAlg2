@@ -7,6 +7,9 @@ using SharpAlg.Geo.Core;
 namespace SharpAlg.Geo.Tests {
     [TestFixture]
     public class ProblemsTests : ExprFunctionalTestsBase {
+        protected override Builder CreateBuilder() {
+            return Builder.CreateRealLife(openBraces: false);
+        }
         [Test, Explicit]
         public void GetAllMapleCommand() {
             var t = string.Concat(new[] {

@@ -219,6 +219,7 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test]
         public void LongIntersectionsSequence() {
+            builder = Builder.CreateSimple();
             var a = Param("A");
             var b = Param("B");
             var c = Param("C");
