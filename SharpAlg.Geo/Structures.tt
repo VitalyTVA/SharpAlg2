@@ -7,8 +7,9 @@
 
 using Numerics;
 using System.Numerics;
+using System.Linq;
 using System.Collections.Generic;
-//using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
+using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
 
 <#GenStructure("SharpAlg.Geo.Core", "DivInfo", 
     new Field("Num", "Expr"), new Field("Den", "Expr"));#>
@@ -19,7 +20,7 @@ using System.Collections.Generic;
 <#GenStructure("SharpAlg.Geo.Core", "ParamPowerInfoListWithSqrt", 
     new Field("ParamPowerInfoList", "IEnumerable<ParamPowerInfo?>"), new Field("Sqrt", "Expr"));#>
 <#GenStructure("SharpAlg.Geo.Core", "KoeffMultInfo", 
-    new Field("Koeff", "BigRational"), new Field("Mult", "Expr"));#>
+    new Field("Koeff", "BigRational"), new Field("Mult", "ExprList"));#>
 
 <#+
 class Field {
@@ -43,7 +44,7 @@ namespace <#=nameSpace#> {
         public static bool operator ==(<#=name#> left, <#=name#> right) {
             return 
 <#+foreach(var field in fields.Take(fields.Length - 1)) {#>
-                <#=fields.Last().Equals#>(left.<#=field.Name#>, right.<#=field.Name#>) &&
+                <#=field.Equals#>(left.<#=field.Name#>, right.<#=field.Name#>) &&
 <#+}#>
                 <#=fields.Last().Equals#>(left.<#=fields.Last().Name#>, right.<#=fields.Last().Name#>);
         }
@@ -67,7 +68,7 @@ namespace <#=nameSpace#> {
         public override int GetHashCode() {
             return 
 <#+foreach(var field in fields.Take(fields.Length - 1)) {#>
-                <#=field.Name#>.<#=fields.Last().HashCode#> ^
+                <#=field.Name#>.<#=field.HashCode#> ^
 <#+}#>
                 <#=fields.Last().Name#>.<#=fields.Last().HashCode#>;
 

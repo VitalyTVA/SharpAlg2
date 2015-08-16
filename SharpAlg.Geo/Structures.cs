@@ -1,8 +1,9 @@
 ﻿
 using Numerics;
 using System.Numerics;
+using System.Linq;
 using System.Collections.Generic;
-//using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
+using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
 
 namespace SharpAlg.Geo.Core {
     public struct DivInfo {
@@ -153,9 +154,9 @@ namespace SharpAlg.Geo.Core {
         }
 
         public readonly BigRational Koeff;
-        public readonly Expr Mult;
+        public readonly ExprList Mult;
 
-        public KoeffMultInfo(BigRational _Koeff, Expr _Mult) {
+        public KoeffMultInfo(BigRational _Koeff, ExprList _Mult) {
             Koeff = _Koeff;
             Mult = _Mult;
         }

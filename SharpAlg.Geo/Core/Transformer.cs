@@ -36,17 +36,17 @@ namespace SharpAlg.Geo.Core {
             );
         }
 
-        static ExprList MergeAddArgs(CoreBuilder b, IEnumerable<Expr> args) {
-            return MergeArgs(b, args, x => x.AsAdd(), BigRational.Zero, BigRational.Add,
-                y => y.Select(x => x.ExprOrMultToKoeffMultInfo(b))
-                    .GroupBy(x => x.Mult)
-                    .Select(x => Mult(b, Const(x.Aggregate(BigRational.Zero, (acc, val) => acc + val.Koeff)).Yield().Concat(x.Key.ToMult()).ToArray())));
+        static ExprList MergeAddArgs(CoreBuilder builber, IEnumerable<Expr> args) {
+            return MergeArgs(builber, args, x => x.AsAdd(), BigRational.Zero, BigRational.Add,
+                y => y.Select(x => x.ExprOrMultToKoeffMultInfo(builber))
+                    .GroupBy(x => x.Mult, new DelegateEqualityComparer<ExprList>((a, b) => Enumerable.SequenceEqual(a, b), a => a.SequenceHash()))
+                    .Select(x => Mult(builber, Const(x.Aggregate(BigRational.Zero, (acc, val) => acc + val.Koeff)).Yield().Concat(x.Key).ToArray())));
         }
-        static ExprList MergeMultArgs(CoreBuilder b, IEnumerable<Expr> args) {
-            return MergeArgs(b, args, x => x.AsMult(), BigRational.One, BigRational.Multiply,
+        static ExprList MergeMultArgs(CoreBuilder builder, IEnumerable<Expr> args) {
+            return MergeArgs(builder, args, x => x.AsMult(), BigRational.One, BigRational.Multiply,
                 y => y.Select(x => x.ExprOrPowerToPower())
                     .GroupBy(x => x.Value)
-                    .Select(x => Power(b, x.Key, x.Aggregate(BigInteger.Zero, (acc, val) => acc + val.Power))));
+                    .Select(x => Power(builder, x.Key, x.Aggregate(BigInteger.Zero, (acc, val) => acc + val.Power))));
         }
         static ExprList MergeArgs(
             CoreBuilder b,
@@ -93,10 +93,10 @@ namespace SharpAlg.Geo.Core {
 
             var numWithCoeff = Mult(b, numDiv.Num, denDiv.Den).ExprOrMultToKoeffMultInfo(b);
             var denWithCoeff = Mult(b, numDiv.Den, denDiv.Num).ExprOrMultToKoeffMultInfo(b);
-            var gcd = Gcd(numWithCoeff.Mult.ToMult(), denWithCoeff.Mult.ToMult());
+            var gcd = Gcd(numWithCoeff.Mult, denWithCoeff.Mult);
 
-            var finalNum = Mult(b, Const(numWithCoeff.Koeff / denWithCoeff.Koeff).Yield().Concat(Divide(b, numWithCoeff.Mult.ToMult(), gcd)).ToArray());
-            var finalDen = Mult(b, Divide(b, denWithCoeff.Mult.ToMult(), gcd));
+            var finalNum = Mult(b, Const(numWithCoeff.Koeff / denWithCoeff.Koeff).Yield().Concat(Divide(b, numWithCoeff.Mult, gcd)).ToArray());
+            var finalDen = Mult(b, Divide(b, denWithCoeff.Mult, gcd));
 
             if(Equals(finalDen, Expr.One))
                 return finalNum;
