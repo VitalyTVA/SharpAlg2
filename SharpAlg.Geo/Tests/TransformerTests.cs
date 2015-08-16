@@ -101,7 +101,12 @@ namespace SharpAlg.Geo.Tests {
             builder.Build(x => (2 * (x ^ 2) - (-2 * (x ^ 2))) / x)
                 .AssertSimpleStringRepresentation("4 * x");
         }
-
+        //TODO sort
+        [Test, Ignore]
+        public void Mult_Sort() {
+            builder.Build((x, y, z, w) => y * x)
+                .AssertSimpleStringRepresentation("x * y");
+        }
         [Test]
         public void Mult_OpenBraces() {
             builder.Build((x, y, z, w) => (x + y) * (z + w))

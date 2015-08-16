@@ -47,7 +47,7 @@ namespace SharpAlg.Geo.Core {
         ExprList MergeAddArgs(CoreBuilder builber, IEnumerable<Expr> args) {
             return MergeArgs(builber, args, x => x.AsAdd(), BigRational.Zero, BigRational.Add,
                 y => y.Select(x => x.ExprOrMultToKoeffMultInfo(builber))
-                    .GroupBy(x => x.Mult, new DelegateEqualityComparer<ExprList>((a, b) => Enumerable.SequenceEqual(a, b), a => a.SequenceHash()))
+                    .GroupBy(x => x.Mult, LinqExtensions.CreateEnumerableComparer<Expr>())
                     .Select(x => Mult(builber, Const(x.Aggregate(BigRational.Zero, (acc, val) => acc + val.Koeff)).Yield().Concat(x.Key).ToArray())));
         }
         ExprList MergeMultArgs(CoreBuilder builder, IEnumerable<Expr> args) {

@@ -110,6 +110,9 @@ namespace SharpAlg.Geo.Core {
         //public static IEnumerable<T> Flatten<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> getItems) {
         //    return source.SelectMany(item => item.Yield().Concat(getItems(item).Flatten(getItems)));
         //}
+        public static IEqualityComparer<IEnumerable<T>> CreateEnumerableComparer<T>(int salt = 0) {
+            return new DelegateEqualityComparer<IEnumerable<T>>(Enumerable.SequenceEqual, x => x.SequenceHash(salt));
+        }
     }
     //public class NoMatchException : ApplicationException { }
 
