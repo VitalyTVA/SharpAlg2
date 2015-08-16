@@ -85,12 +85,39 @@ namespace SharpAlg.Geo.Core {
         static Expr Div(CoreBuilder b, Expr num, Expr den) {
             if(Equals(den, Expr.One))
                 return num;
+
             var numDiv = num.ExprOrDivToDiv();
             var denDiv = den.ExprOrDivToDiv();
-            return b.Divide(
-                Mult(b, numDiv.Num, denDiv.Den),
-                Mult(b, numDiv.Den, denDiv.Num)
-            );
+
+            var numWithCoeff = Mult(b, numDiv.Num, denDiv.Den).ExprOrMultToKoeffMultInfo(b);
+            var denWithCoeff = Mult(b, numDiv.Den, denDiv.Num).ExprOrMultToKoeffMultInfo(b);
+            var gcd = Gcd(numWithCoeff.Mult.ToMult(), denWithCoeff.Mult.ToMult());
+
+            var finalNum = Mult(b, Const(numWithCoeff.Koeff / denWithCoeff.Koeff).Yield().Concat(Divide(b, numWithCoeff.Mult.ToMult(), gcd)).ToArray());
+            var finalDen = Mult(b, Divide(b, denWithCoeff.Mult.ToMult(), gcd));
+
+            if(Equals(finalDen, Expr.One))
+                return finalNum;
+
+            return b.Divide(finalNum, finalDen);
+        }
+        static PowerInfo[] Gcd(ExprList x, ExprList y) {
+            var xInfoList = x.Select(a => a.ExprOrPowerToPower());
+            var yInfoList = y.Select(a => a.ExprOrPowerToPower());
+            return xInfoList
+                .Join(yInfoList, a => a.Value, a => a.Value, (a, b) => new PowerInfo(a.Value, BigInteger.Min(a.Power, b.Power)))
+                .ToArray();
+        }
+        static Expr[] Divide(CoreBuilder builder, ExprList x, PowerInfo[] gcd) {
+            var xInfoList = x.Select(a => a.ExprOrPowerToPower());
+            return xInfoList.Select(a => {
+                var foundGcdPart = gcd.Select(b => (PowerInfo?)b).FirstOrDefault(b => Equals(a.Value, b.Value.Value));
+                if(foundGcdPart != null)
+                    return new PowerInfo(a.Value, a.Power - foundGcdPart.Value.Power);
+                return a;
+            }).Where(a => a.Power > 0)
+            .Select(a => Power(builder, a.Value, a.Power))
+            .ToArray();
         }
     }
     public static class DefaultTransformer {
