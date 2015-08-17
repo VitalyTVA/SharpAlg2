@@ -10,15 +10,17 @@ using System.Collections.Generic;
 
 namespace SharpAlg.Geo.Core {
     public class SingleDivTransformer {
-        public static Transformer Create(bool openBraces) {
-            var transformer = new SingleDivTransformer(openBraces);
-            return new Transformer(
-                add: transformer.Add,
-                mult: transformer.Mult,
-                power: (b, val, pow) => transformer.Power(b, val, pow),
-                div: transformer.Div,
-                sqrt: (b, e) => Sqrt(b, e)
-            );
+        public static Func<CoreBuilder, Transformer> GetFactory(bool openBraces) {
+            return builder => {
+                var transformer = new SingleDivTransformer(openBraces);
+                return new Transformer(
+                    add: transformer.Add,
+                    mult: transformer.Mult,
+                    power: (b, val, pow) => transformer.Power(builder, val, pow),
+                    div: transformer.Div,
+                    sqrt: (b, e) => Sqrt(builder, e)
+                );
+            };
         }
         readonly bool openBraces;
 
@@ -150,13 +152,15 @@ namespace SharpAlg.Geo.Core {
         }
     }
     public static class DefaultTransformer {
-        public static readonly Transformer Instance = new Transformer(
-            add: (b, args) => b.Add(MergeAddArgsSimple(args)),
-            mult: (b, args) => b.Multiply(MergeMultArgsSimple(args)),
-            power: (b, val, pow) => b.Power(val, pow),
-            div: (b, n, d) => b.Divide(n, d),
-            sqrt: (b, e) => b.Sqrt(e)
-        );
+        public static Func<CoreBuilder, Transformer> GetFactory() {
+            return builder => new Transformer( 
+                add: (b, args) => builder.Add(MergeAddArgsSimple(args)),
+                mult: (b, args) => builder.Multiply(MergeMultArgsSimple(args)),
+                power: (b, val, pow) => builder.Power(val, pow),
+                div: (b, n, d) => builder.Divide(n, d),
+                sqrt: (b, e) => builder.Sqrt(e)
+            );
+        }
         static ExprList MergeAddArgsSimple(params Expr[] args) {
             return MergeArgsSimple(args, x => x.AsAdd());
         }
