@@ -269,10 +269,10 @@ namespace SharpAlg.Geo.Core {
             return transformer.Mult(args);
         }
         public Expr Divide(Expr a, Expr b) {
-            return transformer.Div(a, b);
+            return transformer.Div(new DivInfo(a, b));
         }
         public Expr Power(Expr value, BigInteger pow) {
-            return transformer.Power(value, pow);
+            return transformer.Power(new PowerInfo(value, pow));
         }
         public Expr Sqrt(Expr value) {
             return transformer.Sqrt(value);

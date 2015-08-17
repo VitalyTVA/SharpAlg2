@@ -6,19 +6,32 @@ using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.E
 using CoreBuilder = SharpAlg.Geo.Core.Builder.CoreBuilder;
 using Numerics;
 using static SharpAlg.Geo.Core.ExprExtensions;
+using static SharpAlg.Geo.Core.Utility;
 using System.Collections.Generic;
 
 namespace SharpAlg.Geo.Core {
     public class SingleDivTransformer {
+        //public static Func<CoreBuilder, Transformer> GetFactory(bool openBraces) {
+        //    return builder => {
+        //        var transformer = new SingleDivTransformer(builder, openBraces);
+        //        return new Transformer(
+        //            add: Func((Expr[] x) => transformer.Add(x)).Memoize(LinqExtensions.CreateEnumerableComparer<Expr>()),
+        //            mult: Func((Expr[] x) => transformer.Mult(x)).Memoize(LinqExtensions.CreateEnumerableComparer<Expr>()),
+        //            power: Func((PowerInfo x) => transformer.Power(x.Value, x.Power)).Memoize(),
+        //            div: Func((DivInfo x) => transformer.Div(x.Num, x.Den)).Memoize(),
+        //            sqrt: Func((Expr x) => transformer.Sqrt(x)).Memoize()
+        //        );
+        //    };
+        //}
         public static Func<CoreBuilder, Transformer> GetFactory(bool openBraces) {
             return builder => {
                 var transformer = new SingleDivTransformer(builder, openBraces);
                 return new Transformer(
-                    add: transformer.Add,
-                    mult: transformer.Mult,
-                    power: (val, pow) => transformer.Power(val, pow),
-                    div: transformer.Div,
-                    sqrt: e => transformer.Sqrt(e)
+                    add: Func((Expr[] x) => transformer.Add(x)),
+                    mult: Func((Expr[] x) => transformer.Mult(x)),
+                    power: Func((PowerInfo x) => transformer.Power(x.Value, x.Power)),
+                    div: Func((DivInfo x) => transformer.Div(x.Num, x.Den)),
+                    sqrt: Func((Expr x) => transformer.Sqrt(x))
                 );
             };
         }
@@ -158,8 +171,8 @@ namespace SharpAlg.Geo.Core {
             return builder => new Transformer( 
                 add: args => builder.Add(MergeAddArgsSimple(args)),
                 mult: args => builder.Multiply(MergeMultArgsSimple(args)),
-                power: (val, pow) => builder.Power(val, pow),
-                div: (n, d) => builder.Divide(n, d),
+                power: powerInfo => builder.Power(powerInfo.Value, powerInfo.Power),
+                div: divInfo => builder.Divide(divInfo.Num, divInfo.Den),
                 sqrt: (e) => builder.Sqrt(e)
             );
         }
@@ -178,16 +191,16 @@ namespace SharpAlg.Geo.Core {
     public class Transformer {
         public readonly Func<Expr[], Expr> Add;
         public readonly Func<Expr[], Expr> Mult;
-        public readonly Func<Expr, Expr, Expr> Div;
+        public readonly Func<DivInfo, Expr> Div;
         public readonly Func<Expr, Expr> Sqrt;
-        public readonly Func<Expr, BigInteger, Expr> Power;
+        public readonly Func<PowerInfo, Expr> Power;
 
         public Transformer(
             Func<Expr[], Expr> add,
             Func<Expr[], Expr> mult,
-            Func<Expr, Expr, Expr> div,
+            Func<DivInfo, Expr> div,
             Func<Expr, Expr> sqrt,
-            Func<Expr, BigInteger, Expr> power) {
+            Func<PowerInfo, Expr> power) {
             Add = add;
             Mult = mult;
             Power = power;
