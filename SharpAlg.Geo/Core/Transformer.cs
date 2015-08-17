@@ -11,15 +11,18 @@ using System.Collections.Generic;
 
 namespace SharpAlg.Geo.Core {
     public class SingleDivTransformer {
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2211:NonConstantFieldsShouldNotBeVisible")]
+        //public static int Success, Fail;
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         //public static Func<CoreBuilder, Transformer> GetFactory(bool openBraces) {
         //    return builder => {
         //        var transformer = new SingleDivTransformer(builder, openBraces);
         //        return new Transformer(
-        //            add: Func((Expr[] x) => transformer.Add(x)).Memoize(LinqExtensions.CreateEnumerableComparer<Expr>()),
-        //            mult: Func((Expr[] x) => transformer.Mult(x)).Memoize(LinqExtensions.CreateEnumerableComparer<Expr>()),
-        //            power: Func((PowerInfo x) => transformer.Power(x.Value, x.Power)).Memoize(),
-        //            div: Func((DivInfo x) => transformer.Div(x.Num, x.Den)).Memoize(),
-        //            sqrt: Func((Expr x) => transformer.Sqrt(x)).Memoize()
+        //            add: Func((Expr[] x) => transformer.Add(x)).Memoize2(() => Success++, () => Fail++, LinqExtensions.CreateEnumerableComparer<Expr>()),
+        //            mult: Func((Expr[] x) => transformer.Mult(x)).Memoize2(() => Success++, () => Fail++, LinqExtensions.CreateEnumerableComparer<Expr>()),
+        //            power: Func((PowerInfo x) => transformer.Power(x.Value, x.Power)).Memoize2(() => Success++, () => Fail++),
+        //            div: Func((DivInfo x) => transformer.Div(x.Num, x.Den)).Memoize2(() => Success++, () => Fail++),
+        //            sqrt: Func((Expr x) => transformer.Sqrt(x)).Memoize2(() => Success++, () => Fail++)
         //        );
         //    };
         //}
