@@ -263,19 +263,19 @@ namespace SharpAlg.Geo.Core {
         }
 
         public Expr Add(params Expr[] args) {
-            return transformer.Add(builder, args);
+            return transformer.Add(args);
         }
         public Expr Multiply(params Expr[] args) {
-            return transformer.Mult(builder, args);
+            return transformer.Mult(args);
         }
         public Expr Divide(Expr a, Expr b) {
-            return transformer.Div(builder, a, b);
+            return transformer.Div(a, b);
         }
         public Expr Power(Expr value, BigInteger pow) {
-            return transformer.Power(builder, value , pow);
+            return transformer.Power(value, pow);
         }
         public Expr Sqrt(Expr value) {
-            return transformer.Sqrt(builder, value);
+            return transformer.Sqrt(value);
         }
         public void Check(IEnumerable<Expr> args) {
             builder.Check(this, args);
