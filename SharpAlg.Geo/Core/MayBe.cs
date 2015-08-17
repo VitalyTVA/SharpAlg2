@@ -89,6 +89,25 @@ namespace SharpAlg.Geo.Core {
             var dict = new Dictionary<TI, TR>(comparer);
             return x => dict.GetOrAdd(x, f);
         }
+        public static Func<TI, TR> Memoize2<TI, TR>(this Func<TI, TR> f, Action logSuccess, Action logFail, IEqualityComparer<TI> comparer = null) {
+            var dict = new Dictionary<TI, TR>(comparer);
+            return x => {
+                TR val;
+                if(dict.TryGetValue(x, out val)) {
+                    logSuccess();
+                    return val;
+                }
+                logFail();
+                return dict[x] = f(x);
+            };
+        }
+        //public static Func<TI, TR> Log<TI, TR>(this Func<TI, TR> f, Action log) {
+        //    return x => {
+        //        log();
+        //        return f(x);
+        //    };
+        //}
+
         public static bool IsOrdered<T>(this IEnumerable<T> source, IComparer<T> comparer) {
             if(!source.Any())
                 return true;

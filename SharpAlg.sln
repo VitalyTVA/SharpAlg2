@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Geo", "SharpAlg.Geo\SharpAlg.Geo.csproj", "{DB7BC6F9-79D6-43B3-A135-5E6DF69B69FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Geo.Test", "SharpAlg.Geo.Test\SharpAlg.Geo.Test.csproj", "{0E2309EE-5F60-4B52-AA24-D8826C4D64E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{DB7BC6F9-79D6-43B3-A135-5E6DF69B69FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB7BC6F9-79D6-43B3-A135-5E6DF69B69FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB7BC6F9-79D6-43B3-A135-5E6DF69B69FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E2309EE-5F60-4B52-AA24-D8826C4D64E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E2309EE-5F60-4B52-AA24-D8826C4D64E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E2309EE-5F60-4B52-AA24-D8826C4D64E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E2309EE-5F60-4B52-AA24-D8826C4D64E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
