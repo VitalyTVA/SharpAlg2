@@ -203,6 +203,9 @@ namespace SharpAlg.Geo.Core {
         public static ExprList MakeExprList(Expr e1, Expr e2, Expr e3) {
             return ImmutableArray.Create(e1, e2, e3);
         }
+        public static ExprList EmptyExprList(Expr e1, Expr e2, Expr e3) {
+            return ImmutableArray<Expr>.Empty;
+        }
         //public static bool IsParamOrPower(this Expr expr) {
         //    return expr.ParamOrPowerAsPowerInfo() != null;
         //}
