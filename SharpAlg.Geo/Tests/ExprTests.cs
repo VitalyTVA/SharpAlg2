@@ -382,7 +382,7 @@ namespace SharpAlg.Geo.Tests {
             return builder.Build(f, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
         }
         static ExprList GetParameters(LambdaExpression expression) {
-            return expression.Parameters.Select(x => Param(x.Name)).ToImmutableArray();
+            return expression.Parameters.Select(x => Param(x.Name)).ToExprList();
         }
         public static Expr AssertSimpleStringRepresentation(this Expr expr, string str) {
             Assert.AreEqual(str, expr.ToString());

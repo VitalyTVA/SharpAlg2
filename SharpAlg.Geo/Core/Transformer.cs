@@ -91,7 +91,7 @@ namespace SharpAlg.Geo.Core {
                 .Select(x => x.Value)
                 .Aggregate(aggregateSeed, aggregate);
             var other = group(mergedArgs.Where(x => !x.IsConst()));
-            return (@const == aggregateSeed && other.Any() ? other : Const(@const).Yield().Concat(other)).ToImmutableArray();
+            return (@const == aggregateSeed && other.Any() ? other : Const(@const).Yield().Concat(other)).ToExprList();
         }
 
         Expr Mult(params Expr[] args) {
@@ -120,7 +120,7 @@ namespace SharpAlg.Geo.Core {
                 return ImmutableArray<Expr>.Empty;
             return addArgs.Tail()
                 .Aggregate<ExprList, IEnumerable<Expr>>(addArgs.First(), (acc, val) => acc.SelectMany(x => val, (x, y) => Mult_NoOpenBraces(ImmutableArray.Create(x, y))))
-                .ToImmutableArray();
+                .ToExprList();
         }
 
         Expr Add(params Expr[] args) {
@@ -188,7 +188,7 @@ namespace SharpAlg.Geo.Core {
         static ExprList MergeArgsSimple(Expr[] args, Func<Expr, ExprList?> getArgs) {
             return args
                 .SelectMany(x => getArgs(x) ?? x.Yield())
-                .ToImmutableArray();
+                .ToExprList();
         }
     }
     public class Transformer {

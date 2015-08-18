@@ -5,6 +5,7 @@ using System.Linq;
 using System.Diagnostics;
 using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
 using System.Collections.Immutable;
+using System.Collections.Generic;
 
 namespace SharpAlg.Geo.Core {
     public abstract class Expr {
@@ -176,7 +177,7 @@ namespace SharpAlg.Geo.Core {
         public static KoeffMultInfo  ExprOrMultToKoeffMultInfo(this Expr expr, Builder.CoreBuilder b) {
             var args = expr.ExprOrMultToMult();
             var @const = args.First().AsConst() ?? BigRational.One;
-            return new KoeffMultInfo(@const, (args.First().IsConst() ? args.Tail() : args).ToImmutableArray());
+            return new KoeffMultInfo(@const, (args.First().IsConst() ? args.Tail() : args).ToExprList());
         }
         public static ExprList ExprOrAddToAdd(this Expr expr) {
             return expr.AsAdd() ?? ImmutableArray.Create(expr);
@@ -186,6 +187,9 @@ namespace SharpAlg.Geo.Core {
         }
         public static DivInfo ExprOrDivToDiv(this Expr expr) {
             return expr.AsDiv() ?? new DivInfo(expr, 1);
+        }
+        public static ExprList ToExprList(this IEnumerable<Expr> source) {
+            return source.ToImmutableArray();
         }
         //public static bool IsParamOrPower(this Expr expr) {
         //    return expr.ParamOrPowerAsPowerInfo() != null;
