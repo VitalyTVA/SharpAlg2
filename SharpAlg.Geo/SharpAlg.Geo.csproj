@@ -70,6 +70,7 @@
     <Compile Include="Core\Expr.cs" />
     <Compile Include="Core\ExprPrinter.cs" />
     <Compile Include="Core\HashCodeProvider.cs" />
+    <Compile Include="Core\ImmutableListWrapper.cs" />
     <Compile Include="Core\MayBe.cs" />
     <Compile Include="Core\Transformer.cs" />
     <Compile Include="ImmutableContext.cs" />
