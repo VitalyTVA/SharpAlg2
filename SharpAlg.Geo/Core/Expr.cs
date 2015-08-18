@@ -189,6 +189,9 @@ namespace SharpAlg.Geo.Core {
             return expr.AsDiv() ?? new DivInfo(expr, 1);
         }
         public static ExprList ToExprList(this IEnumerable<Expr> source) {
+            //TODO check no extra conversions
+            //if((source is Expr[]) || (source is ExprList))
+            //    throw new InvalidOperationException();
             return source.ToImmutableArray();
         }
         public static ExprList MakeExprList(Expr e1) {
