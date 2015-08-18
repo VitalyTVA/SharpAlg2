@@ -262,10 +262,28 @@ namespace SharpAlg.Geo.Core {
             transformer = createTransfomer(builder);
         }
 
-        public Expr Add(params Expr[] args) {
+        public Expr Add(Expr e) {
+            return Add(new Expr[] { e });
+        }
+        public Expr Add(Expr e1, Expr e2) {
+            return Add(new Expr[] { e1, e2 });
+        }
+        public Expr Add(Expr e1, Expr e2, Expr e3) {
+            return Add(new Expr[] { e1, e2, e3 });
+        }
+        public Expr Add(Expr[] args) {
             return transformer.Add(args);
         }
-        public Expr Multiply(params Expr[] args) {
+        public Expr Multiply(Expr e) {
+            return Multiply(new Expr[] { e });
+        }
+        public Expr Multiply(Expr e1, Expr e2) {
+            return Multiply(new Expr[] { e1, e2 });
+        }
+        public Expr Multiply(Expr e1, Expr e2, Expr e3) {
+            return Multiply(new Expr[] { e1, e2, e3 });
+        }
+        public Expr Multiply(Expr[] args) {
             return transformer.Mult(args);
         }
         public Expr Divide(Expr a, Expr b) {

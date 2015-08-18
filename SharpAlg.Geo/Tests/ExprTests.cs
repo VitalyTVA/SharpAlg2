@@ -9,7 +9,6 @@ using static SharpAlg.Geo.Core.ExprExtensions;
 using static SharpAlg.Geo.Core.Utility;
 using System.Diagnostics;
 using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
-using System.Collections.Immutable;
 
 namespace SharpAlg.Geo.Tests {
     public class ExprTestsBase {
