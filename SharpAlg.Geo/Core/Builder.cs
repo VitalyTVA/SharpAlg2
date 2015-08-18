@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using static SharpAlg.Geo.Core.Utility;
+using static SharpAlg.Geo.Core.ExprExtensions;
 using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
 
 namespace SharpAlg.Geo.Core {
@@ -263,27 +264,27 @@ namespace SharpAlg.Geo.Core {
         }
 
         public Expr Add(Expr e) {
-            return Add(new Expr[] { e });
+            return Add(MakeExprList(e));
         }
         public Expr Add(Expr e1, Expr e2) {
-            return Add(new Expr[] { e1, e2 });
+            return Add(MakeExprList(e1, e2));
         }
         public Expr Add(Expr e1, Expr e2, Expr e3) {
-            return Add(new Expr[] { e1, e2, e3 });
+            return Add(MakeExprList(e1, e2, e3));
         }
-        public Expr Add(Expr[] args) {
+        public Expr Add(ExprList args) {
             return transformer.Add(args);
         }
         public Expr Multiply(Expr e) {
-            return Multiply(new Expr[] { e });
+            return Multiply(MakeExprList(e));
         }
         public Expr Multiply(Expr e1, Expr e2) {
-            return Multiply(new Expr[] { e1, e2 });
+            return Multiply(MakeExprList(e1, e2));
         }
         public Expr Multiply(Expr e1, Expr e2, Expr e3) {
-            return Multiply(new Expr[] { e1, e2, e3 });
+            return Multiply(MakeExprList(e1, e2, e3));
         }
-        public Expr Multiply(Expr[] args) {
+        public Expr Multiply(ExprList args) {
             return transformer.Mult(args);
         }
         public Expr Divide(Expr a, Expr b) {

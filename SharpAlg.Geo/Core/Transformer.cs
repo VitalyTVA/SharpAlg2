@@ -18,8 +18,8 @@ namespace SharpAlg.Geo.Core {
         //    return builder => {
         //        var transformer = new SingleDivTransformer(builder, openBraces);
         //        return new Transformer(
-        //            add: Func((Expr[] x) => transformer.Add(x)).Memoize2(() => Success++, () => Fail++, LinqExtensions.CreateEnumerableComparer<Expr>()),
-        //            mult: Func((Expr[] x) => transformer.Mult(x)).Memoize2(() => Success++, () => Fail++, LinqExtensions.CreateEnumerableComparer<Expr>()),
+        //            add: Func((ExprList x) => transformer.Add(x)).Memoize2(() => Success++, () => Fail++, LinqExtensions.CreateEnumerableComparer<Expr>()),
+        //            mult: Func((ExprList x) => transformer.Mult(x)).Memoize2(() => Success++, () => Fail++, LinqExtensions.CreateEnumerableComparer<Expr>()),
         //            power: Func((PowerInfo x) => transformer.Power(x.Value, x.Power)).Memoize2(() => Success++, () => Fail++),
         //            div: Func((DivInfo x) => transformer.Div(x.Num, x.Den)).Memoize2(() => Success++, () => Fail++),
         //            sqrt: Func((Expr x) => transformer.Sqrt(x)).Memoize2(() => Success++, () => Fail++)
@@ -30,8 +30,8 @@ namespace SharpAlg.Geo.Core {
             return builder => {
                 var transformer = new SingleDivTransformer(builder, openBraces);
                 return new Transformer(
-                    add: Func((Expr[] x) => transformer.Add(x)),
-                    mult: Func((Expr[] x) => transformer.Mult(x)),
+                    add: Func((ExprList x) => transformer.Add(x)),
+                    mult: Func((ExprList x) => transformer.Mult(x)),
                     power: Func((PowerInfo x) => transformer.Power(x.Value, x.Power)),
                     div: Func((DivInfo x) => transformer.Div(x.Num, x.Den)),
                     sqrt: Func((Expr x) => transformer.Sqrt(x))
@@ -59,7 +59,7 @@ namespace SharpAlg.Geo.Core {
             return val.MatchDefault(
                 @default: x => builder.Power(x, pow),
                 @const: x => Const(BigRational.Pow(x, pow)),
-                mult: args => Mult(args.Select(x => Power(x, pow)).ToArray()),
+                mult: args => Mult(args.Select(x => Power(x, pow)).ToExprList()),
                 power: (v, p) => builder.Power(v, pow * p)
             );
         }
@@ -68,7 +68,7 @@ namespace SharpAlg.Geo.Core {
             return MergeArgs(builder, args, x => x.AsAdd(), BigRational.Zero, BigRational.Add,
                 y => y.Select(x => x.ExprOrMultToKoeffMultInfo(builder))
                     .GroupBy(x => x.Mult, LinqExtensions.CreateEnumerableComparer<Expr>())
-                    .Select(x => Mult(Const(x.Aggregate(BigRational.Zero, (acc, val) => acc + val.Koeff)).Yield().Concat(x.Key).ToArray())));
+                    .Select(x => Mult(Const(x.Aggregate(BigRational.Zero, (acc, val) => acc + val.Koeff)).Yield().Concat(x.Key).ToExprList())));
         }
         ExprList MergeMultArgs(IEnumerable<Expr> args) {
             return MergeArgs(builder, args, x => x.AsMult(), BigRational.One, BigRational.Multiply,
@@ -94,11 +94,11 @@ namespace SharpAlg.Geo.Core {
             return (@const == aggregateSeed && other.Any() ? other : Const(@const).Yield().Concat(other)).ToExprList();
         }
 
-        Expr Mult(params Expr[] args) {
+        Expr Mult(ExprList args) {
             if(openBraces) {
                 var openBraceArgs = OpenBraces(args.Select(x => x.ExprOrAddToAdd()));
                 if(openBraceArgs.Length > 1) {
-                    return Add(openBraceArgs.ToArray());
+                    return Add(openBraceArgs.ToExprList());
                 }
                 return Mult_NoOpenBraces(openBraceArgs.Single().ExprOrMultToMult());
             }
@@ -123,7 +123,7 @@ namespace SharpAlg.Geo.Core {
                 .ToExprList();
         }
 
-        Expr Add(params Expr[] args) {
+        Expr Add(ExprList args) {
             var mergedArgs = MergeAddArgs(args);
             return mergedArgs.Length == 1 ? mergedArgs.Single() : builder.Add(mergedArgs);
         }
@@ -137,11 +137,11 @@ namespace SharpAlg.Geo.Core {
             var numDiv = num.ExprOrDivToDiv();
             var denDiv = den.ExprOrDivToDiv();
 
-            var numWithCoeff = Mult(numDiv.Num, denDiv.Den).ExprOrMultToKoeffMultInfo(builder);
-            var denWithCoeff = Mult(numDiv.Den, denDiv.Num).ExprOrMultToKoeffMultInfo(builder);
+            var numWithCoeff = Mult(MakeExprList(numDiv.Num, denDiv.Den)).ExprOrMultToKoeffMultInfo(builder);
+            var denWithCoeff = Mult(MakeExprList(numDiv.Den, denDiv.Num)).ExprOrMultToKoeffMultInfo(builder);
             var gcd = Gcd(numWithCoeff.Mult, denWithCoeff.Mult);
 
-            var finalNum = Mult(Const(numWithCoeff.Koeff / denWithCoeff.Koeff).Yield().Concat(Divide(numWithCoeff.Mult, gcd)).ToArray());
+            var finalNum = Mult(Const(numWithCoeff.Koeff / denWithCoeff.Koeff).Yield().Concat(Divide(numWithCoeff.Mult, gcd)).ToExprList());
             var finalDen = Mult(Divide(denWithCoeff.Mult, gcd));
 
             if(Equals(finalDen, Expr.One))
@@ -156,7 +156,7 @@ namespace SharpAlg.Geo.Core {
                 .Join(yInfoList, a => a.Value, a => a.Value, (a, b) => new PowerInfo(a.Value, BigInteger.Min(a.Power, b.Power)))
                 .ToArray();
         }
-        Expr[] Divide(ExprList x, PowerInfo[] gcd) {
+        ExprList Divide(ExprList x, PowerInfo[] gcd) {
             var xInfoList = x.Select(a => a.ExprOrPowerToPower());
             var result = xInfoList.Select(a => {
                 var foundGcdPart = gcd.Select(b => (PowerInfo?)b).FirstOrDefault(b => Equals(a.Value, b.Value.Value));
@@ -165,8 +165,8 @@ namespace SharpAlg.Geo.Core {
                 return a;
             }).Where(a => a.Power > 0)
             .Select(a => Power(a.Value, a.Power))
-            .ToArray();
-            return result.Length > 0 ? result : new[] { Expr.One };
+            .ToExprList();
+            return result.Length > 0 ? result : MakeExprList(Expr.One);
         }
     }
     public static class DefaultTransformer {
@@ -179,28 +179,28 @@ namespace SharpAlg.Geo.Core {
                 sqrt: (e) => builder.Sqrt(e)
             );
         }
-        static ExprList MergeAddArgsSimple(params Expr[] args) {
+        static ExprList MergeAddArgsSimple(ExprList args) {
             return MergeArgsSimple(args, x => x.AsAdd());
         }
-        static ExprList MergeMultArgsSimple(params Expr[] args) {
+        static ExprList MergeMultArgsSimple(ExprList args) {
             return MergeArgsSimple(args, x => x.AsMult());
         }
-        static ExprList MergeArgsSimple(Expr[] args, Func<Expr, ExprList?> getArgs) {
+        static ExprList MergeArgsSimple(ExprList args, Func<Expr, ExprList?> getArgs) {
             return args
                 .SelectMany(x => getArgs(x) ?? x.Yield())
                 .ToExprList();
         }
     }
     public class Transformer {
-        public readonly Func<Expr[], Expr> Add;
-        public readonly Func<Expr[], Expr> Mult;
+        public readonly Func<ExprList, Expr> Add;
+        public readonly Func<ExprList, Expr> Mult;
         public readonly Func<DivInfo, Expr> Div;
         public readonly Func<Expr, Expr> Sqrt;
         public readonly Func<PowerInfo, Expr> Power;
 
         public Transformer(
-            Func<Expr[], Expr> add,
-            Func<Expr[], Expr> mult,
+            Func<ExprList, Expr> add,
+            Func<ExprList, Expr> mult,
             Func<DivInfo, Expr> div,
             Func<Expr, Expr> sqrt,
             Func<PowerInfo, Expr> power) {

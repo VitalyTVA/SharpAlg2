@@ -42,10 +42,10 @@ namespace SharpAlg.Geo.Core {
                             var tail = GetTail(args);
                             Expr expr2 = (headConstant.Value == BigInteger.MinusOne) ?
                                 tail :
-                                Builder.Simple.Multiply(exprConstant.Yield().Concat(tail.ToMult()).ToArray());
+                                Builder.Simple.Multiply(exprConstant.Yield().Concat(tail.ToMult()).ToExprList());
                             return new UnaryExpressionInfo(expr2, BinaryOperationEx.Subtract);
                         }
-                        return getDefault(Builder.Simple.Multiply(args.ToArray()));
+                        return getDefault(Builder.Simple.Multiply(args.ToExprList()));
                     },
                     @const: getConstant
                 );
@@ -80,7 +80,7 @@ namespace SharpAlg.Geo.Core {
             );
         }
         static Expr GetTail(ExprList args) {
-            return Builder.Simple.Multiply(args.Tail().ToArray());
+            return Builder.Simple.Multiply(args.Tail().ToExprList());
         }
         static bool IsMinusExpression(ExprList args) {
             return args.Count() == 2 && IsMinusOne(args.First());
