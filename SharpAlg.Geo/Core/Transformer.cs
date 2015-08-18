@@ -149,14 +149,14 @@ namespace SharpAlg.Geo.Core {
 
             return builder.Divide(finalNum, finalDen);
         }
-        static PowerInfo[] Gcd(ExprList x, ExprList y) {
+        static IList<PowerInfo> Gcd(ExprList x, ExprList y) {
             var xInfoList = x.Select(a => a.ExprOrPowerToPower());
             var yInfoList = y.Select(a => a.ExprOrPowerToPower());
             return xInfoList
                 .Join(yInfoList, a => a.Value, a => a.Value, (a, b) => new PowerInfo(a.Value, BigInteger.Min(a.Power, b.Power)))
-                .ToArray();
+                .ToList();
         }
-        ExprList Divide(ExprList x, PowerInfo[] gcd) {
+        ExprList Divide(ExprList x, IList<PowerInfo> gcd) {
             var xInfoList = x.Select(a => a.ExprOrPowerToPower());
             var result = xInfoList.Select(a => {
                 var foundGcdPart = gcd.Select(b => (PowerInfo?)b).FirstOrDefault(b => Equals(a.Value, b.Value.Value));
