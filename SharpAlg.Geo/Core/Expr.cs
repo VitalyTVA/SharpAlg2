@@ -3,8 +3,7 @@ using System.Numerics;
 using Numerics;
 using System.Linq;
 using System.Diagnostics;
-using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
-using System.Collections.Immutable;
+using ExprList = SharpAlg.Geo.Core.ImmutableListWrapper<SharpAlg.Geo.Core.Expr>;
 using System.Collections.Generic;
 
 namespace SharpAlg.Geo.Core {
@@ -191,20 +190,19 @@ namespace SharpAlg.Geo.Core {
         public static ExprList ToExprList(this IEnumerable<Expr> source) {
             if((source is Expr[]))
                 throw new InvalidOperationException();
-            return source.ToImmutableArray();
+            var list = (source as IList<Expr>) ?? source.ToList();
+            return new ExprList(list);
         }
         public static ExprList MakeExprList(Expr e1) {
-            return ImmutableArray.Create(e1);
+            return new ExprList(new[] { e1 });
         }
         public static ExprList MakeExprList(Expr e1, Expr e2) {
-            return ImmutableArray.Create(e1, e2);
+            return new ExprList(new[] { e1, e2 });
         }
         public static ExprList MakeExprList(Expr e1, Expr e2, Expr e3) {
-            return ImmutableArray.Create(e1, e2, e3);
+            return new ExprList(new[] { e1, e2, e3 });
         }
-        public static ExprList EmptyExprList(Expr e1, Expr e2, Expr e3) {
-            return ImmutableArray<Expr>.Empty;
-        }
+        public static readonly ExprList EmptyExprList = new ExprList(new Expr[0]);
         //public static bool IsParamOrPower(this Expr expr) {
         //    return expr.ParamOrPowerAsPowerInfo() != null;
         //}

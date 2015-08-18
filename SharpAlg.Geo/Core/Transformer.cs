@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
-using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
+using ExprList = SharpAlg.Geo.Core.ImmutableListWrapper<SharpAlg.Geo.Core.Expr>;
 using CoreBuilder = SharpAlg.Geo.Core.Builder.CoreBuilder;
 using Numerics;
 using static SharpAlg.Geo.Core.ExprExtensions;
@@ -117,7 +116,7 @@ namespace SharpAlg.Geo.Core {
 
         ExprList OpenBraces(IEnumerable<ExprList> addArgs) {
             if(!addArgs.Any())
-                return ImmutableArray<Expr>.Empty;
+                return EmptyExprList;
             return addArgs.Tail()
                 .Aggregate<ExprList, IEnumerable<Expr>>(addArgs.First(), (acc, val) => acc.SelectMany(x => val, (x, y) => Mult_NoOpenBraces(MakeExprList(x, y))))
                 .ToExprList();

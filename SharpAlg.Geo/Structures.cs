@@ -2,7 +2,7 @@
 using Numerics;
 using System.Numerics;
 using System.Collections.Generic;
-using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
+using ExprList = SharpAlg.Geo.Core.ImmutableListWrapper<SharpAlg.Geo.Core.Expr>;
 
 namespace SharpAlg.Geo.Core {
     public struct DivInfo {

@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using ExprList = System.Collections.Immutable.ImmutableArray<SharpAlg.Geo.Core.Expr>;
+using ExprList = SharpAlg.Geo.Core.ImmutableListWrapper<SharpAlg.Geo.Core.Expr>;
 
 namespace SharpAlg.Geo.Core {
     public static class ExprPrinter {

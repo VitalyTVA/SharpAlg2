@@ -20,6 +20,9 @@ namespace SharpAlg.Geo.Core {
             return this == (ImmutableListWrapper<T>)obj;
         }
 
+        public T this[int index] { get { return list[index]; } }
+        public int Length { get { return list.Count; } }
+
         public override int GetHashCode() {
             return list.GetHashCode();
 
