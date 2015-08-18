@@ -172,7 +172,7 @@ namespace SharpAlg.Geo.Core {
                 ?? expr.AsParam().With(x => (ParamPowerInfo?)new ParamPowerInfo(x, 1));
         }
         public static ExprList ExprOrMultToMult(this Expr expr) {
-            return expr.AsMult() ?? ImmutableArray.Create(expr);
+            return expr.AsMult() ?? MakeExprList(expr);
         }
         public static KoeffMultInfo  ExprOrMultToKoeffMultInfo(this Expr expr, Builder.CoreBuilder b) {
             var args = expr.ExprOrMultToMult();
@@ -180,7 +180,7 @@ namespace SharpAlg.Geo.Core {
             return new KoeffMultInfo(@const, (args.First().IsConst() ? args.Tail() : args).ToExprList());
         }
         public static ExprList ExprOrAddToAdd(this Expr expr) {
-            return expr.AsAdd() ?? ImmutableArray.Create(expr);
+            return expr.AsAdd() ?? MakeExprList(expr);
         }
         public static PowerInfo ExprOrPowerToPower(this Expr expr) {
             return expr.AsPower() ?? new PowerInfo(expr, BigInteger.One);

@@ -119,7 +119,7 @@ namespace SharpAlg.Geo.Core {
             if(!addArgs.Any())
                 return ImmutableArray<Expr>.Empty;
             return addArgs.Tail()
-                .Aggregate<ExprList, IEnumerable<Expr>>(addArgs.First(), (acc, val) => acc.SelectMany(x => val, (x, y) => Mult_NoOpenBraces(ImmutableArray.Create(x, y))))
+                .Aggregate<ExprList, IEnumerable<Expr>>(addArgs.First(), (acc, val) => acc.SelectMany(x => val, (x, y) => Mult_NoOpenBraces(MakeExprList(x, y))))
                 .ToExprList();
         }
 
